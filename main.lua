@@ -28,31 +28,48 @@ local lake = nil
 
 -- Define the tile images
 local tiles = {}
-tiles.image = love.graphics.newImage("res/tiles.png")
+tiles.image = love.graphics.newImage("res/newtiles.png")
 tiles.w, tiles.h = tiles.image:getDimensions()
-tiles.water = love.graphics.newQuad(128, 148, 16, 16, tiles.w, tiles.h)
-tiles.land = love.graphics.newQuad(96, 28, 16, 16, tiles.w, tiles.h)
+
+tiles.water = {}
+tiles.water.open = love.graphics.newQuad(80, 16, 16, 16, tiles.w, tiles.h)
+tiles.water.left = love.graphics.newQuad(48, 32, 16, 16, tiles.w, tiles.h)
+tiles.water.right = love.graphics.newQuad(16, 32, 16, 16, tiles.w, tiles.h)
+tiles.water.top = love.graphics.newQuad(32, 48, 16, 16, tiles.w, tiles.h)
+tiles.water.bottom = love.graphics.newQuad(32, 16, 16, 16, tiles.w, tiles.h)
+tiles.water.topleft = love.graphics.newQuad(80, 48, 16, 16, tiles.w, tiles.h)
+tiles.water.topright = love.graphics.newQuad(96, 48, 16, 16, tiles.w, tiles.h)
+tiles.water.bottomleft = love.graphics.newQuad(80, 64, 16, 16, tiles.w, tiles.h)
+tiles.water.bottomright = love.graphics.newQuad(96, 64, 16, 16, tiles.w, tiles.h)
+tiles.water.leftalcove = love.graphics.newQuad(16, 80, 16, 16, tiles.w, tiles.h)
+tiles.water.rightalcove = love.graphics.newQuad(32, 80, 16, 16, tiles.w, tiles.h)
+tiles.water.topalcove = love.graphics.newQuad(16, 96, 16, 16, tiles.w, tiles.h)
+tiles.water.bottomalcove = love.graphics.newQuad(16, 112, 16, 16, tiles.w, tiles.h)
+
+tiles.land = {}
+tiles.land.flat = love.graphics.newQuad(32, 32, 16, 16, tiles.w, tiles.h)
+
 tiles.plants = {
-  love.graphics.newQuad(160, 148, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(193, 148, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(225, 148, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(256, 148, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(289, 148, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(321, 148, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(288, 228, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(208, 16, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(240, 16, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(272, 16, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(304, 16, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(336, 16, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(368, 16, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(400, 16, 16, 16, tiles.w, tiles.h),
 }
 tiles.trees = {
-  love.graphics.newQuad(384, 108, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(416, 108, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(448, 108, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(480, 108, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(208, 96, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(240, 96, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(272, 96, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(304, 96, 16, 16, tiles.w, tiles.h),
 }
 tiles.buildings = {
-  love.graphics.newQuad(288, 108, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(320, 108, 16, 16, tiles.w, tiles.h),
-  love.graphics.newQuad(352, 108, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(208, 144, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(240, 144, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(272, 144, 16, 16, tiles.w, tiles.h),
 }
-tiles.jetty = love.graphics.newQuad(448, 188, 16, 16, tiles.w, tiles.h)
+tiles.jetty = love.graphics.newQuad(256, 48, 16, 16, tiles.w, tiles.h)
 
 local legend = {
   ["Land"] = {92, 64, 32},
@@ -70,6 +87,7 @@ local mapstep = 16 * 3
 
 function love.load()
 
+  love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
   lake = genie:generate(80, 30, 0, 0.25, 6)
 
 end
@@ -85,7 +103,7 @@ function love.draw()
   elseif drawmode == "fancy" then
     if tiles.rendered == nil then renderLakeToImage() end
     love.graphics.setColor(255, 255, 255)
-    love.graphics.scale(1.5, 1.5)
+    love.graphics.scale(2, 2)
     love.graphics.draw(tiles.rendered, drawoffset.x, drawoffset.y)
   end
 
@@ -108,20 +126,13 @@ function renderLakeToImage()
       love.graphics.setColor(255, 255, 255)
 
       if ground then
-        love.graphics.draw(tiles.image, tiles.land, x*16, y*16)
+        love.graphics.draw(tiles.image, tiles.land.flat, x*16, y*16)
       else
-        -- draw lake depth
-        --local shallow = lake.depth[x][y]
-        --if shallow then
-          ---- change the plant draw
-          --if math.random() < 0.1 then
-            --plantid = math.random(1, #tiles.plants)
-          --end
-          --love.graphics.draw(tiles.image, tiles.plants[plantid], x*16, y*16)
-        --else
-          --love.graphics.draw(tiles.image, tiles.water, x*16, y*16)
-        --end
-        love.graphics.draw(tiles.image, tiles.water, x*16, y*16)
+        -- draw open water tile
+        love.graphics.draw(tiles.image, tiles.water.open, x*16, y*16)
+        -- and any special corner tile
+        local waterquad = getWaterCorner(lake.contour, x, y)
+        love.graphics.draw(tiles.image, waterquad, x*16, y*16)
       end
 
       local plantid = lake.plants[x][y]
@@ -151,6 +162,45 @@ function renderLakeToImage()
   end
 
   love.graphics.setCanvas()
+
+end
+
+
+--- Get the quad to draw a corner of water as interpolated by the land around it.
+function getWaterCorner(a, x, y)
+
+  local left = a[x-1][y]
+  local top = a[x][y-1]
+  local right = a[x+1][y]
+  local bottom = a[x][y+1]
+
+  if top and bottom and left and not right then
+    return tiles.water.leftalcove
+  elseif top and bottom and right and not left then
+    return tiles.water.rightalcove
+  elseif left and right and top and not bottom then
+    return tiles.water.topalcove
+  elseif left and right and bottom and not top then
+    return tiles.water.bottomalcove
+  elseif top and left then
+    return tiles.water.topleft
+  elseif top and right then
+    return tiles.water.topright
+  elseif bottom and left then
+    return tiles.water.bottomleft
+  elseif bottom and right then
+    return tiles.water.bottomright
+  elseif left then
+    return tiles.water.left
+  elseif right then
+    return tiles.water.right
+  elseif top then
+    return tiles.water.top
+  elseif bottom then
+    return tiles.water.bottom
+  else
+    return tiles.water.open
+  end
 
 end
 
