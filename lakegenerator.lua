@@ -79,6 +79,36 @@ function module:placeJetties(a, seed)
 
 end
 
+--- Create some water obstacles
+function module:createObstacles(a, seed)
+
+  seed = seed or os.time()
+  math.randomseed(seed)
+
+  local list = {}
+
+  for i=1, 10 do
+    -- next seed since we are in a loop
+    seed = seed + 10
+    local coastalpoint = array2d:findCoastline(a, seed)
+
+    -- is it a rock, a log or a moored boat?
+    local what = math.random(1, 3)
+    if what == 1 then
+      coastalpoint.rock = true
+    elseif what == 2 then
+      coastalpoint.log = true
+    else
+      coastalpoint.boat = true
+    end
+
+    table.insert(list, coastalpoint)
+  end
+
+  return list
+
+end
+
 --- Return a new generated map
 function module:generate(width, height, seed, density, iterations)
 
@@ -130,6 +160,19 @@ function module:generate(width, height, seed, density, iterations)
 
   -- place jetties
   data.jetties = self:placeJetties(data.contour, seed)
+
+  -- add obstacles (logs, rocks, moored boats)
+  data.obstacles = self:createObstacles(data.contour)
+
+  -- remove obstacles covering jetties
+  for obsi, obs in ipairs(data.obstacles) do
+    for _, jetty in ipairs(data.jetties) do
+      if obs.x == jetty.x and obs.y == jetty.y then
+        table.remove(data.obstacles, obsi)
+      end
+    end
+  end
+
 
   return data
 

@@ -73,13 +73,31 @@ tiles.jetties = {}
 tiles.jetties.horizontal = love.graphics.newQuad(256, 48, 16, 16, tiles.w, tiles.h)
 tiles.jetties.vertical = love.graphics.newQuad(224, 48, 16, 16, tiles.w, tiles.h)
 
+tiles.obstacles = {}
+tiles.obstacles.rocks = {
+  love.graphics.newQuad(288, 48, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(304, 48, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(320, 48, 16, 16, tiles.w, tiles.h),
+}
+tiles.obstacles.logs = {
+  love.graphics.newQuad(288, 64, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(304, 64, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(320, 64, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(336, 64, 16, 16, tiles.w, tiles.h),
+}
+tiles.boats = {
+  love.graphics.newQuad(384, 48, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(400, 48, 16, 16, tiles.w, tiles.h),
+}
+
 local legend = {
   ["Land"] = {92, 64, 32},
   ["Water"] = {16, 16, 64},
   ["Aquatic Plant"] = {16, 40, 56},
   ["Tree"] = {32, 92, 32},
   ["Building"] = {192, 192, 64},
-  ["Jetty"] = {128, 128, 128}
+  ["Jetty"] = {128, 128, 128},
+  ["Obstacle"] = {128, 64, 64}
 }
 
 local drawmode = "legend"   -- legend/fancy
@@ -105,7 +123,7 @@ function love.draw()
   elseif drawmode == "fancy" then
     if tiles.rendered == nil then renderLakeToImage() end
     love.graphics.setColor(255, 255, 255)
-    love.graphics.scale(2, 2)
+    --love.graphics.scale(2, 2)
     love.graphics.draw(tiles.rendered, drawoffset.x, drawoffset.y)
   end
 
@@ -155,11 +173,6 @@ function renderLakeToImage()
         love.graphics.draw(tiles.image, tiles.buildings[id], x*16, y*16)
       end
 
-      --local jetty = lake.jetties[x][y] > 0
-      --if jetty then
-        --love.graphics.draw(tiles.image, tiles.jetty, x*16, y*16)
-      --end
-
     end
   end
 
@@ -169,6 +182,20 @@ function renderLakeToImage()
       love.graphics.draw(tiles.image, tiles.jetties.horizontal, jetty.x*16, jetty.y*16)
     else
       love.graphics.draw(tiles.image, tiles.jetties.vertical, jetty.x*16, jetty.y*16)
+    end
+  end
+
+  -- Draw obstacles
+  for _, obs in ipairs(lake.obstacles) do
+    if obs.log then
+      local id = math.random(1, #tiles.obstacles.logs)
+      love.graphics.draw(tiles.image, tiles.obstacles.logs[id], obs.x*16, obs.y*16)
+    elseif obs.rock then
+      local id = math.random(1, #tiles.obstacles.rocks)
+      love.graphics.draw(tiles.image, tiles.obstacles.rocks[id], obs.x*16, obs.y*16)
+    elseif obs.boat then
+      local id = math.random(1, #tiles.boats)
+      love.graphics.draw(tiles.image, tiles.boats[id], obs.x*16, obs.y*16)
     end
   end
 
@@ -274,18 +301,18 @@ function drawWithLegend()
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      --local jetty = lake.jetties[x][y] > 0
-      --if jetty then
-        --love.graphics.setColor(legend["Jetty"])
-        --love.graphics.rectangle("fill", x, y, 1, 1)
-      --end
-
     end
   end
 
   -- Draw jetties
   love.graphics.setColor(legend["Jetty"])
   for _, jetty in ipairs(lake.jetties) do
+    love.graphics.rectangle("fill", jetty.x, jetty.y, 1, 1)
+  end
+
+  -- Draw obstacles
+  love.graphics.setColor(legend["Obstacle"])
+  for _, jetty in ipairs(lake.obstacles) do
     love.graphics.rectangle("fill", jetty.x, jetty.y, 1, 1)
   end
 
