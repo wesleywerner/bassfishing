@@ -64,49 +64,15 @@ end
 
 
 --- Place jetties on a map conforming to a contour.
-function module:placeJetties(contour, seed)
-
-  seed = seed or os.time()
-  math.randomseed(seed)
+function module:placeJetties(a, seed)
 
   local list = {}
-  local width, height = #contour, #contour[1]
-  local amount = width * height * 0.002
 
-  while amount > 0 do
-
-    -- find a random open point on the contour
-    local x, y = 1, 1
-    while contour[x][y] > 0 do
-      x = math.random(1, width-1)
-      y = math.random(1, height-1)
-    end
-
-    -- find the shoreline in a random direction
-    local ox, oy = 0, 0
-
-    -- move either up/down or left/right
-    repeat
-      ox, oy = math.random(-1, 1), math.random(-1, 1)
-    until (ox == 0 and oy ~= 0) or (ox ~= 0 and oy == 0)
-
-    -- move in direction until we hit land
-    while contour[x+ox][y+oy] == 0 do
-      x = x + ox
-      y = y + oy
-    end
-
-    -- this spot is a jetty
-    table.insert(list, {
-      x=x,
-      y=y,
-      horizontal=ox ~= 0,
-      vertical=oy ~= 0
-    })
-
-    -- count down to the next jetty
-    amount = amount - 1
-
+  for i=1, 4 do
+    -- next seed since we are in a loop
+    seed = seed + 1
+    local coastalpoint = array2d:findCoastline(a, seed)
+    table.insert(list, coastalpoint)
   end
 
   return list

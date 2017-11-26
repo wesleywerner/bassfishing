@@ -31,6 +31,8 @@
 --
 -- Good old rogue basin for cave generation:
 -- http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
+--
+-- @module array2d
 
 local module = {}
 
@@ -117,7 +119,20 @@ function module:noise(a, seed, density)
 
 end
 
---- Count living neighbouring cells in an array.
+--- Count neighbouring cells of a map point.
+-- Only counts a neighbour if it's value is non zero.
+--
+-- @tparam table a
+-- Array to reference.
+--
+-- @tparam number px
+-- x position to test.
+--
+-- @tparam number py
+-- y position to test.
+--
+-- @treturn number
+-- Count of neighbours with non-zero values.
 function module:countNeighbours(a, px, py)
 
   local width = #a
@@ -401,6 +416,69 @@ function module:clipExcludeContour(a, contour)
       end
     end
   end
+
+end
+
+--- Find a random position on the coastline.
+-- The found point will be on the water next to land.
+--
+-- @tparam table a
+-- Array to search.
+--
+-- @tparam number seed
+--
+-- @tparam[opt] function startTest
+-- Function(value) that must return true to find the starting point on the map.
+--
+-- @tparam[opt] function endTest
+-- Function(value) that must return true to end the search
+--
+-- @treturn CoastlineResult
+function module:findCoastline(a, seed, startTest, endTest)
+
+  -- use default provided test functions
+  startTest = startTest or function(value) return value == 0 end
+  endTest = endTest or function(value) return value > 0 end
+
+  seed = seed or os.time()
+  math.randomseed(seed)
+
+  local width, height = #a, #a[1]
+
+  -- find a random open point on the contour
+  local x, y = 0, 0
+  repeat
+    x = math.random(2, width-1)
+    y = math.random(2, height-1)
+  until startTest(a[x][y])
+
+  -- find the shoreline in a random direction
+  local ox, oy = 0, 0
+
+  -- move either up/down or left/right
+  repeat
+    ox, oy = math.random(-1, 1), math.random(-1, 1)
+  until (ox == 0 and oy ~= 0) or (ox ~= 0 and oy == 0)
+
+  -- move in direction until we hit land
+  while not endTest(a[x+ox][y+oy]) do
+    x = x + ox
+    y = y + oy
+  end
+
+  --- Costline find result
+  -- @table CoastlineResult
+  -- @tfield number x
+  -- @tfield number y
+  -- @tfield boolean horizontal
+  -- @tfield boolean vertical
+
+  return {
+    x=x,
+    y=y,
+    horizontal=ox ~= 0,
+    vertical=oy ~= 0
+  }
 
 end
 
