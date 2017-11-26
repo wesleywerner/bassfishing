@@ -21,6 +21,48 @@ local array2d = require("array2d")
 local module = {}
 
 
+--- Adds large chunks of noise simulating land mass
+--
+-- @tparam table a
+-- The array to fill.
+--
+-- @tparam number seed
+-- The random seed.
+--
+-- @tparam number density
+-- Percent of array width to try cover.
+function module:largeNoise(a, seed, density)
+
+  seed = seed or os.time()
+  math.randomseed(seed)
+
+  local width = #a
+  local height = #a[1]
+  local iterations = width * density
+
+  for iteration=1, iterations do
+
+    -- random position
+    local blockx = math.random(1, width)
+    local blocky = math.random(1, height)
+    local blockw = math.floor(math.random(1, width * 0.2))  -- % of size
+    local blockh = math.floor(math.random(1, height * 0.2))
+
+    for offsetx=1, blockw do
+      for offsety=1, blockh do
+
+        -- wrap around
+        local x = math.max(1, (blockx + offsetx) % width)
+        local y = math.max(1, (blocky + offsety) % height)
+        a[x][y] = 1
+
+      end
+    end
+  end
+
+end
+
+
 --- Place jetties on a map conforming to a contour.
 function module:placeJetties(a, contour, seed, density)
 
@@ -75,7 +117,7 @@ function module:generate(width, height, seed, density, iterations)
   -- add random noise to start our contours
   array2d:noise(data.contour, seed, density)
   -- add variety by placing some random land masses (or plain blocks if you prefer)
-  array2d:populateBlocks(data.contour, seed, density)
+  self:largeNoise(data.contour, seed, density)
   -- close off the map with a border
   array2d:addBorder(data.contour)
   -- put it through cellular evolution
@@ -88,7 +130,7 @@ function module:generate(width, height, seed, density, iterations)
   -- (psst: it is a contour map with a higher density)
   data.depth = array2d:array(width, height)
   array2d:noise(data.depth, seed, density + 0.1)
-  array2d:populateBlocks(data.depth, seed, density - 0.1)
+  self:largeNoise(data.depth, seed, density - 0.1)
   array2d:cellulate(data.depth, math.floor(iterations / 3))
 
   -- generate aquatic plants

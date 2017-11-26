@@ -91,6 +91,7 @@ function module:iter(a, test, assignment)
 end
 
 --- Fill an array with random noise.
+-- This preserves the value of untouched cells.
 --
 -- @tparam table a
 -- The array to fill.
@@ -113,38 +114,6 @@ function module:noise(a, seed, density)
       return math.random()  -- used to return 1
     end
     )
-
-end
-
---- Place random blocks in the array
-function module:populateBlocks(a, seed, density)
-
-  seed = seed or os.time()
-  math.randomseed(seed)
-
-  local width = #a
-  local height = #a[1]
-  local iterations = width * density
-
-  for iteration=1, iterations do
-
-    -- random position
-    local blockx = math.random(1, width)
-    local blocky = math.random(1, height)
-    local blockw = math.floor(math.random(1, width * 0.2))  -- % of size
-    local blockh = math.floor(math.random(1, height * 0.2))
-
-    for offsetx=1, blockw do
-      for offsety=1, blockh do
-
-        -- wrap around
-        local x = math.max(1, (blockx + offsetx) % width)
-        local y = math.max(1, (blocky + offsety) % height)
-        a[x][y] = 1
-
-      end
-    end
-  end
 
 end
 
