@@ -69,7 +69,9 @@ tiles.buildings = {
   love.graphics.newQuad(240, 144, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(272, 144, 16, 16, tiles.w, tiles.h),
 }
-tiles.jetty = love.graphics.newQuad(256, 48, 16, 16, tiles.w, tiles.h)
+tiles.jetties = {}
+tiles.jetties.horizontal = love.graphics.newQuad(256, 48, 16, 16, tiles.w, tiles.h)
+tiles.jetties.vertical = love.graphics.newQuad(224, 48, 16, 16, tiles.w, tiles.h)
 
 local legend = {
   ["Land"] = {92, 64, 32},
@@ -153,11 +155,20 @@ function renderLakeToImage()
         love.graphics.draw(tiles.image, tiles.buildings[id], x*16, y*16)
       end
 
-      local jetty = lake.jetties[x][y] > 0
-      if jetty then
-        love.graphics.draw(tiles.image, tiles.jetty, x*16, y*16)
-      end
+      --local jetty = lake.jetties[x][y] > 0
+      --if jetty then
+        --love.graphics.draw(tiles.image, tiles.jetty, x*16, y*16)
+      --end
 
+    end
+  end
+
+  -- Draw jetties
+  for _, jetty in ipairs(lake.jetties) do
+    if jetty.horizontal then
+      love.graphics.draw(tiles.image, tiles.jetties.horizontal, jetty.x*16, jetty.y*16)
+    else
+      love.graphics.draw(tiles.image, tiles.jetties.vertical, jetty.x*16, jetty.y*16)
     end
   end
 
@@ -263,13 +274,19 @@ function drawWithLegend()
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      local jetty = lake.jetties[x][y] > 0
-      if jetty then
-        love.graphics.setColor(legend["Jetty"])
-        love.graphics.rectangle("fill", x, y, 1, 1)
-      end
+      --local jetty = lake.jetties[x][y] > 0
+      --if jetty then
+        --love.graphics.setColor(legend["Jetty"])
+        --love.graphics.rectangle("fill", x, y, 1, 1)
+      --end
 
     end
+  end
+
+  -- Draw jetties
+  love.graphics.setColor(legend["Jetty"])
+  for _, jetty in ipairs(lake.jetties) do
+    love.graphics.rectangle("fill", jetty.x, jetty.y, 1, 1)
   end
 
 end

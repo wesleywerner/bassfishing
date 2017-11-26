@@ -64,13 +64,14 @@ end
 
 
 --- Place jetties on a map conforming to a contour.
-function module:placeJetties(a, contour, seed, density)
+function module:placeJetties(contour, seed)
 
   seed = seed or os.time()
   math.randomseed(seed)
 
+  local list = {}
   local width, height = #contour, #contour[1]
-  local amount = width * height * density
+  local amount = width * height * 0.002
 
   while amount > 0 do
 
@@ -82,23 +83,33 @@ function module:placeJetties(a, contour, seed, density)
     end
 
     -- find the shoreline in a random direction
-    local offsetx = math.random(-1, 1)
+    local ox, oy = 0, 0
 
-    if offsetx == 0 then
-      -- left by default
-      offsetx = -1
-    end
+    -- move either up/down or left/right
+    repeat
+      ox, oy = math.random(-1, 1), math.random(-1, 1)
+    until (ox == 0 and oy ~= 0) or (ox ~= 0 and oy == 0)
 
     -- move in direction until we hit land
-    while contour[x+offsetx][y] == 0 do
-      x = x + offsetx
+    while contour[x+ox][y+oy] == 0 do
+      x = x + ox
+      y = y + oy
     end
 
     -- this spot is a jetty
-    a[x][y] = 1
+    table.insert(list, {
+      x=x,
+      y=y,
+      horizontal=ox ~= 0,
+      vertical=oy ~= 0
+    })
+
+    -- count down to the next jetty
     amount = amount - 1
 
   end
+
+  return list
 
 end
 
@@ -152,8 +163,7 @@ function module:generate(width, height, seed, density, iterations)
   array2d:clipIncludeContour(data.buildings, data.contour)
 
   -- place jetties
-  data.jetties = array2d:array(width, height)
-  self:placeJetties(data.jetties, data.contour, seed, 0.002)  -- n% of the surface
+  data.jetties = self:placeJetties(data.contour, seed)
 
   return data
 
