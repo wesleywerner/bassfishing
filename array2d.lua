@@ -63,6 +63,33 @@ function module:array(width, height, default)
 
 end
 
+--- Iterate over an array.
+--
+-- @tparam table a
+-- The array to iterate.
+--
+-- @tparam function test
+-- function(value, x, y)
+-- A function that should return true if assignment is to proceed.
+--
+-- @tparam function assignment
+-- function(value, x, y)
+-- A function that should return the new value to assign.
+--
+-- @treturn table
+function module:iter(a, test, assignment)
+
+  local width, height = #a, #a[1]
+  for x=1, width do
+    for y=1, height do
+      if test(a[x][y], x, y) then
+        a[x][y] = assignment(a[x][y], x, y)
+      end
+    end
+  end
+
+end
+
 -- Fills an array with noise.
 function module:noise(a, seed)
 
@@ -267,14 +294,13 @@ function module:numberRegions(a)
   -- to make this work, we must ensure that all values in the array
   -- won't clash with our numbering scheme. we change all non-zero
   -- values to a temporary value first.
-  local width, height = #a, #a[1]
-  for x=1, width do
-    for y=1, height do
-      if a[x][y] > 0 then
-        a[x][y] = 1000
-      end
-    end
-  end
+  self:iter(a,
+    function(value)
+      return value > 0
+    end,
+    function(value)
+      return 1000
+    end)
 
   local regions = self:getListOfIslands(a)
 
