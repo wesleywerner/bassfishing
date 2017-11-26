@@ -152,6 +152,7 @@ function module:generate(width, height, seed, density, iterations)
   array2d:noise(data.trees, seed, 0.45) -- n% of the surface
   array2d:cellulate(data.trees, 6)
   array2d:clipIncludeContour(data.trees, data.contour)
+  array2d:numberRegions(data.trees)
 
   -- generate buildings (dotted around the contour)
   data.buildings = array2d:array(width, height)

@@ -161,10 +161,10 @@ function renderLakeToImage()
         love.graphics.draw(tiles.image, tiles.plants[plantidx], x*16, y*16)
       end
 
-      local tree = lake.trees[x][y] > 0
-      if tree then
-        local id = math.random(1, #tiles.trees)
-        love.graphics.draw(tiles.image, tiles.trees[id], x*16, y*16)
+      local treeid = lake.trees[x][y]
+      if treeid > 0 then
+        local treeidx = math.max(1, treeid % #tiles.trees)
+        love.graphics.draw(tiles.image, tiles.trees[treeidx], x*16, y*16)
       end
 
       local house = lake.buildings[x][y] > 0
