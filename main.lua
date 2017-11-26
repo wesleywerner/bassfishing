@@ -169,10 +169,15 @@ end
 --- Get the quad to draw a corner of water as interpolated by the land around it.
 function getWaterCorner(a, x, y)
 
-  local left = a[x-1][y] > 0
-  local top = a[x][y-1] > 0
-  local right = a[x+1][y] > 0
-  local bottom = a[x][y+1] > 0
+  local leftX = math.max(1, x-1)
+  local rightX = math.min(#a, x+1)
+  local topY = math.max(1, y-1)
+  local bottomY = math.min(#a[1], y+1)
+
+  local left = a[leftX][y] > 0
+  local top = a[x][topY] > 0
+  local right = a[rightX][y] > 0
+  local bottom = a[x][bottomY] > 0
 
   if top and bottom and left and not right then
     return tiles.water.leftalcove
