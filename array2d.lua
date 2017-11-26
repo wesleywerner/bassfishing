@@ -90,41 +90,29 @@ function module:iter(a, test, assignment)
 
 end
 
--- Fills an array with noise.
-function module:noise(a, seed)
+--- Fill an array with random noise.
+--
+-- @tparam table a
+-- The array to fill.
+--
+-- @tparam number seed
+-- The random seed.
+--
+-- @tparam number density
+-- Weight of the chance of placing a value, 0>n>1
+function module:noise(a, seed, density)
 
   seed = seed or os.time()
   math.randomseed(seed)
 
-  local width = #a
-  local height = #a[1]
-
-  for x=1, width do
-    for y=1, height do
-      a[x][y] = math.random()
+  self:iter(a,
+    function(value)
+      return math.random() < density
+    end,
+    function(value)
+      return math.random()  -- used to return 1
     end
-  end
-
-end
-
---- Populate an array with random bits weighed towards density (0..1)
-function module:populate(a, seed, density)
-
-  seed = seed or os.time()
-  math.randomseed(seed)
-
-  local width = #a
-  local height = #a[1]
-
-  for x=1, width do
-    for y=1, height do
-      if math.random() < density then
-        a[x][y] = 1
-      else
-        a[x][y] = 0
-      end
-    end
-  end
+    )
 
 end
 

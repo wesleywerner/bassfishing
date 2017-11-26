@@ -73,7 +73,7 @@ function module:generate(width, height, seed, density, iterations)
   -- generate the contour map: a 2D boolean array where land is "true".
   data.contour = array2d:array(width, height)
   -- add random noise to start our contours
-  array2d:populate(data.contour, seed, density)
+  array2d:noise(data.contour, seed, density)
   -- add variety by placing some random land masses (or plain blocks if you prefer)
   array2d:populateBlocks(data.contour, seed, density)
   -- close off the map with a border
@@ -87,7 +87,7 @@ function module:generate(width, height, seed, density, iterations)
   -- reduce evolution iterations to make it more "ragged".
   -- (psst: it is a contour map with a higher density)
   data.depth = array2d:array(width, height)
-  array2d:populate(data.depth, seed, density + 0.1)
+  array2d:noise(data.depth, seed, density + 0.1)
   array2d:populateBlocks(data.depth, seed, density - 0.1)
   array2d:cellulate(data.depth, math.floor(iterations / 3))
 
@@ -100,13 +100,13 @@ function module:generate(width, height, seed, density, iterations)
 
   -- generate trees (cellular evolution around the contour)
   data.trees = array2d:array(width, height)
-  array2d:populate(data.trees, seed, 0.45) -- n% of the surface
+  array2d:noise(data.trees, seed, 0.45) -- n% of the surface
   array2d:cellulate(data.trees, 6)
   array2d:clipIncludeContour(data.trees, data.contour)
 
   -- generate buildings (dotted around the contour)
   data.buildings = array2d:array(width, height)
-  array2d:populate(data.buildings, seed, 0.01)  -- n% of the surface
+  array2d:noise(data.buildings, seed, 0.01)  -- n% of the surface
   array2d:clipIncludeContour(data.buildings, data.contour)
 
   -- place jetties
