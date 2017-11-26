@@ -87,7 +87,7 @@ function module:createObstacles(a, seed)
 
   local list = {}
 
-  for i=1, 10 do
+  for i=1, 30 do
     -- next seed since we are in a loop
     seed = seed + 10
     local coastalpoint = array2d:findCoastline(a, seed)
@@ -102,7 +102,18 @@ function module:createObstacles(a, seed)
       coastalpoint.boat = true
     end
 
-    table.insert(list, coastalpoint)
+    -- avoid placing over other obstacles
+    local duplicate = false
+    for obsi, obs in ipairs(list) do
+      if coastalpoint.x == obs.x and coastalpoint.y == obs.y then
+        duplicate = true
+      end
+    end
+
+    if not duplicate then
+      table.insert(list, coastalpoint)
+    end
+
   end
 
   return list
@@ -163,7 +174,7 @@ function module:generate(width, height, seed, density, iterations)
   data.jetties = self:placeJetties(data.contour, seed)
 
   -- add obstacles (logs, rocks, moored boats)
-  data.obstacles = self:createObstacles(data.contour)
+  data.obstacles = self:createObstacles(data.contour, seed)
 
   -- remove obstacles covering jetties
   for obsi, obs in ipairs(data.obstacles) do
