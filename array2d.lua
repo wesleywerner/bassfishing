@@ -50,7 +50,7 @@ local module = {}
 function module:array(width, height, default)
 
   local a = {}
-  default = default or false
+  default = default or 0
 
   for x=1, width do
     a[x] = {}
@@ -92,9 +92,9 @@ function module:populate(a, seed, density)
   for x=1, width do
     for y=1, height do
       if math.random() < density then
-        a[x][y] = true
+        a[x][y] = 1
       else
-        a[x][y] = false
+        a[x][y] = 0
       end
     end
   end
@@ -125,7 +125,7 @@ function module:populateBlocks(a, seed, density)
         -- wrap around
         local x = math.max(1, (blockx + offsetx) % width)
         local y = math.max(1, (blocky + offsety) % height)
-        a[x][y] = true
+        a[x][y] = 1
 
       end
     end
@@ -152,7 +152,7 @@ function module:countNeighbours(a, px, py)
         if nx < 1 or ny < 1 or nx > width or ny > height then
           -- comment the line below to generate open-sea like islands
           count = count + 1
-        elseif a[nx][ny] then
+        elseif a[nx][ny] > 0 then
           -- count if this neighbour is positive
           count = count + 1
         end
@@ -184,18 +184,18 @@ function module:cellulate(a, iterations)
     for x=1, width do
       for y=1, height do
         -- this cell is alive if truthy
-        local alive = a[x][y]
+        local alive = a[x][y] > 0
         -- copy the cell
-        b[x][y] = alive
+        b[x][y] = a[x][y]
         -- count neighbours at this point
         local neighbours = self:countNeighbours(a, x, y)
         -- alone cells die off without enough neighbours
         if alive and neighbours < deathLimit then
           -- the cell dies
-          b[x][y] = false
+          b[x][y] = 0
         elseif not alive and neighbours > birthLimit then
           -- a new cell is born
-          b[x][y] = true
+          b[x][y] = 1
         end
       end
     end
@@ -218,12 +218,12 @@ function module:addBorder(a)
   local height = #a[1]
 
   for x=1, width do
-    a[x][1] = true
-    a[x][height] = true
+    a[x][1] = 1
+    a[x][height] = 1
   end
   for y=1, height do
-    a[1][y] = true
-    a[width][y] = true
+    a[1][y] = 1
+    a[width][y] = 1
   end
 
 end
@@ -243,20 +243,6 @@ end
 --- Fills all but the largest hole on a map.
 function module:fillHoles(a)
 
-  --local width, height = #a, #a[1]
-
-  ---- make a list of all the holes in the map and their size.
-  ---- we use a copy of the map for this, as it will destroy the map.
-  --local cp = self:copy(a)
-  --local holes = {}
-  --local nexthole = self:findHole(cp)
-
-  --while nexthole ~= nil do
-    --local filledSize = self:floodFill(cp, nexthole.x, nexthole.y)
-    --table.insert(holes, { pos=nexthole, size=filledSize })
-    --nexthole = self:findHole(cp)
-  --end
-
   local holes = self:getListOfHoles(a)
 
   -- sort the list, smallest hole first
@@ -269,27 +255,31 @@ function module:fillHoles(a)
 
   -- fill the remaining holes on the original array
   for _, hole in ipairs(holes) do
-    self:floodFill(a, hole.pos.x, hole.pos.y, false, true)
+    self:floodFill(a, hole.pos.x, hole.pos.y, 0, 1)
   end
 
 end
 
+
 --- Assign a number to each island in a map.
 function module:numberRegions(a)
 
-  local regions = self:getListOfIslands(a)
-  for i, reg in ipairs(regions) do
-    self:floodFill(a, reg.pos.x, reg.pos.y, true, i)
-  end
-
-  -- as a courtesy we zero out the rest
+  -- to make this work, we must ensure that all values in the array
+  -- won't clash with our numbering scheme. we change all non-zero
+  -- values to a temporary value first.
   local width, height = #a, #a[1]
   for x=1, width do
     for y=1, height do
-      if type(a[x][y]) == "boolean" then
-        a[x][y] = 0
+      if a[x][y] > 0 then
+        a[x][y] = 1000
       end
     end
+  end
+
+  local regions = self:getListOfIslands(a)
+
+  for i, reg in ipairs(regions) do
+    self:floodFill(a, reg.pos.x, reg.pos.y, 1000, i)
   end
 
 end
@@ -307,7 +297,7 @@ function module:getListOfHoles(a)
   local nexthole = self:findHole(cp)
 
   while nexthole ~= nil do
-    local filledSize = self:floodFill(cp, nexthole.x, nexthole.y, false, true)
+    local filledSize = self:floodFill(cp, nexthole.x, nexthole.y, 0, 1)
     table.insert(list, { pos=nexthole, size=filledSize })
     nexthole = self:findHole(cp)
   end
@@ -328,7 +318,7 @@ function module:getListOfIslands(a)
   local nextisland = self:findIsland(cp)
 
   while nextisland ~= nil do
-    local filledSize = self:floodFill(cp, nextisland.x, nextisland.y, true, false)
+    local filledSize = self:floodFill(cp, nextisland.x, nextisland.y, nextisland.value, 0)
     table.insert(list, { pos=nextisland, size=filledSize })
     nextisland = self:findIsland(cp)
   end
@@ -344,8 +334,8 @@ function module:findHole(a)
   local width, height = #a, #a[1]
   for x=1, width do
     for y=1, height do
-      if not a[x][y] then
-        return {x=x, y=y}
+      if a[x][y] == 0 then
+        return { x=x, y=y }
       end
     end
   end
@@ -358,8 +348,8 @@ function module:findIsland(a)
   local width, height = #a, #a[1]
   for x=1, width do
     for y=1, height do
-      if a[x][y] then
-        return {x=x, y=y}
+      if a[x][y] > 0 then
+        return { x=x, y=y, value=a[x][y] }
       end
     end
   end
@@ -409,8 +399,8 @@ function module:clipIncludeContour(a, contour)
 
   for x=1, width do
     for y=1, height do
-      if not contour[x][y] then
-        a[x][y] = false
+      if contour[x][y] == 0 then
+        a[x][y] = 0
       end
     end
   end
@@ -423,8 +413,8 @@ function module:clipExcludeContour(a, contour)
 
   for x=1, width do
     for y=1, height do
-      if contour[x][y] then
-        a[x][y] = false
+      if contour[x][y] > 0 then
+        a[x][y] = 0
       end
     end
   end

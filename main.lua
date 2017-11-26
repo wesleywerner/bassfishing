@@ -80,7 +80,7 @@ local legend = {
   ["Jetty"] = {128, 128, 128}
 }
 
-local drawmode = "fancy"
+local drawmode = "legend"   -- legend/fancy
 local drawoffset = {x=0, y=0}
 local mapstep = 16 * 3
 
@@ -121,7 +121,7 @@ function renderLakeToImage()
   for x=1, lake.width do
     for y=1, lake.height do
 
-      local ground = lake.contour[x][y]
+      local ground = lake.contour[x][y] > 0
 
       love.graphics.setColor(255, 255, 255)
 
@@ -141,19 +141,19 @@ function renderLakeToImage()
         love.graphics.draw(tiles.image, tiles.plants[plantidx], x*16, y*16)
       end
 
-      local tree = lake.trees[x][y]
+      local tree = lake.trees[x][y] > 0
       if tree then
         local id = math.random(1, #tiles.trees)
         love.graphics.draw(tiles.image, tiles.trees[id], x*16, y*16)
       end
 
-      local house = lake.buildings[x][y]
+      local house = lake.buildings[x][y] > 0
       if house then
         local id = math.random(1, #tiles.buildings)
         love.graphics.draw(tiles.image, tiles.buildings[id], x*16, y*16)
       end
 
-      local jetty = lake.jetties[x][y]
+      local jetty = lake.jetties[x][y] > 0
       if jetty then
         love.graphics.draw(tiles.image, tiles.jetty, x*16, y*16)
       end
@@ -169,10 +169,10 @@ end
 --- Get the quad to draw a corner of water as interpolated by the land around it.
 function getWaterCorner(a, x, y)
 
-  local left = a[x-1][y]
-  local top = a[x][y-1]
-  local right = a[x+1][y]
-  local bottom = a[x][y+1]
+  local left = a[x-1][y] > 0
+  local top = a[x][y-1] > 0
+  local right = a[x+1][y] > 0
+  local bottom = a[x][y+1] > 0
 
   if top and bottom and left and not right then
     return tiles.water.leftalcove
@@ -230,14 +230,14 @@ function drawWithLegend()
   for x=1, lake.width do
     for y=1, lake.height do
 
-      local ground = lake.contour[x][y]
+      local ground = lake.contour[x][y] > 0
 
       if ground then
         love.graphics.setColor(legend["Land"])
         love.graphics.rectangle("fill", x, y, 1, 1)
       else
         -- draw lake depth
-        local shallow = lake.depth[x][y]
+        local shallow = lake.depth[x][y] > 0
         if shallow then
           love.graphics.setColor(legend["Aquatic Plant"])
         else
@@ -246,19 +246,19 @@ function drawWithLegend()
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      local tree = lake.trees[x][y]
+      local tree = lake.trees[x][y] > 0
       if tree then
         love.graphics.setColor(legend["Tree"])
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      local house = lake.buildings[x][y]
+      local house = lake.buildings[x][y] > 0
       if house then
         love.graphics.setColor(legend["Building"])
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      local jetty = lake.jetties[x][y]
+      local jetty = lake.jetties[x][y] > 0
       if jetty then
         love.graphics.setColor(legend["Jetty"])
         love.graphics.rectangle("fill", x, y, 1, 1)

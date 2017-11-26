@@ -34,7 +34,7 @@ function module:placeJetties(a, contour, seed, density)
 
     -- find a random open point on the contour
     local x, y = 1, 1
-    while contour[x][y] do
+    while contour[x][y] > 0 do
       x = math.random(1, width-1)
       y = math.random(1, height-1)
     end
@@ -48,12 +48,12 @@ function module:placeJetties(a, contour, seed, density)
     end
 
     -- move in direction until we hit land
-    while not contour[x+offsetx][y] do
+    while contour[x+offsetx][y] == 0 do
       x = x + offsetx
     end
 
     -- this spot is a jetty
-    a[x][y] = true
+    a[x][y] = 1
     amount = amount - 1
 
   end
