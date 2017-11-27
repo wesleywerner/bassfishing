@@ -38,8 +38,7 @@ tiles.water.rightalcove = love.graphics.newQuad(32, 80, 16, 16, tiles.w, tiles.h
 tiles.water.topalcove = love.graphics.newQuad(16, 96, 16, 16, tiles.w, tiles.h)
 tiles.water.bottomalcove = love.graphics.newQuad(16, 112, 16, 16, tiles.w, tiles.h)
 
-tiles.land = {}
-tiles.land.flat = love.graphics.newQuad(32, 32, 16, 16, tiles.w, tiles.h)
+tiles.land = love.graphics.newQuad(32, 32, 16, 16, tiles.w, tiles.h)
 
 tiles.plants = {
   love.graphics.newQuad(208, 16, 16, 16, tiles.w, tiles.h),
@@ -50,33 +49,39 @@ tiles.plants = {
   love.graphics.newQuad(368, 16, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(400, 16, 16, 16, tiles.w, tiles.h),
 }
+
 tiles.trees = {
   love.graphics.newQuad(208, 96, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(240, 96, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(272, 96, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(304, 96, 16, 16, tiles.w, tiles.h),
 }
+
 tiles.buildings = {
   love.graphics.newQuad(208, 144, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(240, 144, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(272, 144, 16, 16, tiles.w, tiles.h),
 }
+
 tiles.jetties = {}
 tiles.jetties.horizontal = love.graphics.newQuad(256, 48, 16, 16, tiles.w, tiles.h)
 tiles.jetties.vertical = love.graphics.newQuad(224, 48, 16, 16, tiles.w, tiles.h)
 
 tiles.obstacles = {}
+
 tiles.obstacles.rocks = {
   love.graphics.newQuad(288, 48, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(304, 48, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(320, 48, 16, 16, tiles.w, tiles.h),
 }
+
 tiles.obstacles.logs = {
   love.graphics.newQuad(288, 64, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(304, 64, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(320, 64, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(336, 64, 16, 16, tiles.w, tiles.h),
 }
+
 tiles.boats = {
   love.graphics.newQuad(384, 48, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(400, 48, 16, 16, tiles.w, tiles.h),

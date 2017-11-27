@@ -53,48 +53,40 @@ function module:init()
 end
 
 function module:keypressed(key)
-    if key == "escape" then
+    if key == "escape" or key == "f10" then
         states:pop()
     elseif key == "left" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         math.max(0, glob.lake.seed - 1), glob.lake.density,
         glob.lake.iterations)
-        --glob.rendered = false
     elseif key == "right" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         math.max(0, glob.lake.seed + 1), glob.lake.density,
         glob.lake.iterations)
-        --glob.rendered = false
     elseif key == "up" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         glob.lake.seed, glob.lake.density, math.max(0,
         glob.lake.iterations + 1))
-        --glob.rendered = false
     elseif key == "down" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         glob.lake.seed, glob.lake.density, math.max(0,
         glob.lake.iterations - 1))
-        --glob.rendered = false
     elseif key == "insert" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         glob.lake.seed, math.max(0, glob.lake.density + .025),
         glob.lake.iterations)
-        --glob.rendered = false
     elseif key == "delete" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         glob.lake.seed, math.max(0, glob.lake.density - .025),
         glob.lake.iterations)
-        --glob.rendered = false
     elseif key == "kp-" then
         glob.lake = genie:generate( glob.lake.width, math.max(30,
         glob.lake.height - 1), glob.lake.seed, glob.lake.density,
         glob.lake.iterations)
-        --glob.rendered = false
     elseif key == "kp+" then
         glob.lake = genie:generate( glob.lake.width, math.min(80,
         glob.lake.height + 1), glob.lake.seed, glob.lake.density,
         glob.lake.iterations)
-        --glob.rendered = false
     end
 end
 
