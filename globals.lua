@@ -1,5 +1,5 @@
 --[[
-   main.lua
+   globals.lua
 
    Copyright 2017 wesley werner <wesley.werner@gmail.com>
 
@@ -18,30 +18,12 @@
 
 ]]--
 
-local states = require("states")
+local module = {}
 
-function love.load()
+module.defaultMapWidth = 80
+module.defaultMapHeight = 30
+module.defaultMapSeed = 0
+module.defaultMapDensity = 0.25
+module.defaultMapIterations = 6
 
-    love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
-    states:add("fishing", require("fishingview"))
-    states:add("debug map", require("debugmapview"))
-
-end
-
-function love.update(dt)
-
-    states:update(dt)
-
-end
-
-function love.keypressed(key)
-
-    states:keypressed(key)
-
-end
-
-function love.draw()
-
-    states:draw()
-
-end
+return module
