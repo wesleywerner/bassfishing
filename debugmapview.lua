@@ -34,7 +34,7 @@ WSAD keys moves around in render mode]]
 module.legend = {
   ["Land"] = {92, 64, 32},
   ["Water"] = {16, 16, 64},
-  ["Aquatic Plant"] = {16, 128, 32, 128},
+  ["Aquatic Plant"] = {0, 192, 0, 64},
   ["Tree"] = {32, 92, 32},
   ["Building"] = {192, 192, 64},
   ["Jetty"] = {128, 128, 128},

@@ -143,17 +143,16 @@ function module:generate(width, height, seed, density, iterations)
   -- fill in the gaps
   array2d:fillHoles(data.contour)
 
-  -- generate the water depth: a 2D boolean array where shallow is "true".
-  -- reduce evolution iterations to make it more "ragged".
-  -- (psst: it is a contour map with a higher density)
+  -- generate the water depth (values 0..1 where 1 is near the surface)
   data.depth = array2d:array(width, height)
   array2d:noise(data.depth, seed, density + 0.1)
   self:largeNoise(data.depth, seed, density + 0.2)
-  array2d:cellulate(data.depth, math.floor(iterations / 4))
+  array2d:cellulate(data.depth, iterations)
+  -- smooth out the water bed
+  array2d:average(data.depth)
 
   -- generate aquatic plants
-  -- reuse the depth map, the idea being plants grow in shallow waters.
-  -- we also number each island of plants to easier draw groups of same sprites.
+  -- number each island of plants to draw groups of the same sprite.
   data.plants = array2d:array(width, height)
   array2d:noise(data.plants, seed, density + 0.01)
   self:largeNoise(data.plants, seed, density + 0.05)
