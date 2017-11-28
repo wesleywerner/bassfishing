@@ -93,11 +93,15 @@ function module:render()
             love.graphics.draw(tiles.image, tiles.land, x*16, y*16)
         else
             -- draw open water tile
+            local depth = 192 + (lake.depth[x][y] * 63)
+            love.graphics.setColor(depth, depth, depth)
             love.graphics.draw(tiles.image, tiles.water.open, x*16, y*16)
             -- and any special corner tile
             local waterquad = getWaterCorner(lake.contour, x, y)
             love.graphics.draw(tiles.image, waterquad, x*16, y*16)
         end
+        
+        love.graphics.setColor(255, 255, 255)
 
         local plantid = lake.plants[x][y]
         if plantid > 0 then
