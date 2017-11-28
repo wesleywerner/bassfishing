@@ -50,8 +50,8 @@ end
 
 function module:update(dt)
     
-    if self.frames <= 1 then
-        self.frames = self.frames + dt * 0.01
+    if (self.x ~= self.targetX) or (self.y ~= self.targetY) then
+        self.frames = dt
         
         -- move the camera
         self.x = lerp(self.x, self.targetX, self.frames)
