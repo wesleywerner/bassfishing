@@ -54,7 +54,7 @@ function module:largeNoise(a, seed, density)
         -- wrap around
         local x = math.max(1, (blockx + offsetx) % width)
         local y = math.max(1, (blocky + offsety) % height)
-        a[x][y] = 1
+        a[x][y] = math.random()
 
       end
     end
@@ -148,13 +148,16 @@ function module:generate(width, height, seed, density, iterations)
   -- (psst: it is a contour map with a higher density)
   data.depth = array2d:array(width, height)
   array2d:noise(data.depth, seed, density + 0.1)
-  self:largeNoise(data.depth, seed, density - 0.1)
-  array2d:cellulate(data.depth, math.floor(iterations / 3))
+  self:largeNoise(data.depth, seed, density + 0.2)
+  array2d:cellulate(data.depth, math.floor(iterations / 4))
 
   -- generate aquatic plants
   -- reuse the depth map, the idea being plants grow in shallow waters.
   -- we also number each island of plants to easier draw groups of same sprites.
-  data.plants = array2d:copy(data.depth)
+  data.plants = array2d:array(width, height)
+  array2d:noise(data.plants, seed, density + 0.01)
+  self:largeNoise(data.plants, seed, density + 0.05)
+  array2d:cellulate(data.plants, math.floor(iterations / 6))
   array2d:clipExcludeContour(data.plants, data.contour)
   array2d:numberRegions(data.plants)
 

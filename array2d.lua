@@ -137,8 +137,10 @@ function module:countNeighbours(a, px, py)
 
   local width = #a
   local height = #a[1]
-
   local count = 0
+  local average = 0
+  
+  
   for ix=-1,1 do
     for iy=-1,1 do
       if ix == 0 and iy == 0 then
@@ -154,11 +156,12 @@ function module:countNeighbours(a, px, py)
         elseif a[nx][ny] > 0 then
           -- count if this neighbour is positive
           count = count + 1
+          average = average + a[nx][ny]
         end
       end
     end
   end
-  return count
+  return count, (average / count)
 
 end
 
@@ -187,14 +190,14 @@ function module:cellulate(a, iterations)
         -- copy the cell
         b[x][y] = a[x][y]
         -- count neighbours at this point
-        local neighbours = self:countNeighbours(a, x, y)
+        local neighbours, average = self:countNeighbours(a, x, y)
         -- alone cells die off without enough neighbours
         if alive and neighbours < deathLimit then
           -- the cell dies
           b[x][y] = 0
         elseif not alive and neighbours > birthLimit then
           -- a new cell is born
-          b[x][y] = 1
+          b[x][y] = average
         end
       end
     end

@@ -34,7 +34,7 @@ WSAD keys moves around in render mode]]
 module.legend = {
   ["Land"] = {92, 64, 32},
   ["Water"] = {16, 16, 64},
-  ["Aquatic Plant"] = {16, 40, 56},
+  ["Aquatic Plant"] = {16, 128, 32, 128},
   ["Tree"] = {32, 92, 32},
   ["Building"] = {192, 192, 64},
   ["Jetty"] = {128, 128, 128},
@@ -126,13 +126,15 @@ function module:draw()
         love.graphics.rectangle("fill", x, y, 1, 1)
       else
         -- draw lake depth
-        local shallow = glob.lake.depth[x][y] > 0
-        if shallow then
-          love.graphics.setColor(self.legend["Aquatic Plant"])
-        else
-          love.graphics.setColor(self.legend["Water"])
-        end
+        local depth = glob.lake.depth[x][y]
+        love.graphics.setColor(0, 0, 64 + (128*depth) )
         love.graphics.rectangle("fill", x, y, 1, 1)
+      end
+      
+      local plant = glob.lake.plants[x][y] > 0
+      if plant then
+        love.graphics.setColor(self.legend["Aquatic Plant"])
+        love.graphics.rectangle("fill", x, y, 1, 1)          
       end
 
       local tree = glob.lake.trees[x][y] > 0
