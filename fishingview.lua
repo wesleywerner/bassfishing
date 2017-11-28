@@ -23,10 +23,10 @@ local glob = require("globals")
 local genie = require("lakegenerator")
 local states = require("states")
 local player = require("player")
+local camera = require("camera")
 local maprender = require("maprender")
 
-local drawoffset = {x=0, y=0}
-local mapstep = 16 * 3
+local mapstep = 16 * 10
 
 function module:init()
 
@@ -47,26 +47,39 @@ function module:keypressed(key)
     elseif key == "f10" then
         states:push("debug map")
     elseif key == "w" then
-        drawoffset.y = math.min(0, drawoffset.y + mapstep)
+        camera:moveBy(0, mapstep)
     elseif key == "s" then
-        drawoffset.y = drawoffset.y - mapstep
+        camera:moveBy(0, -mapstep)
     elseif key == "a" then
-        drawoffset.x = math.min(0, drawoffset.x + mapstep)
+        camera:moveBy(mapstep, 0)
     elseif key == "d" then
-        drawoffset.x = drawoffset.x - mapstep
+        camera:moveBy(-mapstep, 0)
     end
 end
 
 function module:update(dt)
+    
+    player:update(dt)
+    camera:center(player.screenX, player.screenY)
+    camera:update(dt)
 
 end
 
 function module:draw()
-
+    
+    -- must render the map outside any transformations
     maprender:render()
+
+    camera:pose()
+
     love.graphics.setColor(255, 255, 255)
     --love.graphics.scale(2, 2)
-    love.graphics.draw(maprender.image, drawoffset.x, drawoffset.y)
+    love.graphics.draw(maprender.image)
+    
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.circle("fill", player.screenX + 8, player.screenY, 8)
+
+    camera:relax()
 
 end
 

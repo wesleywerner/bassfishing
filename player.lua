@@ -61,4 +61,17 @@ function module:launchBoat()
     
 end
 
+--- Updates the boat on-screen position
+function module:update(dt)
+    
+    self.screenGoalX = self.mapX * 16
+    self.screenGoalY = self.mapY * 16
+    
+    -- this value to be tweened
+    self.screenX = self.screenGoalX
+    self.screenY = self.screenGoalY
+    
+end
+
+
 return module
