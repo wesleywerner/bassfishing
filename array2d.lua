@@ -485,4 +485,32 @@ function module:findCoastline(a, seed, startTest, endTest)
 
 end
 
+--- Alter the value of each point to the average of all it's non-zero neighbours.
+function module:average(a)
+    
+    -- reference a copy to get results that are not affected by this function
+    local cp = self:copy(a)
+    local width, height = #a, #a[1]
+    
+    local function averageNeighbours(x, y)
+        local avg = 0
+        local directionsX = { 0, -1, 1,  0, 0,  -1, -1,  1, 1 }    -- self / left/right/top/bottom / topleft/topright/botleft/botright
+        local directionsY = { 0,  0, 0, -1, 1,  -1, 1,  -1, 1 }
+        for n=1, #directionsX do
+            local px = math.min(width, math.max(1, x + directionsX[n]) )
+            local py = math.min(height, math.max(1, y + directionsY[n]) )
+            avg = avg + cp[px][py]
+        end
+        return avg / #directionsX
+    end
+    
+    for x=1, width do
+      for y=1, height do
+        a[x][y] = averageNeighbours(x, y)
+      end
+    end    
+    
+end
+
+
 return module
