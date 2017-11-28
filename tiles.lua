@@ -20,6 +20,7 @@
 
 local tiles = {}
 
+tiles.size = 16
 tiles.image = love.graphics.newImage("res/newtiles.png")
 tiles.w, tiles.h = tiles.image:getDimensions()
 

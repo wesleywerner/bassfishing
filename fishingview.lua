@@ -25,9 +25,8 @@ local states = require("states")
 local player = require("player")
 local camera = require("camera")
 local maprender = require("maprender")
-
+local tiles = require("tiles")
 local scale = 2
-local mapstep = 16 * 10
 
 function module:init()
 
@@ -39,7 +38,7 @@ function module:init()
     
         player:launchBoat()
         
-        camera:worldSize(glob.lake.width * 16 * scale, glob.lake.height * 16 * scale)
+        camera:worldSize(glob.lake.width * tiles.size * scale, glob.lake.height * tiles.size * scale)
         camera:frame(100, 100, 300, 300)
     end
 
@@ -50,14 +49,6 @@ function module:keypressed(key)
         states:pop()
     elseif key == "f10" then
         states:push("debug map")
-    elseif key == "w" then
-        camera:moveBy(0, mapstep)
-    elseif key == "s" then
-        camera:moveBy(0, -mapstep)
-    elseif key == "a" then
-        camera:moveBy(mapstep, 0)
-    elseif key == "d" then
-        camera:moveBy(-mapstep, 0)
     elseif key == "left" then
         player.mapX = player.mapX - 1
     elseif key == "right" then
