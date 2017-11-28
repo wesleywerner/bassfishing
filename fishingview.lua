@@ -22,6 +22,7 @@ local module = {}
 local glob = require("globals")
 local genie = require("lakegenerator")
 local states = require("states")
+local player = require("player")
 local maprender = require("maprender")
 
 local drawoffset = {x=0, y=0}
@@ -34,6 +35,8 @@ function module:init()
         glob.lake = genie:generate(glob.defaultMapWidth,
         glob.defaultMapHeight, glob.defaultMapSeed,
         glob.defaultMapDensity, glob.defaultMapIterations)
+    
+        player:launchBoat()
     end
 
 end
