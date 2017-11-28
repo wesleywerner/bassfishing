@@ -30,10 +30,13 @@ local module = {
     y = 0,
     
     -- camera frame size and position
-    width = love.graphics.getWidth( ),
-    height = love.graphics.getHeight( ),
-    top = 0,
-    left = 0,
+    frameWidth = love.graphics.getWidth( ),
+    frameHeight = love.graphics.getHeight( ),
+    frameTop = 0,
+    frameLeft = 0,
+    
+    worldWidth = love.graphics.getWidth( ),
+    worldHeight = love.graphics.getHeight( ),
     
 }
 
@@ -59,19 +62,26 @@ function module:update(dt)
         self.y = math.min(0, self.y )
         
         -- clamp bottom right
-        --self.x = 
-        --self.y = 
+        self.x = math.max( - self.worldWidth + self.frameWidth, self.x )
+        self.y = math.max( - self.worldHeight + self.frameHeight, self.y )
         
     end
     
 end
 
+function module:worldSize(width, height)
+    
+    self.worldWidth = width
+    self.worldHeight = height
+    
+end
+
 function module:frame(left, top, width, height)
     
-    self.left = left
-    self.top = top
-    self.width = width
-    self.height = height
+    self.frameLeft = left
+    self.frameTop = top
+    self.frameWidth = width
+    self.frameHeight = height
     
 end
 
@@ -93,8 +103,8 @@ end
 
 function module:center(x, y)
    
-    local dx = - x + (self.width / 2)
-    local dy = - y + (self.height / 2)
+    local dx = - x + (self.frameWidth / 2)
+    local dy = - y + (self.frameHeight / 2)
     self:lookAt(dx, dy)
     
 end
@@ -102,7 +112,7 @@ end
 function module:pose()
     
     love.graphics.push()
-    love.graphics.translate(self.x + self.left, self.y + self.top)
+    love.graphics.translate(self.x + self.frameLeft, self.y + self.frameTop)
     
 end
 

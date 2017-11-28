@@ -26,6 +26,7 @@ local player = require("player")
 local camera = require("camera")
 local maprender = require("maprender")
 
+local scale = 2
 local mapstep = 16 * 10
 
 function module:init()
@@ -37,6 +38,8 @@ function module:init()
         glob.defaultMapDensity, glob.defaultMapIterations)
     
         player:launchBoat()
+        
+        camera:worldSize(glob.lake.width * 16 * scale, glob.lake.height * 16 * scale)
         camera:frame(100, 100, 300, 300)
     end
 
@@ -65,7 +68,7 @@ end
 function module:update(dt)
     
     player:update(dt)
-    camera:center(player.screenX, player.screenY)
+    camera:center(player.screenX * scale, player.screenY * scale)
     camera:update(dt)
 
 end
@@ -78,7 +81,7 @@ function module:draw()
     camera:pose()
 
     love.graphics.setColor(255, 255, 255)
-    --love.graphics.scale(2, 2)
+    love.graphics.scale(scale, scale)
     love.graphics.draw(maprender.image)
     
     love.graphics.setColor(255, 255, 255)
@@ -87,7 +90,7 @@ function module:draw()
     camera:relax()
     
     -- debug camera window
-    love.graphics.rectangle("line", camera.left, camera.top, camera.width, camera.height)
+    love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
 
 end
 
