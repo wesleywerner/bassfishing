@@ -20,14 +20,21 @@
 
 local module = {
     frames = 0,
+    
+    -- camera goal on screen
     targetX = 0,
     targetY = 0,
+    
+    -- camera actual on screen
     x = 0,
     y = 0,
+    
+    -- camera frame size and position
     width = love.graphics.getWidth( ),
     height = love.graphics.getHeight( ),
     top = 0,
-    left = 0
+    left = 0,
+    
 }
 
 local function clamp(x, min, max)
@@ -40,18 +47,29 @@ end
 
 function module:update(dt)
     
-    if self.frames < 1 then
-        self.frames = self.frames + dt / 3
+    if self.frames <= 1 then
+        self.frames = self.frames + dt * 0.01
+        
+        -- move the camera
         self.x = lerp(self.x, self.targetX, self.frames)
         self.y = lerp(self.y, self.targetY, self.frames)
+        
+        -- clamp top left
+        self.x = math.min(0, self.x )
+        self.y = math.min(0, self.y )
+        
+        -- clamp bottom right
+        --self.x = 
+        --self.y = 
+        
     end
     
 end
 
-function module:frame(top, left, width, height)
+function module:frame(left, top, width, height)
     
-    self.top = top
     self.left = left
+    self.top = top
     self.width = width
     self.height = height
     
@@ -69,16 +87,14 @@ end
 
 function module:moveBy(dx, dy)
    
-    self.frames = 0
-    self.targetX = self.targetX + dx
-    self.targetY = self.targetY + dy
+   self:lookAt(self.targetX + dx, self.targetY + dy)
     
 end
 
 function module:center(x, y)
    
-    local dx = - x + self.left + (self.width / 2)
-    local dy = - y + self.top + (self.height / 2)
+    local dx = - x + (self.width / 2)
+    local dy = - y + (self.height / 2)
     self:lookAt(dx, dy)
     
 end
@@ -86,7 +102,7 @@ end
 function module:pose()
     
     love.graphics.push()
-    love.graphics.translate(self.x, self.y)
+    love.graphics.translate(self.x + self.left, self.y + self.top)
     
 end
 

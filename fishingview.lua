@@ -37,6 +37,7 @@ function module:init()
         glob.defaultMapDensity, glob.defaultMapIterations)
     
         player:launchBoat()
+        camera:frame(100, 100, 300, 300)
     end
 
 end
@@ -54,6 +55,10 @@ function module:keypressed(key)
         camera:moveBy(mapstep, 0)
     elseif key == "d" then
         camera:moveBy(-mapstep, 0)
+    elseif key == "left" then
+        player.mapX = player.mapX - 1
+    elseif key == "right" then
+        player.mapX = player.mapX + 1
     end
 end
 
@@ -80,6 +85,9 @@ function module:draw()
     love.graphics.circle("fill", player.screenX + 8, player.screenY, 8)
 
     camera:relax()
+    
+    -- debug camera window
+    love.graphics.rectangle("line", camera.left, camera.top, camera.width, camera.height)
 
 end
 
