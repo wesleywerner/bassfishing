@@ -84,21 +84,24 @@ function module:render()
 
     for x=1, lake.width do
     for y=1, lake.height do
+        
+        local drawx = (x-1) * 16
+        local drawy = (y-1) * 16
 
         local ground = lake.contour[x][y] > 0
 
         love.graphics.setColor(255, 255, 255)
 
         if ground then
-            love.graphics.draw(tiles.image, tiles.land, x*16, y*16)
+            love.graphics.draw(tiles.image, tiles.land, drawx, drawy)
         else
             -- draw open water tile
             local depth = 192 + (lake.depth[x][y] * 63)
             love.graphics.setColor(depth, depth, depth)
-            love.graphics.draw(tiles.image, tiles.water.open, x*16, y*16)
+            love.graphics.draw(tiles.image, tiles.water.open, drawx, drawy)
             -- and any special corner tile
             local waterquad = getWaterCorner(lake.contour, x, y)
-            love.graphics.draw(tiles.image, waterquad, x*16, y*16)
+            love.graphics.draw(tiles.image, waterquad, drawx, drawy)
         end
         
         love.graphics.setColor(255, 255, 255)
@@ -106,19 +109,19 @@ function module:render()
         local plantid = lake.plants[x][y]
         if plantid > 0 then
             local plantidx = math.max(1, plantid % #tiles.plants)
-            love.graphics.draw(tiles.image, tiles.plants[plantidx], x*16, y*16)
+            love.graphics.draw(tiles.image, tiles.plants[plantidx], drawx, drawy)
         end
 
         local treeid = lake.trees[x][y]
         if treeid > 0 then
             local treeidx = math.max(1, treeid % #tiles.trees)
-            love.graphics.draw(tiles.image, tiles.trees[treeidx], x*16, y*16)
+            love.graphics.draw(tiles.image, tiles.trees[treeidx], drawx, drawy)
         end
 
         local house = lake.buildings[x][y] > 0
         if house then
             local id = math.random(1, #tiles.buildings)
-            love.graphics.draw(tiles.image, tiles.buildings[id], x*16, y*16)
+            love.graphics.draw(tiles.image, tiles.buildings[id], drawx, drawy)
         end
 
     end
@@ -127,9 +130,9 @@ function module:render()
     -- Draw jetties
     for _, jetty in ipairs(lake.jetties) do
         if jetty.horizontal then
-            love.graphics.draw(tiles.image, tiles.jetties.horizontal, jetty.x*16, jetty.y*16)
+            love.graphics.draw(tiles.image, tiles.jetties.horizontal, jetty.drawx, jetty.drawy)
         else
-            love.graphics.draw(tiles.image, tiles.jetties.vertical, jetty.x*16, jetty.y*16)
+            love.graphics.draw(tiles.image, tiles.jetties.vertical, jetty.drawx, jetty.drawy)
         end
     end
 
@@ -137,13 +140,13 @@ function module:render()
     for _, obs in ipairs(lake.obstacles) do
         if obs.log then
             local id = math.random(1, #tiles.obstacles.logs)
-            love.graphics.draw(tiles.image, tiles.obstacles.logs[id], obs.x*16, obs.y*16)
+            love.graphics.draw(tiles.image, tiles.obstacles.logs[id], obs.drawx, obs.drawy)
         elseif obs.rock then
             local id = math.random(1, #tiles.obstacles.rocks)
-            love.graphics.draw(tiles.image, tiles.obstacles.rocks[id], obs.x*16, obs.y*16)
+            love.graphics.draw(tiles.image, tiles.obstacles.rocks[id], obs.drawx, obs.drawy)
         elseif obs.boat then
             local id = math.random(1, #tiles.boats)
-            love.graphics.draw(tiles.image, tiles.boats[id], obs.x*16, obs.y*16)
+            love.graphics.draw(tiles.image, tiles.boats[id], obs.drawx, obs.drawy)
         end
     end
 
