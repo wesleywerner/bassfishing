@@ -70,8 +70,8 @@ end
 function module:update(dt)
     
     -- the screen position goal
-    self.screenGoalX = self.mapX * 16
-    self.screenGoalY = self.mapY * 16
+    self.screenGoalX = (self.mapX -1) * 16
+    self.screenGoalY = (self.mapY -1) * 16
     
     -- the player starts in-place if the screen position is empty
     if not self.screenX or not self.screenY then
