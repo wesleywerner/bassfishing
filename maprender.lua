@@ -72,19 +72,18 @@ function module:render()
         return true
     end
 
-    local tilesize = 16
     local lake = glob.lake
 
     self.image = nil
-    self.image = love.graphics.newCanvas( (lake.width+1)*tilesize, (lake.height+1)*tilesize )
+    self.image = love.graphics.newCanvas( (lake.width+1) * tiles.size, (lake.height+1) * tiles.size )
 
     love.graphics.setCanvas(self.image)
 
     for x=1, lake.width do
     for y=1, lake.height do
         
-        local drawx = (x-1) * 16
-        local drawy = (y-1) * 16
+        local drawx = (x-1) * tiles.size
+        local drawy = (y-1) * tiles.size
 
         local ground = lake.contour[x][y] > 0
 
@@ -130,24 +129,28 @@ function module:render()
 
     -- Draw jetties
     for _, jetty in ipairs(lake.jetties) do
+        local drawx = (jetty.x-1) * tiles.size
+        local drawy = (jetty.y-1) * tiles.size
         if jetty.horizontal then
-            love.graphics.draw(tiles.image, tiles.jetties.horizontal, jetty.drawx, jetty.drawy)
+            love.graphics.draw(tiles.image, tiles.jetties.horizontal, drawx, drawy)
         else
-            love.graphics.draw(tiles.image, tiles.jetties.vertical, jetty.drawx, jetty.drawy)
+            love.graphics.draw(tiles.image, tiles.jetties.vertical, drawx, drawy)
         end
     end
 
     -- Draw obstacles
     for _, obs in ipairs(lake.obstacles) do
+        local drawx = (obs.x-1) * tiles.size
+        local drawy = (obs.y-1) * tiles.size
         if obs.log then
             local id = math.random(1, #tiles.obstacles.logs)
-            love.graphics.draw(tiles.image, tiles.obstacles.logs[id], obs.drawx, obs.drawy)
+            love.graphics.draw(tiles.image, tiles.obstacles.logs[id], drawx, drawy)
         elseif obs.rock then
             local id = math.random(1, #tiles.obstacles.rocks)
-            love.graphics.draw(tiles.image, tiles.obstacles.rocks[id], obs.drawx, obs.drawy)
+            love.graphics.draw(tiles.image, tiles.obstacles.rocks[id], drawx, drawy)
         elseif obs.boat then
             local id = math.random(1, #tiles.boats)
-            love.graphics.draw(tiles.image, tiles.boats[id], obs.drawx, obs.drawy)
+            love.graphics.draw(tiles.image, tiles.boats[id], drawx, drawy)
         end
     end
 
