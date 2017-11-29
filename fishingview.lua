@@ -41,6 +41,8 @@ function module:init()
         camera:worldSize(glob.lake.width * tiles.size * scale, glob.lake.height * tiles.size * scale)
         camera:frame(10, 10, love.graphics.getWidth( ) - 200, love.graphics.getHeight( ) - 20)
     end
+    
+    love.graphics.setFont( love.graphics.newFont( 20 ) )
 
 end
 

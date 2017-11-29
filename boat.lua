@@ -30,12 +30,15 @@ local module = {
     angleFrame = 0,
     -- the boat is stuck after hitting the shore or an obstacle. we can only reverse out.
     stuck = false,
+    -- a timer that counts down until we show the crunch screen
+    crunchTimer = 0,
 }
 
 local glob = require("globals")
 local array2d = require("array2d")
 local lume = require("lume")
 local genie = require("lakegenerator")
+local states = require("states")
 
 --- Find a jetty as the launch zone
 function module:launchBoat()
@@ -107,6 +110,18 @@ function module:update(dt)
     -- lerp the boat angle
     self.angleFrame = self.angleFrame + dt * 2
     self.angle = lume.lerp(self.angleFrom, self.angleTo, self.angleFrame)
+    
+    -- show a crunch screen
+    if self.stuck and self.crunchTimer > 0 then
+        -- but only when the boat is near it's goal on screen (compensates for movement lerping)
+        if lume.distance(self.screenX, self.screenY, self.screenGoalX, self.screenGoalY) < 1 then
+            self.crunchTimer = self.crunchTimer - dt
+            if self.crunchTimer < 0 then
+                states:push("crunch", {whatdidyouhit="foo"})
+            end
+        end
+    end
+    
     
 end
 
@@ -188,6 +203,8 @@ function module:move(dir)
     elseif obstructed.land then
         -- prevent moving onto land
         self.stuck = true
+        -- set a timer to show a crunch screen
+        self.crunchTimer = 0.1
     elseif obstructed then
         -- allow moving onto other obstructions, except when we are already stuck
         if not self.stuck then
@@ -195,7 +212,10 @@ function module:move(dir)
             self.mapY = newMapY
         end
         self.stuck = true
+        -- set a timer to show a crunch screen
+        self.crunchTimer = 0.4
     end
+    
 
 end
 
