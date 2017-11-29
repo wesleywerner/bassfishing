@@ -22,7 +22,7 @@ local module = {}
 local glob = require("globals")
 local genie = require("lakegenerator")
 local states = require("states")
-local player = require("player")
+local boat = require("boat")
 local camera = require("camera")
 local maprender = require("maprender")
 local tiles = require("tiles")
@@ -36,7 +36,7 @@ function module:init()
         glob.defaultMapHeight, glob.defaultMapSeed,
         glob.defaultMapDensity, glob.defaultMapIterations)
     
-        player:launchBoat()
+        boat:launchBoat()
         
         camera:worldSize(glob.lake.width * tiles.size * scale, glob.lake.height * tiles.size * scale)
         camera:frame(10, 10, love.graphics.getWidth( ) - 200, love.graphics.getHeight( ) - 20)
@@ -50,20 +50,20 @@ function module:keypressed(key)
     elseif key == "f10" then
         states:push("debug map")
     elseif key == "left" or key == "kp4" then
-        player:left()
+        boat:left()
     elseif key == "right" or key == "kp6" then
-        player:right()
+        boat:right()
     elseif key == "up" or key == "kp8" then
-        player:forward()
+        boat:forward()
     elseif key == "down" or key == "kp2" then
-        player:reverse()
+        boat:reverse()
     end
 end
 
 function module:update(dt)
     
-    player:update(dt)
-    camera:center(player.screenX * scale, player.screenY * scale)
+    boat:update(dt)
+    camera:center(boat.screenX * scale, boat.screenY * scale)
     camera:update(dt)
 
 end
@@ -80,8 +80,7 @@ function module:draw()
     love.graphics.draw(maprender.image)
     
     love.graphics.setColor(255, 255, 255)
-    --love.graphics.circle("fill", player.screenX + 8, player.screenY + 8, 8)
-    love.graphics.draw(tiles.image, tiles.boats[2], player.screenX + 8, player.screenY + 8, math.rad(player.angle), 1, 1, 8, 8 )
+    love.graphics.draw(tiles.image, tiles.boats[2], boat.screenX + 8, boat.screenY + 8, math.rad(boat.angle), 1, 1, 8, 8 )
 
     camera:relax()
     
