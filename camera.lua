@@ -45,11 +45,11 @@ local lume = require("lume")
 function module:update(dt)
     
     if (self.x ~= self.targetX) or (self.y ~= self.targetY) then
-        self.frames = dt
+        self.frames = self.frames + dt
         
         -- move the camera
-        self.x = lume.lerp(self.x, self.targetX, self.frames)
-        self.y = lume.lerp(self.y, self.targetY, self.frames)
+        self.x = lume.lerp(self.fromX, self.targetX, self.frames)
+        self.y = lume.lerp(self.fromY, self.targetY, self.frames)
         
         -- clamp to the world
         self.x = lume.clamp(self.x, - self.worldWidth + self.frameWidth, 0 )
@@ -77,8 +77,11 @@ end
 
 function module:lookAt(x, y)
     
+    --print("looking at",x,y,self.targetX,self.targetY, self.frames)
     if self.targetX ~= x or self.targetY ~= y then
         self.frames = 0
+        self.fromX = self.x
+        self.fromY = self.y
         self.targetX = x
         self.targetY = y
     end
