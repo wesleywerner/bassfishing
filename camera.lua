@@ -40,13 +40,7 @@ local module = {
     
 }
 
-local function clamp(x, min, max)
-  return x < min and min or (x > max and max or x)
-end
-
-local function lerp(a, b, amount)
-  return a + (b - a) * clamp(amount, 0, 1)
-end
+local lume = require("lume")
 
 function module:update(dt)
     
@@ -54,16 +48,12 @@ function module:update(dt)
         self.frames = dt
         
         -- move the camera
-        self.x = lerp(self.x, self.targetX, self.frames)
-        self.y = lerp(self.y, self.targetY, self.frames)
+        self.x = lume.lerp(self.x, self.targetX, self.frames)
+        self.y = lume.lerp(self.y, self.targetY, self.frames)
         
-        -- clamp top left
-        self.x = math.min(0, self.x )
-        self.y = math.min(0, self.y )
-        
-        -- clamp bottom right
-        self.x = math.max( - self.worldWidth + self.frameWidth, self.x )
-        self.y = math.max( - self.worldHeight + self.frameHeight, self.y )
+        -- clamp to the world
+        self.x = lume.clamp(self.x, - self.worldWidth + self.frameWidth, 0 )
+        self.y = lume.clamp(self.y, - self.worldHeight + self.frameHeight, 0 )
         
     end
     
