@@ -132,7 +132,7 @@ function module:update(dt)
                 template = string.format(messages["jetty collision"], timelost)
             end
             
-            states:push("crunch", { title="CRUNCH!!!!", message=template, shake=true } )
+            states:push("message", { title="CRUNCH!!!!", message=template, shake=true } )
             
             -- auto reverse out of the pickle
             self.mapX = self.previousMapX

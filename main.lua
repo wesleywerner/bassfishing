@@ -24,7 +24,7 @@ function love.load()
 
     love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
     states:add("fishing", require("fishingview"))
-    states:add("crunch", require("crunchview"))
+    states:add("message", require("messageview"))
     states:add("debug map", require("debugmapview"))
 
 end
