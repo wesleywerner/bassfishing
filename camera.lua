@@ -116,11 +116,13 @@ function module:pose()
     
     love.graphics.push()
     love.graphics.translate(self.x + self.frameLeft, self.y + self.frameTop)
+    love.graphics.setScissor( self.frameLeft, self.frameTop, self.frameWidth, self.frameHeight )
     
 end
 
 function module:relax()
     
+    love.graphics.setScissor()
     love.graphics.pop()
     
 end
