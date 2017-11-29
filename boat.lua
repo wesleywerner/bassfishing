@@ -153,6 +153,13 @@ function module:move(dir)
     -- 0        BOAT    180
     -- 315      270     225
     
+    -- prevent movement while stuck until the crunch screen has shown.
+    -- this also prevents a boat zooming over obstacles without crunching into them
+    -- since moving into open water while stuck is a valid move.
+    if self.stuck and self.crunchTimer > 0 then
+        return
+    end
+    
     local direction = self.angleTo % 360
     
     -- store new positions temporarily
