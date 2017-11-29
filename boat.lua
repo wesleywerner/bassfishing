@@ -116,22 +116,23 @@ function module:update(dt)
         if lume.distance(self.screenX, self.screenY, self.screenGoalX, self.screenGoalY) < 8 then
             
             -- customize the obstruction message
-            local message = ""
+            local timelost = math.random(4, 10)
+            local template = ""
             if self.stuck.building then
-                message = messages["building collision"]
+                template = string.format(messages["building collision"], timelost)
             elseif self.stuck.land then
-                message = messages["land collision"]
+                template = string.format(messages["land collision"], timelost)
             elseif self.stuck.rock then
-                message = messages["rock collision"]
+                template = string.format(messages["severe rock collision"], timelost)
             elseif self.stuck.log then
-                message = messages["log collision"]
+                template = string.format(messages["log collision"], timelost)
             elseif self.stuck.boat then
-                message = messages["boat collision"]
+                template = string.format(messages["boat collision"], timelost)
             elseif self.stuck.jetty then
-                message = messages["jetty collision"]
+                template = string.format(messages["jetty collision"], timelost)
             end
             
-            states:push("crunch", { message=message } )
+            states:push("crunch", { title="CRUNCH!!!!", message=template, shake=true } )
             
             -- auto reverse out of the pickle
             self.mapX = self.previousMapX

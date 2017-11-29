@@ -20,21 +20,21 @@
 
 local module = {}
 
-module["building collision"] = "You have run aground! A home owner sitting on their porch eyes you suspiciously."
+module["building collision"] = "You have run aground! The accident costs you %d minutes. A home owner sitting on their porch eyes you suspiciously."
 
-module["land collision"] = "You have run aground!"
+module["land collision"] = "You have run aground! The accident costs you %d minutes."
 
-module["boat collision"] = "You have run into another boat! You lose 10 minutes while you pay the owner $50 for the damage."
+module["boat collision"] = "You have run into another boat! You lose %d minutes while you pay the owner $50 for the damage."
 
-module["rock collision"] = "You have hit some rocks! You are relieved there is no damage but lost 10 minutes checking your hull."
+module["rock collision"] = "You have hit some rocks! You are relieved there is no damage but lost %d minutes checking your hull."
 
-module["severe rock collision"] = "You have hit some rocks! You waste 30 minutes of fishing time doing a hasty repair job. It will cost $100 to fix it right later."
+module["severe rock collision"] = "You have hit some rocks! You waste %d minutes of fishing time doing a hasty repair job. It will cost $100 to fix it right later."
 
-module["jetty collision"] = "You have hit a boat dock! The owner is irate. It costs you $75 and you lose 10 minutes arguing over the damages."
+module["jetty collision"] = "You have hit a boat dock! The owner is irate. It costs you $75 and you lose %d minutes arguing over the damages."
 
-module["log collision"] = "You have struck a log! You lose 5 minutes extracting your boat."
+module["log collision"] = "You have struck a log! You lose %d minutes extracting your boat."
 
-module["sign collision"] = "You have run into a floating sign that reads NO WAKE. Aside from a scratch or two you lose 5 minutes."
+module["sign collision"] = "You have run into a floating sign that reads NO WAKE. Aside from a scratch or two you lose %d minutes."
 
 -- on some rocks: You waste 30 minutes of fishing time doing a hasty repair job. It will cost $100 to fix it right later.
 
