@@ -60,8 +60,6 @@ local function getWaterCorner(a, x, y)
         return tiles.water.top
     elseif bottom then
         return tiles.water.bottom
-    else
-        return tiles.water.open
     end
 
 end
@@ -101,7 +99,10 @@ function module:render()
             love.graphics.draw(tiles.image, tiles.water.open, drawx, drawy)
             -- and any special corner tile
             local waterquad = getWaterCorner(lake.contour, x, y)
-            love.graphics.draw(tiles.image, waterquad, drawx, drawy)
+            if waterquad then
+                love.graphics.setColor(255, 255, 255)
+                love.graphics.draw(tiles.image, waterquad, drawx, drawy)
+            end
         end
         
         love.graphics.setColor(255, 255, 255)
