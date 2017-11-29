@@ -51,11 +51,11 @@ function module:get()
         error("Cannot get anything from an empty state stack. Try pushing something on the state first.")
     end
 
-    return self.stack[#self.stack].object
+    return self.stack[#self.stack]
 
 end
 
-function module:push(name)
+function module:push(name, data)
 
     if not self.list[name] then
         error(string.format("Cannot push an unknown state: %q", name))
@@ -67,7 +67,7 @@ function module:push(name)
         return
     end
 
-    table.insert(self.stack, { name=name, object=self.list[name] })
+    table.insert(self.stack, { name=name, object=self.list[name], data=data })
     self:initCurrent()
 
 end
@@ -90,7 +90,8 @@ end
 function module:initCurrent()
 
     if #self.stack > 0 then
-        self:get():init()
+        local item = self:get()
+        item.object:init(item.data)
     end
 
 end
@@ -99,15 +100,15 @@ end
 
 -- hook into love events
 function module:update(dt)
-    self:get():update(dt)
+    self:get().object:update(dt)
 end
 
 function module:keypressed(key)
-    self:get():keypressed(key)
+    self:get().object:keypressed(key)
 end
 
 function module:draw()
-    self:get():draw()
+    self:get().object:draw()
 end
 
 return module
