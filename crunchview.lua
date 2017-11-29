@@ -25,22 +25,51 @@ local lume = require("lume")
 
 function module:init(data)
     
-    -- expect data to contain info on what we crunched
-    self.message = data.message
+    -- expect data to contain "title", "message" and optionally "shake bool".
 
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
-    self.shaking = 60
+    self.fade = 0
+    self.shaking = data.shake and 60 or 0
+        
+    -- predraw the messages on a canvas
     self.width = love.graphics.getWidth()
+    self.height = love.graphics.getHeight()
+    self.canvas = love.graphics.newCanvas( )
+    love.graphics.setCanvas( self.canvas )
     
-    love.graphics.setFont( love.graphics.newFont( 60 ) )
+    local frameLeft = self.width * 0.1
+    local frameTop = self.height * 0.2
+    local frameWidth = self.width * 0.8
+    local frameHeight = self.height * 0.4
+    
+    -- draw a frame
+    love.graphics.setColor(0, 0, 0, 164)
+    love.graphics.rectangle("fill", frameLeft, frameTop, frameWidth, frameHeight )
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.rectangle("line", frameLeft, frameTop, frameWidth, frameHeight )
+    
+    -- print title
+    if data.title then
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.setFont( love.graphics.newFont( 60 ) )
+        love.graphics.printf(data.title, frameLeft, frameTop + 30, frameWidth, "center")
+    end
+    
+    if data.message then
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.setFont( love.graphics.newFont( 20 ) )
+        love.graphics.printf(data.message, frameLeft, frameTop + 130, frameWidth, "center")
+    end
+    
+    love.graphics.setCanvas()
 
 end
 
 function module:keypressed(key)
     
-    if self.shaking < 1 then
+    if self.shaking < 1 or self.fade > 250 then
         states:pop()
     end
     
@@ -48,6 +77,10 @@ end
 
 function module:update(dt)
 
+    if self.shaking < 1 then
+        self.fade = math.min(255, self.fade + 10)
+    end
+    
     self.shaking = lume.lerp(self.shaking, 0, 7*dt)
 
 end
@@ -61,11 +94,11 @@ function module:draw()
     end
     
     -- underlay screenshot
-    love.graphics.draw(self.screenshot)
-
     love.graphics.setColor(255, 255, 255)
-    love.graphics.printf("CRUNCH!!!!", 0, 0, self.width, "center")
-    love.graphics.printf(self.message, 0, 100, self.width, "center")
+    love.graphics.draw(self.screenshot)
+    
+    love.graphics.setColor(255, 255, 255, self.fade)
+    love.graphics.draw(self.canvas)
     
     love.graphics.pop()
 
