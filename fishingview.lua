@@ -39,7 +39,7 @@ function module:init()
         player:launchBoat()
         
         camera:worldSize(glob.lake.width * tiles.size * scale, glob.lake.height * tiles.size * scale)
-        camera:frame(100, 100, 300, 300)
+        camera:frame(10, 10, love.graphics.getWidth( ) - 200, love.graphics.getHeight( ) - 20)
     end
 
 end
