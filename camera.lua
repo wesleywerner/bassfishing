@@ -92,8 +92,9 @@ function module:lookAt(x, y)
         -- the time taken to move the camera is a function of distance over the smallest world side.
         -- this means smaller movements happen slower.
         local dist = lume.distance(self.x, self.y, x, y, false) / math.min( self.worldHeight, self.worldWidth )
+        dist = math.exp(dist)
         -- limit the time to sane values
-        self.time = lume.clamp(dist, 0.5, 3)
+        self.time = lume.clamp(dist, 0.5, 6)
     end
     
 end
