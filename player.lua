@@ -61,6 +61,9 @@ function module:launchBoat()
         end
     end
     
+    -- clear the boat screen position so it can be launched at the correct place
+    self.screenX = nil
+    self.screenY = nil
 end
 
 --- Updates the boat on-screen position
@@ -71,7 +74,6 @@ function module:update(dt)
     self.screenGoalY = self.mapY * 16
     
     -- the player starts in-place if the screen position is empty
-    -- TODO: if switching maps gives the superman effect, either set screenX/Y to nil
     if not self.screenX or not self.screenY then
         self.screenX = self.screenGoalX
         self.screenY = self.screenGoalY
