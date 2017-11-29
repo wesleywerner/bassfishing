@@ -56,10 +56,6 @@ function module:update(dt)
         self.x = lume.lerp(self.fromX, self.targetX, self.frames)
         self.y = lume.lerp(self.fromY, self.targetY, self.frames)
         
-        -- clamp to the world
-        self.x = lume.clamp(self.x, - self.worldWidth + self.frameWidth, 0 )
-        self.y = lume.clamp(self.y, - self.worldHeight + self.frameHeight, 0 )
-        
     end
     
 end
@@ -87,8 +83,11 @@ function module:lookAt(x, y)
         self.frames = 0
         self.fromX = self.x
         self.fromY = self.y
-        self.targetX = x
-        self.targetY = y
+        
+        -- clamp to the world
+        self.targetX = lume.clamp(x, - self.worldWidth + self.frameWidth, 0 )
+        self.targetY = lume.clamp(y, - self.worldHeight + self.frameHeight, 0 )
+        
         -- the time taken to move the camera is a function of distance over the smallest world side.
         -- this means smaller movements happen slower.
         local dist = lume.distance(self.x, self.y, x, y, false) / math.min( self.worldHeight, self.worldWidth )
