@@ -19,7 +19,12 @@
 ]]--
 
 local module = {
+    
+    -- a value 0..1 indicating progress of the camera start..end position
     frames = 0,
+    
+    -- the time in seconds the movement should take
+    time = 1,
     
     -- camera goal on screen
     targetX = 0,
@@ -45,7 +50,7 @@ local lume = require("lume")
 function module:update(dt)
     
     if (self.x ~= self.targetX) or (self.y ~= self.targetY) then
-        self.frames = self.frames + dt
+        self.frames = self.frames + (dt / self.time)
         
         -- move the camera
         self.x = lume.lerp(self.fromX, self.targetX, self.frames)
@@ -77,13 +82,18 @@ end
 
 function module:lookAt(x, y)
     
-    --print("looking at",x,y,self.targetX,self.targetY, self.frames)
+    -- we only update the movement if the target is new
     if self.targetX ~= x or self.targetY ~= y then
         self.frames = 0
         self.fromX = self.x
         self.fromY = self.y
         self.targetX = x
         self.targetY = y
+        -- the time taken to move the camera is a function of distance over the smallest world side.
+        -- this means smaller movements happen slower.
+        local dist = lume.distance(self.x, self.y, x, y, false) / math.min( self.worldHeight, self.worldWidth )
+        -- limit the time to sane values
+        self.time = lume.clamp(dist, 0.5, 3)
     end
     
 end
