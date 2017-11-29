@@ -121,35 +121,6 @@ function module:createObstacles(a, seed)
 
 end
 
---- Returns an obstacle at a map position.
--- Includes jetties and land.
-function module:getObstacle(lake, x, y)
-    
-    for _, obstacle in ipairs(lake.obstacles) do
-        if obstacle.x == x and obstacle.y == y then
-            return obstacle
-        end
-    end
-    
-    -- include jetties
-    for _, jetty in ipairs(lake.jetties) do
-        if jetty.x == x and jetty.y == y then
-            return jetty
-        end
-    end
-    
-    -- include land
-    if lake.contour[x][y] > 0 then
-        return {
-            x=x,
-            y=y,
-            land=true
-        }
-    end
-    
-end
-
-
 --- Return a new generated map
 function module:generate(width, height, seed, density, iterations)
 

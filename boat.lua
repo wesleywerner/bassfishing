@@ -30,8 +30,8 @@ local module = {
     angleFrame = 0,
     -- the boat is stuck after hitting the shore or an obstacle. we can only reverse out.
     stuck = false,
-    -- a timer that counts down until we show the crunch screen
-    crunchTimer = 0,
+    -- show the crunch screen when most convenient (practically this is when the boat has caught up to it's target position)
+    showCrunch = 0,
 }
 
 local glob = require("globals")
@@ -112,13 +112,11 @@ function module:update(dt)
     self.angle = lume.lerp(self.angleFrom, self.angleTo, self.angleFrame)
     
     -- show a crunch screen
-    if self.stuck and self.crunchTimer > 0 then
+    if self.showCrunch then
         -- but only when the boat is near it's goal on screen (compensates for movement lerping)
-        if lume.distance(self.screenX, self.screenY, self.screenGoalX, self.screenGoalY) < 1 then
-            self.crunchTimer = self.crunchTimer - dt
-            if self.crunchTimer < 0 then
-                states:push("crunch", {whatdidyouhit="foo"})
-            end
+        if lume.distance(self.screenX, self.screenY, self.screenGoalX, self.screenGoalY) < 8 then
+            self.showCrunch = false
+            states:push("crunch", {whatdidyouhit="foo"})
         end
     end
     
@@ -156,7 +154,7 @@ function module:move(dir)
     -- prevent movement while stuck until the crunch screen has shown.
     -- this also prevents a boat zooming over obstacles without crunching into them
     -- since moving into open water while stuck is a valid move.
-    if self.stuck and self.crunchTimer > 0 then
+    if self.stuck and self.showCrunch then
         return
     end
     
@@ -201,7 +199,7 @@ function module:move(dir)
     end
     
     -- get any obstacle at the new position
-    local obstructed = genie:getObstacle(glob.lake, newMapX, newMapY)
+    local obstructed = self:getObstacle(glob.lake, newMapX, newMapY)
     
     if not obstructed then
         self.mapX = newMapX
@@ -210,8 +208,7 @@ function module:move(dir)
     elseif obstructed.land then
         -- prevent moving onto land
         self.stuck = true
-        -- set a timer to show a crunch screen
-        self.crunchTimer = 0.1
+        self.showCrunch = true
     elseif obstructed then
         -- allow moving onto other obstructions, except when we are already stuck
         if not self.stuck then
@@ -219,8 +216,7 @@ function module:move(dir)
             self.mapY = newMapY
         end
         self.stuck = true
-        -- set a timer to show a crunch screen
-        self.crunchTimer = 0.4
+        self.showCrunch = true
     end
     
 
@@ -236,7 +232,32 @@ function module:reverse()
     self:move(-1)
 end
 
-
+--- Returns an obstacle at a map position including jetties and land.
+function module:getObstacle(lake, x, y)
+    
+    for _, obstacle in ipairs(lake.obstacles) do
+        if obstacle.x == x and obstacle.y == y then
+            return obstacle
+        end
+    end
+    
+    -- include jetties
+    for _, jetty in ipairs(lake.jetties) do
+        if jetty.x == x and jetty.y == y then
+            return jetty
+        end
+    end
+    
+    -- include land
+    if lake.contour[x][y] > 0 then
+        return {
+            x=x,
+            y=y,
+            land=true
+        }
+    end
+    
+end
 
 
 return module
