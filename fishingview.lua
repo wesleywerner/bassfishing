@@ -92,7 +92,7 @@ function module:draw()
     love.graphics.draw(maprender.image)
     
     love.graphics.setColor(255, 255, 255)
-    love.graphics.circle("fill", player.screenX + 8, player.screenY, 8)
+    love.graphics.circle("fill", player.screenX + 8, player.screenY + 8, 8)
 
     camera:relax()
     

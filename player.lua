@@ -21,6 +21,8 @@
 local module = {}
 local glob = require("globals")
 local array2d = require("array2d")
+local lume = require("lume")
+
 
 --- Find a jetty as the launch zone
 function module:launchBoat()
@@ -64,12 +66,28 @@ end
 --- Updates the boat on-screen position
 function module:update(dt)
     
+    -- the screen position goal
     self.screenGoalX = self.mapX * 16
     self.screenGoalY = self.mapY * 16
     
+    -- the player starts in-place if the screen position is empty
+    -- TODO: if switching maps gives the superman effect, either set screenX/Y to nil
+    if not self.screenX or not self.screenY then
+        self.screenX = self.screenGoalX
+        self.screenY = self.screenGoalY
+    end
+        
+    -- remember the old position, and reset the movement counter when this changes
+    if self.fromScreenX ~= self.screenGoalX or self.fromScreenY ~= self.screenGoalY then
+        self.fromScreenX = self.screenX
+        self.fromScreenY = self.screenY
+        self.frame = 0
+    end
+    
     -- this value to be tweened
-    self.screenX = self.screenGoalX
-    self.screenY = self.screenGoalY
+    self.frame = self.frame + dt * 4
+    self.screenX = lume.lerp(self.fromScreenX, self.screenGoalX, self.frame)
+    self.screenY = lume.lerp(self.fromScreenY, self.screenGoalY, self.frame)
     
 end
 
