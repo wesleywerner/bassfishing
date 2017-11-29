@@ -50,25 +50,13 @@ function module:keypressed(key)
     elseif key == "f10" then
         states:push("debug map")
     elseif key == "left" or key == "kp4" then
-        player.mapX = player.mapX - 1
+        player:left()
     elseif key == "right" or key == "kp6" then
-        player.mapX = player.mapX + 1
+        player:right()
     elseif key == "up" or key == "kp8" then
-        player.mapY = player.mapY - 1
+        player:forward()
     elseif key == "down" or key == "kp2" then
-        player.mapY = player.mapY + 1
-    elseif key == "kp7" then
-        player.mapX = player.mapX - 1
-        player.mapY = player.mapY - 1
-    elseif key == "kp9" then
-        player.mapX = player.mapX + 1
-        player.mapY = player.mapY - 1
-    elseif key == "kp1" then
-        player.mapX = player.mapX - 1
-        player.mapY = player.mapY + 1
-    elseif key == "kp3" then
-        player.mapX = player.mapX + 1
-        player.mapY = player.mapY + 1
+        player:reverse()
     end
 end
 
@@ -92,7 +80,8 @@ function module:draw()
     love.graphics.draw(maprender.image)
     
     love.graphics.setColor(255, 255, 255)
-    love.graphics.circle("fill", player.screenX + 8, player.screenY + 8, 8)
+    --love.graphics.circle("fill", player.screenX + 8, player.screenY + 8, 8)
+    love.graphics.draw(tiles.image, tiles.boats[2], player.screenX + 8, player.screenY + 8, math.rad(player.angle), 1, 1, 8, 8 )
 
     camera:relax()
     

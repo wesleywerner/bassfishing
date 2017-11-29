@@ -18,7 +18,18 @@
 
 ]]--
 
-local module = {}
+local module = {
+    
+    -- current boat angle
+    angle = 0,
+    -- lerp the angle from this
+    angleFrom = 0,
+    -- lerp the angle to this
+    angleTo = 0,
+    -- lerp progress
+    angleFrame = 0
+}
+
 local glob = require("globals")
 local array2d = require("array2d")
 local lume = require("lume")
@@ -86,12 +97,89 @@ function module:update(dt)
         self.frame = 0
     end
     
-    -- this value to be tweened
+    -- lerp the boat position
     self.frame = self.frame + dt * 4
     self.screenX = lume.lerp(self.fromScreenX, self.screenGoalX, self.frame)
     self.screenY = lume.lerp(self.fromScreenY, self.screenGoalY, self.frame)
     
+    -- lerp the boat angle
+    self.angleFrame = self.angleFrame + dt * 2
+    self.angle = lume.lerp(self.angleFrom, self.angleTo, self.angleFrame)
+    
 end
+
+--- Turn the boat
+function module:turn(turnangle)
+    
+    self.angleFrom = self.angleTo
+    self.angleTo = (self.angleTo + turnangle)
+    self.angleFrame = 0
+    
+end
+
+function module:left()
+    self:turn(-45)
+end
+
+function module:right()
+    self:turn(45)
+end
+
+--- Move the boat
+function module:move(dir)
+    
+    -- 45       90      135
+    -- 0        BOAT    180
+    -- 315      270     225
+    
+    local direction = self.angleTo % 360
+    
+    local neg = - dir
+    local pos = dir
+    
+    if direction == 0 then
+        -- west
+        self.mapX = self.mapX + neg
+    elseif direction == 45 then
+        -- north west
+        self.mapX = self.mapX + neg
+        self.mapY = self.mapY + neg
+    elseif direction == 90 then
+        -- north
+        self.mapY = self.mapY + neg
+    elseif direction == 135 then
+        -- north east
+        self.mapX = self.mapX + pos
+        self.mapY = self.mapY + neg
+    elseif direction == 180 then
+        -- east
+        self.mapX = self.mapX + pos
+    elseif direction == 225 then
+        -- south east
+        self.mapX = self.mapX + pos
+        self.mapY = self.mapY + pos
+    elseif direction == 270 then
+        -- south
+        self.mapY = self.mapY + pos
+    elseif direction == 315 then
+        -- south west
+        self.mapX = self.mapX + neg
+        self.mapY = self.mapY + pos
+    end
+
+end
+
+-- Move forward
+function module:forward()
+    self:move(1)
+end
+
+-- Move backward
+function module:reverse()
+    self:move(-1)
+end
+
+
 
 
 return module
