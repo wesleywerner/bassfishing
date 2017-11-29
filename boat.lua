@@ -37,6 +37,7 @@ local array2d = require("array2d")
 local lume = require("lume")
 local genie = require("lakegenerator")
 local states = require("states")
+local messages = require("messages")
 
 --- Find a jetty as the launch zone
 function module:launchBoat()
@@ -117,17 +118,17 @@ function module:update(dt)
             -- customize the obstruction message
             local message = ""
             if self.stuck.building then
-                message = "You hit the land near a building"
+                message = messages["building collision"]
             elseif self.stuck.land then
-                message = "You hit the land"
+                message = messages["land collision"]
             elseif self.stuck.rock then
-                message = "you hit some rocks"
+                message = messages["rock collision"]
             elseif self.stuck.log then
-                message = "you hit a log"
+                message = messages["log collision"]
             elseif self.stuck.boat then
-                message = "you hit another boat"
+                message = messages["boat collision"]
             elseif self.stuck.jetty then
-                message = "you hit a jetty"
+                message = messages["jetty collision"]
             end
             
             states:push("crunch", { message=message } )
