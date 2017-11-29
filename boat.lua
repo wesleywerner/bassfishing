@@ -27,13 +27,15 @@ local module = {
     -- lerp the angle to this
     angleTo = 0,
     -- lerp progress
-    angleFrame = 0
+    angleFrame = 0,
+    -- the boat is stuck after hitting the shore or an obstacle. we can only reverse out.
+    stuck = false,
 }
 
 local glob = require("globals")
 local array2d = require("array2d")
 local lume = require("lume")
-
+local genie = require("lakegenerator")
 
 --- Find a jetty as the launch zone
 function module:launchBoat()
@@ -118,11 +120,15 @@ function module:turn(turnangle)
 end
 
 function module:left()
-    self:turn(-45)
+    if not self.stuck then
+        self:turn(-45)
+    end
 end
 
 function module:right()
-    self:turn(45)
+    if not self.stuck then
+        self:turn(45)
+    end
 end
 
 --- Move the boat
@@ -134,37 +140,61 @@ function module:move(dir)
     
     local direction = self.angleTo % 360
     
+    -- store new positions temporarily
+    local newMapX = self.mapX
+    local newMapY = self.mapY
+    
+    -- flip positive and negative movement. allows going forward and backward with this function.
     local neg = - dir
     local pos = dir
     
     if direction == 0 then
         -- west
-        self.mapX = self.mapX + neg
+        newMapX = self.mapX + neg
     elseif direction == 45 then
         -- north west
-        self.mapX = self.mapX + neg
-        self.mapY = self.mapY + neg
+        newMapX = self.mapX + neg
+        newMapY = self.mapY + neg
     elseif direction == 90 then
         -- north
-        self.mapY = self.mapY + neg
+        newMapY = self.mapY + neg
     elseif direction == 135 then
         -- north east
-        self.mapX = self.mapX + pos
-        self.mapY = self.mapY + neg
+        newMapX = self.mapX + pos
+        newMapY = self.mapY + neg
     elseif direction == 180 then
         -- east
-        self.mapX = self.mapX + pos
+        newMapX = self.mapX + pos
     elseif direction == 225 then
         -- south east
-        self.mapX = self.mapX + pos
-        self.mapY = self.mapY + pos
+        newMapX = self.mapX + pos
+        newMapY = self.mapY + pos
     elseif direction == 270 then
         -- south
-        self.mapY = self.mapY + pos
+        newMapY = self.mapY + pos
     elseif direction == 315 then
         -- south west
-        self.mapX = self.mapX + neg
-        self.mapY = self.mapY + pos
+        newMapX = self.mapX + neg
+        newMapY = self.mapY + pos
+    end
+    
+    -- get any obstacle at the new position
+    local obstructed = genie:getObstacle(glob.lake, newMapX, newMapY)
+    
+    if not obstructed then
+        self.mapX = newMapX
+        self.mapY = newMapY
+        self.stuck = false
+    elseif obstructed.land then
+        -- prevent moving onto land
+        self.stuck = true
+    elseif obstructed then
+        -- allow moving onto other obstructions, except when we are already stuck
+        if not self.stuck then
+            self.mapX = newMapX
+            self.mapY = newMapY
+        end
+        self.stuck = true
     end
 
 end
