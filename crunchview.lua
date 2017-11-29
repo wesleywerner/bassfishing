@@ -26,6 +26,7 @@ local lume = require("lume")
 function module:init(data)
     
     -- expect data to contain info on what we crunched
+    self.message = data.message
 
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
@@ -64,6 +65,7 @@ function module:draw()
 
     love.graphics.setColor(255, 255, 255)
     love.graphics.printf("CRUNCH!!!!", 0, 0, self.width, "center")
+    love.graphics.printf(self.message, 0, 100, self.width, "center")
     
     love.graphics.pop()
 

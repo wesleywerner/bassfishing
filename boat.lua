@@ -30,8 +30,6 @@ local module = {
     angleFrame = 0,
     -- the boat is stuck after hitting the shore or an obstacle. we can only reverse out.
     stuck = false,
-    -- show the crunch screen when most convenient (practically this is when the boat has caught up to it's target position)
-    showCrunch = 0,
 }
 
 local glob = require("globals")
@@ -112,11 +110,32 @@ function module:update(dt)
     self.angle = lume.lerp(self.angleFrom, self.angleTo, self.angleFrame)
     
     -- show a crunch screen
-    if self.showCrunch then
+    if self.stuck then
         -- but only when the boat is near it's goal on screen (compensates for movement lerping)
         if lume.distance(self.screenX, self.screenY, self.screenGoalX, self.screenGoalY) < 8 then
-            self.showCrunch = false
-            states:push("crunch", {whatdidyouhit="foo"})
+            
+            -- customize the obstruction message
+            local message = ""
+            if self.stuck.building then
+                message = "You hit the land near a building"
+            elseif self.stuck.land then
+                message = "You hit the land"
+            elseif self.stuck.rock then
+                message = "you hit some rocks"
+            elseif self.stuck.log then
+                message = "you hit a log"
+            elseif self.stuck.boat then
+                message = "you hit another boat"
+            elseif self.stuck.jetty then
+                message = "you hit a jetty"
+            end
+            
+            states:push("crunch", { message=message } )
+            
+            -- auto reverse out of the pickle
+            self.mapX = self.previousMapX
+            self.mapY = self.previousMapY
+            self.stuck = false
         end
     end
     
@@ -154,7 +173,7 @@ function module:move(dir)
     -- prevent movement while stuck until the crunch screen has shown.
     -- this also prevents a boat zooming over obstacles without crunching into them
     -- since moving into open water while stuck is a valid move.
-    if self.stuck and self.showCrunch then
+    if self.stuck then
         return
     end
     
@@ -198,28 +217,19 @@ function module:move(dir)
         newMapY = self.mapY + pos
     end
     
-    -- get any obstacle at the new position
-    local obstructed = self:getObstacle(glob.lake, newMapX, newMapY)
+    -- store last known good position before moving
+    self.previousMapX = self.mapX
+    self.previousMapY = self.mapY
     
-    if not obstructed then
+    -- apply the new position
+    if not self.stuck then
         self.mapX = newMapX
         self.mapY = newMapY
-        self.stuck = false
-    elseif obstructed.land then
-        -- prevent moving onto land
-        self.stuck = true
-        self.showCrunch = true
-    elseif obstructed then
-        -- allow moving onto other obstructions, except when we are already stuck
-        if not self.stuck then
-            self.mapX = newMapX
-            self.mapY = newMapY
-        end
-        self.stuck = true
-        self.showCrunch = true
     end
-    
 
+    -- get any obstacles at the new position
+    self.stuck = self:getObstacle(glob.lake, newMapX, newMapY)
+    
 end
 
 -- Move forward
@@ -250,10 +260,13 @@ function module:getObstacle(lake, x, y)
     
     -- include land
     if lake.contour[x][y] > 0 then
+        local nearBuilding = lake.buildings[x][y] > 0
+        
         return {
             x=x,
             y=y,
-            land=true
+            land=true,
+            building=nearBuilding
         }
     end
     
