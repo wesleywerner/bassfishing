@@ -35,79 +35,80 @@ local glob = require("globals")
 local player = require("player")
 
 function module:update()
-    
+
     local depth = glob.lake.depth[player.x][player.y]
-    
+    local fish = math.random(0, 1) == 1
+
     -- Fill the points list if empty
     if #self.points == 0 then
         for n=1, self.history do
             table.insert(self.points, {
                 depth = depth,
-                fish = 0
+                fish = false
             })
         end
     else
         table.insert(self.points, {
             depth = depth,
-            fish = math.random(0, 1)
+            fish = fish
         })
     end
-    
+
     -- remove old
     while #self.points > self.history do
-       table.remove(self.points, 1) 
+       table.remove(self.points, 1)
     end
-    
+
     self.refresh = true
-    
+
 end
 
 function module:draw()
-    
+
     -- render to canvas
     if self.refresh then
-        
+
         love.graphics.push()
         local backgroundcolor = { 140, 185, 164 }
         local foregroundcolor = { 0, 85, 182, 128 }
-        
+
         self.image = nil
         self.image = love.graphics.newCanvas( self.width, self.height )
         love.graphics.setCanvas(self.image)
-        
+
         -- background
         love.graphics.setColor(backgroundcolor)
         love.graphics.rectangle("fill", 0, 0, self.width, self.height)
-        
+
         -- border
         love.graphics.setLineWidth( 6 )
         love.graphics.setColor(foregroundcolor)
         love.graphics.rectangle("line", 0, 0, self.width, self.height)
         love.graphics.setLineWidth( 1 )
-        
+
         -- draw land
         if #self.points > 3 then
-            
+
             -- build the list of depth vertices
             local vertices = { 0, self.height + 1 } -- ensure start point is an extremity
-            
+
             for n, point in ipairs(self.points) do
-                
+
                 -- history moves from right to left
                 local px = ( self.width / (self.history-1) ) * (n-1)
-                
+
                 -- depth 0=bottom 1=surface
                 local py = self.height - ( self.height * point.depth )
                 table.insert(vertices, px)
                 table.insert(vertices, py)
-                
+
                 -- draw a fish
-                if point.fish > 0 then
+                if point.fish then
                     love.graphics.print("^", px, py - 20)
                 end
-                
+
             end
-            
+
             -- insert a bottom-left vertice at no 1, and bottom-right vertice at last position.
             -- this completes a polygon
             table.insert(vertices, self.width)
@@ -119,17 +120,17 @@ function module:draw()
             for triNo, triangle in ipairs ( triangles ) do
                 love.graphics.polygon ( "fill", triangle )
             end
-        
+
         end
-        
+
         love.graphics.setCanvas()
         love.graphics.setColor(255, 255, 255)
         love.graphics.setLineWidth( 1 )
         love.graphics.pop()
     end
-    
+
     love.graphics.draw(self.image, self.left, self.top)
-    
+
 end
 
 return module
