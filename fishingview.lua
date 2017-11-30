@@ -77,12 +77,22 @@ function module:draw()
 
     camera:pose()
 
+    -- draw the map
     love.graphics.setColor(255, 255, 255)
     love.graphics.scale(scale, scale)
     love.graphics.draw(maprender.image)
 
+    -- draw other boats
+    for _, boat in ipairs(glob.lake.boats) do
+        love.graphics.setColor(boat.color)
+        love.graphics.draw(tiles.image, tiles.boats[3], boat.screenX + 8,
+        boat.screenY + 8, math.rad(boat.angle), 1, 1, 8, 8 )
+    end
+
+    -- draw player boat
     love.graphics.setColor(0, 255, 255)
-    love.graphics.draw(tiles.image, tiles.boats[3], boat.screenX + 8, boat.screenY + 8, math.rad(boat.angle), 1, 1, 8, 8 )
+    love.graphics.draw(tiles.image, tiles.boats[3], boat.screenX + 8,
+    boat.screenY + 8, math.rad(boat.angle), 1, 1, 8, 8 )
 
     camera:relax()
 

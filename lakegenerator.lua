@@ -94,13 +94,11 @@ function module:createObstacles(a, seed)
     local coastalpoint = array2d:findCoastline(a, seed)
 
     -- is it a rock, a log or a moored boat?
-    local what = math.random(1, 3)
+    local what = math.random(1, 2)
     if what == 1 then
       coastalpoint.rock = true
     elseif what == 2 then
       coastalpoint.log = true
-    else
-      coastalpoint.boat = true
     end
 
     -- avoid placing over other obstacles
@@ -118,6 +116,62 @@ function module:createObstacles(a, seed)
   end
 
   return list
+
+end
+
+--- Build some boats
+function module:createBoats(a, seed)
+
+    seed = seed or os.time()
+    math.randomseed(seed)
+
+    local width, height = #a, #a[1]
+    local list = {}
+    local colors = {
+        {224, 0, 0},
+        {0, 224, 0},
+        {224, 224, 224},
+        {224, 0, 224},
+        {224, 224, 0},
+    }
+
+    for i=1, 30 do
+
+        -- next seed since we are in a loop
+        seed = seed + 10
+
+        -- find a random open point on the contour
+        local x, y = 0, 0
+        repeat
+            x = math.random(1, width-1)
+            y = math.random(1, height-1)
+        until a[x][y] == 0
+
+        -- assign a random color
+        local boatcolor = colors[math.random(1, #colors)]
+
+        -- avoid placing over other boats
+        local duplicate = false
+        for _, b in ipairs(list) do
+          if b.x == x and b.y == y then
+            duplicate = true
+          end
+        end
+
+        if not duplicate then
+            table.insert(list, {
+                x=x,
+                y=y,
+                screenX=(x-1)*16,   -- TODO: set to zero and update with AI module
+                screenY=(y-1)*16,
+                angle=0,
+                color=boatcolor,
+                boat=true
+            })
+        end
+    end
+
+    return list
 
 end
 
@@ -178,6 +232,9 @@ function module:generate(width, height, seed, density, iterations)
 
   -- add obstacles (logs, rocks, moored boats)
   data.obstacles = self:createObstacles(data.contour, seed)
+
+  -- add other boats
+  data.boats = self:createBoats(data.contour, seed)
 
   -- remove obstacles covering jetties
   for obsi, obs in ipairs(data.obstacles) do
