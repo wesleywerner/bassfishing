@@ -24,6 +24,7 @@ local genie = require("lakegenerator")
 local states = require("states")
 local camera = require("camera")
 local maprender = require("maprender")
+local fishfinder = require("fishfinder")
 --local messages = require("messages")
 local tiles = require("tiles")
 local boat = require("boat")
@@ -50,6 +51,12 @@ function module:init()
         camera:frame(10, 10, love.graphics.getWidth( ) - 200, love.graphics.getHeight( ) - 20)
     end
 
+    -- set up our fish finder
+    fishfinder.top = camera.frameTop
+    fishfinder.left = camera.frameLeft + camera.frameWidth + 2
+    fishfinder.width = love.graphics.getWidth( ) - fishfinder.left - 2
+    fishfinder.height = fishfinder.width
+    
     love.graphics.setFont( love.graphics.newFont( 20 ) )
 
 end
@@ -62,15 +69,19 @@ function module:keypressed(key)
     elseif key == "left" or key == "kp4" then
         boatAI:move()
         player:left()
+        fishfinder:update()
     elseif key == "right" or key == "kp6" then
         boatAI:move()
         player:right()
+        fishfinder:update()
     elseif key == "up" or key == "kp8" then
         boatAI:move()
         player:forward()
+        fishfinder:update()
     elseif key == "down" or key == "kp2" then
         boatAI:move()
         player:reverse()
+        fishfinder:update()
     end
 end
 
@@ -117,6 +128,10 @@ function module:draw()
 
     -- debug camera window
     love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
+    
+    -- fish finder
+    love.graphics.setColor(255, 255, 255)
+    fishfinder:draw()
 
 end
 
