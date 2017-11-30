@@ -59,12 +59,6 @@ end
 
 function module:reset()
     
-    -- prepare other boats
-    for _, craft in ipairs(glob.lake.boats) do
-        craft.AI = true
-        boat:prepare(craft)
-    end
-
     -- prepare the player boat
     boat:prepare(player)
     boat:launchBoat(player)

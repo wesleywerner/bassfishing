@@ -17,8 +17,9 @@
    along with this program. If not, see http://www.gnu.org/licenses/.
 ]]--
 
-local array2d = require("array2d")
 local module = {}
+local array2d = require("array2d")
+local boat = require("boat")
 
 
 --- Adds large chunks of noise simulating land mass
@@ -168,6 +169,12 @@ function module:createBoats(a, seed)
                 boat = true
             })
         end
+    end
+
+    -- prepare the boats
+    for _, craft in ipairs(list) do
+        craft.AI = true
+        boat:prepare(craft)
     end
 
     return list
