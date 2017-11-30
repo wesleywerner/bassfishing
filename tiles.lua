@@ -86,6 +86,7 @@ tiles.obstacles.logs = {
 tiles.boats = {
   love.graphics.newQuad(384, 48, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(400, 48, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(416, 48, 16, 16, tiles.w, tiles.h),
 }
 
 return tiles

@@ -35,13 +35,13 @@ function module:init()
         glob.lake = genie:generate(glob.defaultMapWidth,
         glob.defaultMapHeight, glob.defaultMapSeed,
         glob.defaultMapDensity, glob.defaultMapIterations)
-    
+
         boat:launchBoat()
-        
+
         camera:worldSize(glob.lake.width * tiles.size * scale, glob.lake.height * tiles.size * scale)
         camera:frame(10, 10, love.graphics.getWidth( ) - 200, love.graphics.getHeight( ) - 20)
     end
-    
+
     love.graphics.setFont( love.graphics.newFont( 20 ) )
 
 end
@@ -63,7 +63,7 @@ function module:keypressed(key)
 end
 
 function module:update(dt)
-    
+
     boat:update(dt)
     camera:center(boat.screenX * scale, boat.screenY * scale)
     camera:update(dt)
@@ -71,7 +71,7 @@ function module:update(dt)
 end
 
 function module:draw()
-    
+
     -- must render the map outside any transformations
     maprender:render()
 
@@ -80,12 +80,12 @@ function module:draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.scale(scale, scale)
     love.graphics.draw(maprender.image)
-    
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(tiles.image, tiles.boats[2], boat.screenX + 8, boat.screenY + 8, math.rad(boat.angle), 1, 1, 8, 8 )
+
+    love.graphics.setColor(0, 255, 255)
+    love.graphics.draw(tiles.image, tiles.boats[3], boat.screenX + 8, boat.screenY + 8, math.rad(boat.angle), 1, 1, 8, 8 )
 
     camera:relax()
-    
+
     -- debug camera window
     love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
 
