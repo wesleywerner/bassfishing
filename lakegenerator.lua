@@ -162,13 +162,10 @@ function module:createBoats(a, seed)
 
         if not duplicate then
             table.insert(list, {
-                x=x,
-                y=y,
-                screenX=(x-1)*16,   -- TODO: set to zero and update with AI module
-                screenY=(y-1)*16,
-                angle=0,
-                color=boatcolor,
-                boat=true
+                x = x,
+                y = y,
+                color = boatcolor,
+                boat = true
             })
         end
     end

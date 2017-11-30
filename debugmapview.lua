@@ -22,6 +22,7 @@ local module = {}
 local glob = require("globals")
 local genie = require("lakegenerator")
 local states = require("states")
+local player = require("player")
 local boat = require("boat")
 
 -- set private values
@@ -50,11 +51,26 @@ function module:init()
         glob.lake = genie:generate(glob.defaultMapWidth,
         glob.defaultMapHeight, glob.defaultMapSeed,
         glob.defaultMapDensity, glob.defaultMapIterations)
-
-        boat:launchBoat()
+    
+        self:reset()
     end
 
 end
+
+function module:reset()
+    
+    -- prepare other boats
+    for _, craft in ipairs(glob.lake.boats) do
+        craft.AI = true
+        boat:prepare(craft)
+    end
+
+    -- prepare the player boat
+    boat:prepare(player)
+    boat:launchBoat(player)
+
+end
+
 
 function module:keypressed(key)
     if key == "escape" or key == "f10" then
@@ -63,42 +79,42 @@ function module:keypressed(key)
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         math.max(0, glob.lake.seed - 1), glob.lake.density,
         glob.lake.iterations)
-        boat:launchBoat()
+        self:reset()
     elseif key == "right" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         math.max(0, glob.lake.seed + 1), glob.lake.density,
         glob.lake.iterations)
-        boat:launchBoat()
+        self:reset()
     elseif key == "up" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         glob.lake.seed, glob.lake.density, math.max(0,
         glob.lake.iterations + 1))
-        boat:launchBoat()
+        self:reset()
     elseif key == "down" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         glob.lake.seed, glob.lake.density, math.max(0,
         glob.lake.iterations - 1))
-        boat:launchBoat()
+        self:reset()
     elseif key == "insert" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         glob.lake.seed, math.max(0, glob.lake.density + .025),
         glob.lake.iterations)
-        boat:launchBoat()
+        self:reset()
     elseif key == "delete" then
         glob.lake = genie:generate( glob.lake.width, glob.lake.height,
         glob.lake.seed, math.max(0, glob.lake.density - .025),
         glob.lake.iterations)
-        boat:launchBoat()
+        self:reset()
     elseif key == "kp-" then
         glob.lake = genie:generate( glob.lake.width, math.max(30,
         glob.lake.height - 1), glob.lake.seed, glob.lake.density,
         glob.lake.iterations)
-        boat:launchBoat()
+        self:reset()
     elseif key == "kp+" then
         glob.lake = genie:generate( glob.lake.width, math.min(80,
         glob.lake.height + 1), glob.lake.seed, glob.lake.density,
         glob.lake.iterations)
-        boat:launchBoat()
+        self:reset()
     end
 end
 
@@ -178,7 +194,7 @@ function module:draw()
 
   -- player boat
   love.graphics.setColor(self.legend["Player"])
-  love.graphics.rectangle("fill", boat.x, boat.y, 1, 1)
+  love.graphics.rectangle("fill", player.x, player.y, 1, 1)
 
 end
 
