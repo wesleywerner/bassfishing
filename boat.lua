@@ -38,6 +38,7 @@ local lume = require("lume")
 local genie = require("lakegenerator")
 local states = require("states")
 local messages = require("messages")
+local boatAI = require("ai")
 
 --- Find a jetty as the launch zone
 function module:launchBoat()
@@ -142,6 +143,8 @@ function module:update(dt)
         end
     end
 
+    -- update other boats
+    boatAI:update(dt)
 
 end
 
@@ -158,12 +161,14 @@ function module:left()
     if not self.stuck then
         self:turn(-45)
     end
+    boatAI:move()
 end
 
 function module:right()
     if not self.stuck then
         self:turn(45)
     end
+    boatAI:move()
 end
 
 --- Move the boat
@@ -237,11 +242,13 @@ end
 
 -- Move forward
 function module:forward()
+    boatAI:move()
     self:move(1)
 end
 
 -- Move backward
 function module:reverse()
+    boatAI:move()
     self:move(-1)
 end
 

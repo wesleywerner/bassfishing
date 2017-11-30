@@ -135,7 +135,9 @@ function module:createBoats(a, seed)
         {224, 224, 0},
     }
 
-    for i=1, 30 do
+    local boatAmount = math.random(10, 20)
+
+    for i=1, boatAmount do
 
         -- next seed since we are in a loop
         seed = seed + 10
