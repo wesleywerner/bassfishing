@@ -50,7 +50,7 @@ function module:init()
         glob.lake = genie:generate(glob.defaultMapWidth,
         glob.defaultMapHeight, glob.defaultMapSeed,
         glob.defaultMapDensity, glob.defaultMapIterations)
-    
+
         boat:launchBoat()
     end
 
@@ -142,11 +142,11 @@ function module:draw()
         love.graphics.setColor(0, 0, 64 + (128*depth) )
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
-      
+
       local plant = glob.lake.plants[x][y] > 0
       if plant then
         love.graphics.setColor(self.legend["Aquatic Plant"])
-        love.graphics.rectangle("fill", x, y, 1, 1)          
+        love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
       local tree = glob.lake.trees[x][y] > 0
@@ -175,10 +175,10 @@ function module:draw()
   for _, jetty in ipairs(glob.lake.obstacles) do
     love.graphics.rectangle("fill", jetty.x, jetty.y, 1, 1)
   end
-  
+
   -- player boat
   love.graphics.setColor(self.legend["Player"])
-  love.graphics.rectangle("fill", boat.mapX, boat.mapY, 1, 1)
+  love.graphics.rectangle("fill", boat.x, boat.y, 1, 1)
 
 end
 

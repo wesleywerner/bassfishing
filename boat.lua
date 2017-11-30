@@ -73,8 +73,8 @@ function module:launchBoat()
 
     for _, test in ipairs(tests) do
         if glob.lake.contour[test.x][test.y] == 0 then
-           self.mapX = test.x
-           self.mapY = test.y
+           self.x = test.x
+           self.y = test.y
         end
     end
 
@@ -87,8 +87,8 @@ end
 function module:update(dt)
 
     -- the screen position goal
-    self.screenGoalX = (self.mapX -1) * 16
-    self.screenGoalY = (self.mapY -1) * 16
+    self.screenGoalX = (self.x -1) * 16
+    self.screenGoalY = (self.y -1) * 16
 
     -- the player starts in-place if the screen position is empty
     if not self.screenX or not self.screenY then
@@ -137,8 +137,8 @@ function module:update(dt)
             states:push("message", { title="CRUNCH!!!!", message=template, shake=true } )
 
             -- auto reverse out of the pickle
-            self.mapX = self.previousMapX
-            self.mapY = self.previousMapY
+            self.x = self.previousMapX
+            self.y = self.previousMapY
             self.stuck = false
         end
     end
@@ -188,8 +188,8 @@ function module:move(dir)
     local direction = self.angleTo % 360
 
     -- store new positions temporarily
-    local newMapX = self.mapX
-    local newMapY = self.mapY
+    local newMapX = self.x
+    local newMapY = self.y
 
     -- flip positive and negative movement. allows going forward and backward with this function.
     local neg = - dir
@@ -197,42 +197,42 @@ function module:move(dir)
 
     if direction == 0 then
         -- west
-        newMapX = self.mapX + neg
+        newMapX = self.x + neg
     elseif direction == 45 then
         -- north west
-        newMapX = self.mapX + neg
-        newMapY = self.mapY + neg
+        newMapX = self.x + neg
+        newMapY = self.y + neg
     elseif direction == 90 then
         -- north
-        newMapY = self.mapY + neg
+        newMapY = self.y + neg
     elseif direction == 135 then
         -- north east
-        newMapX = self.mapX + pos
-        newMapY = self.mapY + neg
+        newMapX = self.x + pos
+        newMapY = self.y + neg
     elseif direction == 180 then
         -- east
-        newMapX = self.mapX + pos
+        newMapX = self.x + pos
     elseif direction == 225 then
         -- south east
-        newMapX = self.mapX + pos
-        newMapY = self.mapY + pos
+        newMapX = self.x + pos
+        newMapY = self.y + pos
     elseif direction == 270 then
         -- south
-        newMapY = self.mapY + pos
+        newMapY = self.y + pos
     elseif direction == 315 then
         -- south west
-        newMapX = self.mapX + neg
-        newMapY = self.mapY + pos
+        newMapX = self.x + neg
+        newMapY = self.y + pos
     end
 
     -- store last known good position before moving
-    self.previousMapX = self.mapX
-    self.previousMapY = self.mapY
+    self.previousMapX = self.x
+    self.previousMapY = self.y
 
     -- apply the new position
     if not self.stuck then
-        self.mapX = newMapX
-        self.mapY = newMapY
+        self.x = newMapX
+        self.y = newMapY
     end
 
     -- get any obstacles at the new position
