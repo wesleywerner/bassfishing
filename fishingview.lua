@@ -125,6 +125,13 @@ function module:draw()
     love.graphics.draw(tiles.image, tiles.boats[3], player.screenX + 8,
     player.screenY + 8, math.rad(player.angle), 1, 1, 8, 8 )
 
+    -- fish (debugging)
+    love.graphics.setColor(255, 255, 255, 32)
+    for _, fish in ipairs(glob.lake.fish) do
+        love.graphics.circle("line", (fish.x-1) * tiles.size + 8,
+        (fish.y-1) * tiles.size + 8, fish.weight)
+    end
+
     camera:relax()
 
     -- debug camera window
