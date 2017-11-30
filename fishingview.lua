@@ -46,7 +46,7 @@ function module:init()
         boat:launchBoat(player)
         -- add player boat to the boats list so it can be included in obstacle tests
         table.insert(glob.lake.boats, player)
-        
+
         camera:worldSize(glob.lake.width * tiles.size * scale, glob.lake.height * tiles.size * scale)
         camera:frame(10, 10, love.graphics.getWidth( ) - 200, love.graphics.getHeight( ) - 20)
     end
@@ -56,7 +56,8 @@ function module:init()
     fishfinder.left = camera.frameLeft + camera.frameWidth + 2
     fishfinder.width = love.graphics.getWidth( ) - fishfinder.left - 2
     fishfinder.height = fishfinder.width
-    
+    fishfinder:update()
+
     love.graphics.setFont( love.graphics.newFont( 20 ) )
 
 end
@@ -89,7 +90,7 @@ function module:update(dt)
 
     boatAI:update(dt)
     player:update(dt)
-    
+
     camera:center(player.screenX * scale, player.screenY * scale)
     camera:update(dt)
 
@@ -112,11 +113,11 @@ function module:draw()
         love.graphics.setColor(craft.color)
         love.graphics.draw(tiles.image, tiles.boats[3], craft.screenX + 8,
         craft.screenY + 8, math.rad(craft.angle), 1, 1, 8, 8 )
-        
+
         if craft.stuck then
             love.graphics.rectangle("line", craft.screenX, craft.screenY, 16, 16)
         end
-        
+
     end
 
     -- draw player boat
@@ -128,7 +129,7 @@ function module:draw()
 
     -- debug camera window
     love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
-    
+
     -- fish finder
     love.graphics.setColor(255, 255, 255)
     fishfinder:draw()

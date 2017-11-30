@@ -109,6 +109,10 @@ function module:draw()
 
                 -- depth 0=bottom 1=surface
                 local py = self.height - ( self.height * point.depth )
+
+                -- vary the bottom for variety
+                py = math.max(1, py - math.random(0, 6))
+
                 table.insert(vertices, px)
                 table.insert(vertices, py)
 
@@ -141,6 +145,9 @@ function module:draw()
         love.graphics.setColor(255, 255, 255)
         love.graphics.setLineWidth( 1 )
         love.graphics.pop()
+
+        self.refresh = false
+
     end
 
     love.graphics.draw(self.image, self.left, self.top)
