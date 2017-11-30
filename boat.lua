@@ -18,30 +18,43 @@
 
 ]]--
 
-local module = {
-
-    -- current boat angle
-    angle = 0,
-    -- lerp the angle from this
-    angleFrom = 0,
-    -- lerp the angle to this
-    angleTo = 0,
-    -- lerp progress
-    angleFrame = 0,
-    -- the boat is stuck after hitting the shore or an obstacle. we can only reverse out.
-    stuck = false,
-}
+local module = {}
 
 local glob = require("globals")
-local array2d = require("array2d")
 local lume = require("lume")
-local genie = require("lakegenerator")
-local states = require("states")
-local messages = require("messages")
-local boatAI = require("ai")
+
+
+--- Prepare a boat
+function module:prepare(boat)
+    
+    -- movement counter
+    boat.frame = 0
+    
+    -- current boat angle
+    boat.angle = 0
+    
+    -- lerp the angle from this
+    boat.angleFrom = 0
+    
+    -- lerp the angle to this
+    boat.angleTo = 0
+    
+    -- lerp progress
+    boat.angleFrame = 0
+    
+    -- the boat is stuck after hitting the shore or an obstacle. we can only reverse out.
+    boat.stuck = false
+
+    -- position on screen in pixels
+    boat.screenX = nil
+    boat.screenY = nil
+    
+    boat.color = boat.color or {255, 255, 255}
+
+end
 
 --- Find a jetty as the launch zone
-function module:launchBoat()
+function module:launchBoat(boat)
 
     if not glob.lake then
         error("Cannot launch the boat if there is no lake to fish on")
@@ -49,147 +62,107 @@ function module:launchBoat()
 
     -- pick a random jetty
     math.randomseed(os.time())
-    self.jetty = glob.lake.jetties[ math.random(1, #glob.lake.jetties) ]
+    boat.jetty = glob.lake.jetties[ math.random(1, #glob.lake.jetties) ]
 
     -- test for surrounding open water
     local tests = {
         {   -- left
-            x = math.max(1, self.jetty.x - 2),
-            y = self.jetty.y
+            x = math.max(1, boat.jetty.x - 2),
+            y = boat.jetty.y
         },
         {   -- right
-            x = math.min(glob.lake.width, self.jetty.x + 2),
-            y = self.jetty.y
+            x = math.min(glob.lake.width, boat.jetty.x + 2),
+            y = boat.jetty.y
         },
         {   -- top
-            x = self.jetty.x,
-            y = math.max(1, self.jetty.y - 2)
+            x = boat.jetty.x,
+            y = math.max(1, boat.jetty.y - 2)
         },
         {   -- bottom
-            x = self.jetty.x,
-            y = math.min(glob.lake.height, self.jetty.y + 2)
+            x = boat.jetty.x,
+            y = math.min(glob.lake.height, boat.jetty.y + 2)
         },
     }
 
     for _, test in ipairs(tests) do
         if glob.lake.contour[test.x][test.y] == 0 then
-           self.x = test.x
-           self.y = test.y
+           boat.x = test.x
+           boat.y = test.y
         end
     end
 
     -- clear the boat screen position so it can be launched at the correct place
-    self.screenX = nil
-    self.screenY = nil
+    boat.screenX = nil
+    boat.screenY = nil
+    
 end
 
 --- Updates the boat on-screen position
-function module:update(dt)
+function module:update(boat, dt)
 
     -- the screen position goal
-    self.screenGoalX = (self.x -1) * 16
-    self.screenGoalY = (self.y -1) * 16
+    boat.screenGoalX = (boat.x - 1) * 16
+    boat.screenGoalY = (boat.y - 1) * 16
 
-    -- the player starts in-place if the screen position is empty
-    if not self.screenX or not self.screenY then
-        self.screenX = self.screenGoalX
-        self.screenY = self.screenGoalY
+    -- start in-place if the screen position is empty
+    if not boat.screenX or not boat.screenY then
+        boat.screenX = boat.screenGoalX
+        boat.screenY = boat.screenGoalY
     end
 
     -- remember the old position, and reset the movement counter when this changes
-    if self.fromScreenX ~= self.screenGoalX or self.fromScreenY ~= self.screenGoalY then
-        self.fromScreenX = self.screenX
-        self.fromScreenY = self.screenY
-        self.frame = 0
+    if boat.fromScreenX ~= boat.screenGoalX or boat.fromScreenY ~= boat.screenGoalY then
+        boat.fromScreenX = boat.screenX
+        boat.fromScreenY = boat.screenY
+        boat.frame = 0  -- TODO: rename to movementFrame
     end
 
     -- lerp the boat position
-    self.frame = self.frame + dt * 4
-    self.screenX = lume.lerp(self.fromScreenX, self.screenGoalX, self.frame)
-    self.screenY = lume.lerp(self.fromScreenY, self.screenGoalY, self.frame)
+    boat.frame = boat.frame + dt * 4
+    boat.screenX = lume.lerp(boat.fromScreenX, boat.screenGoalX, boat.frame)
+    boat.screenY = lume.lerp(boat.fromScreenY, boat.screenGoalY, boat.frame)
 
     -- lerp the boat angle
-    self.angleFrame = self.angleFrame + dt * 2
-    self.angle = lume.lerp(self.angleFrom, self.angleTo, self.angleFrame)
-
-    -- show a crunch screen
-    if self.stuck then
-        -- but only when the boat is near it's goal on screen (compensates for movement lerping)
-        if lume.distance(self.screenX, self.screenY, self.screenGoalX, self.screenGoalY) < 8 then
-
-            -- customize the obstruction message
-            local timelost = math.random(4, 10)
-            local template = ""
-            if self.stuck.building then
-                template = string.format(messages["building collision"], timelost)
-            elseif self.stuck.land then
-                template = string.format(messages["land collision"], timelost)
-            elseif self.stuck.rock then
-                template = string.format(messages["severe rock collision"], timelost)
-            elseif self.stuck.log then
-                template = string.format(messages["log collision"], timelost)
-            elseif self.stuck.boat then
-                template = string.format(messages["boat collision"], timelost)
-            elseif self.stuck.jetty then
-                template = string.format(messages["jetty collision"], timelost)
-            end
-
-            states:push("message", { title="CRUNCH!!!!", message=template, shake=true } )
-
-            -- auto reverse out of the pickle
-            self.x = self.previousMapX
-            self.y = self.previousMapY
-            self.stuck = false
-        end
-    end
-
-    -- update other boats
-    boatAI:update(dt)
+    boat.angleFrame = boat.angleFrame + dt * 2
+    boat.angle = lume.lerp(boat.angleFrom, boat.angleTo, boat.angleFrame)
 
 end
 
 --- Turn the boat
-function module:turn(turnangle)
+function module:turn(boat, turnangle)
 
-    self.angleFrom = self.angleTo
-    self.angleTo = (self.angleTo + turnangle)
-    self.angleFrame = 0
+    boat.angleFrom = boat.angleTo
+    boat.angleTo = (boat.angleTo + turnangle)
+    boat.angleFrame = 0
 
 end
 
-function module:left()
-    if not self.stuck then
-        self:turn(-45)
+function module:left(boat)
+    if not boat.stuck then
+        self:turn(boat, -45)
     end
     boatAI:move()
 end
 
-function module:right()
-    if not self.stuck then
-        self:turn(45)
+function module:right(boat)
+    if not boat.stuck then
+        self:turn(boat, 45)
     end
     boatAI:move()
 end
 
---- Move the boat
-function module:move(dir)
-
+--- Gets the new position of a boat given it's direction (1 forward, -1 reverse).
+function module:getNextPosition(boat, dir)
+    
     -- 45       90      135
     -- 0        BOAT    180
     -- 315      270     225
 
-    -- prevent movement while stuck until the crunch screen has shown.
-    -- this also prevents a boat zooming over obstacles without crunching into them
-    -- since moving into open water while stuck is a valid move.
-    if self.stuck then
-        return
-    end
-
-    local direction = self.angleTo % 360
+    local direction = boat.angleTo % 360
 
     -- store new positions temporarily
-    local newMapX = self.x
-    local newMapY = self.y
+    local nextX = boat.x
+    local nextY = boat.y
 
     -- flip positive and negative movement. allows going forward and backward with this function.
     local neg = - dir
@@ -197,64 +170,83 @@ function module:move(dir)
 
     if direction == 0 then
         -- west
-        newMapX = self.x + neg
+        nextX = boat.x + neg
     elseif direction == 45 then
         -- north west
-        newMapX = self.x + neg
-        newMapY = self.y + neg
+        nextX = boat.x + neg
+        nextY = boat.y + neg
     elseif direction == 90 then
         -- north
-        newMapY = self.y + neg
+        nextY = boat.y + neg
     elseif direction == 135 then
         -- north east
-        newMapX = self.x + pos
-        newMapY = self.y + neg
+        nextX = boat.x + pos
+        nextY = boat.y + neg
     elseif direction == 180 then
         -- east
-        newMapX = self.x + pos
+        nextX = boat.x + pos
     elseif direction == 225 then
         -- south east
-        newMapX = self.x + pos
-        newMapY = self.y + pos
+        nextX = boat.x + pos
+        nextY = boat.y + pos
     elseif direction == 270 then
         -- south
-        newMapY = self.y + pos
+        nextY = boat.y + pos
     elseif direction == 315 then
         -- south west
-        newMapX = self.x + neg
-        newMapY = self.y + pos
+        nextX = boat.x + neg
+        nextY = boat.y + pos
     end
+    
+    -- clamp to the map size
+    nextX = lume.clamp(nextX, 1, glob.lake.width)
+    nextY = lume.clamp(nextY, 1, glob.lake.height)
+    
+    return nextX, nextY
+    
+end
+
+
+--- Move the boat
+function module:move(boat, dir)
 
     -- store last known good position before moving
-    self.previousMapX = self.x
-    self.previousMapY = self.y
-
+    boat.previousX = boat.x
+    boat.previousY = boat.y
+    
     -- apply the new position
-    if not self.stuck then
-        self.x = newMapX
-        self.y = newMapY
-    end
+    boat.x, boat.y = self:getNextPosition(boat, dir)
 
     -- get any obstacles at the new position
-    self.stuck = self:getObstacle(glob.lake, newMapX, newMapY)
+    boat.stuck = self:getObstacle(boat)
 
 end
 
 -- Move forward
-function module:forward()
-    boatAI:move()
-    self:move(1)
+function module:forward(boat)
+    self:move(boat, 1)
 end
 
 -- Move backward
-function module:reverse()
-    boatAI:move()
-    self:move(-1)
+function module:reverse(boat)
+    self:move(boat, -1)
 end
 
---- Returns an obstacle at a map position including jetties and land.
-function module:getObstacle(lake, x, y)
+--- Undo the last move
+function module:undoMove(boat)
+    if boat.previousX and boat.previousY then
+       boat.x = boat.previousX
+       boat.y = boat.previousY
+    end
+end
 
+
+--- Returns an obstacle at a map position including jetties and land.
+function module:getObstacle(boat)
+
+    local lake = glob.lake
+    local x, y = boat.x, boat.y
+    
     for _, obstacle in ipairs(lake.obstacles) do
         if obstacle.x == x and obstacle.y == y then
             return obstacle
@@ -280,10 +272,10 @@ function module:getObstacle(lake, x, y)
         }
     end
 
-    -- include other boats
-    for _, boat in ipairs(lake.boats) do
-        if boat.x == x and boat.y == y then
-            return boat
+    -- include other boats except the current
+    for _, craft in ipairs(lake.boats) do
+        if craft.x == x and craft.y == y and craft ~= boat then
+            return craft
         end
     end
 

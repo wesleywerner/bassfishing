@@ -22,11 +22,15 @@ local module = {}
 local glob = require("globals")
 local genie = require("lakegenerator")
 local states = require("states")
-local boat = require("boat")
 local camera = require("camera")
 local maprender = require("maprender")
+--local messages = require("messages")
 local tiles = require("tiles")
+local boat = require("boat")
+local player = require("player")
+local boatAI = require("ai")
 local scale = 2
+
 
 function module:init()
 
@@ -36,8 +40,18 @@ function module:init()
         glob.defaultMapHeight, glob.defaultMapSeed,
         glob.defaultMapDensity, glob.defaultMapIterations)
 
-        boat:launchBoat()
+        -- prepare other boats
+        for _, craft in ipairs(glob.lake.boats) do
+            craft.AI = true
+            boat:prepare(craft)
+        end
 
+        -- prepare the player boat
+        boat:prepare(player)
+        boat:launchBoat(player)
+        -- add player boat to the boats list so it can be included in obstacle tests
+        table.insert(glob.lake.boats, player)
+        
         camera:worldSize(glob.lake.width * tiles.size * scale, glob.lake.height * tiles.size * scale)
         camera:frame(10, 10, love.graphics.getWidth( ) - 200, love.graphics.getHeight( ) - 20)
     end
@@ -52,20 +66,26 @@ function module:keypressed(key)
     elseif key == "f10" then
         states:push("debug map")
     elseif key == "left" or key == "kp4" then
-        boat:left()
+        boatAI:move()
+        player:left()
     elseif key == "right" or key == "kp6" then
-        boat:right()
+        boatAI:move()
+        player:right()
     elseif key == "up" or key == "kp8" then
-        boat:forward()
+        boatAI:move()
+        player:forward()
     elseif key == "down" or key == "kp2" then
-        boat:reverse()
+        boatAI:move()
+        player:reverse()
     end
 end
 
 function module:update(dt)
 
-    boat:update(dt)
-    camera:center(boat.screenX * scale, boat.screenY * scale)
+    boatAI:update(dt)
+    player:update(dt)
+    
+    camera:center(player.screenX * scale, player.screenY * scale)
     camera:update(dt)
 
 end
@@ -83,16 +103,21 @@ function module:draw()
     love.graphics.draw(maprender.image)
 
     -- draw other boats
-    for _, boat in ipairs(glob.lake.boats) do
-        love.graphics.setColor(boat.color)
-        love.graphics.draw(tiles.image, tiles.boats[3], boat.screenX + 8,
-        boat.screenY + 8, math.rad(boat.angle), 1, 1, 8, 8 )
+    for _, craft in ipairs(glob.lake.boats) do
+        love.graphics.setColor(craft.color)
+        love.graphics.draw(tiles.image, tiles.boats[3], craft.screenX + 8,
+        craft.screenY + 8, math.rad(craft.angle), 1, 1, 8, 8 )
+        
+        if craft.stuck then
+            love.graphics.rectangle("line", craft.screenX, craft.screenY, 16, 16)
+        end
+        
     end
 
     -- draw player boat
     love.graphics.setColor(0, 255, 255)
-    love.graphics.draw(tiles.image, tiles.boats[3], boat.screenX + 8,
-    boat.screenY + 8, math.rad(boat.angle), 1, 1, 8, 8 )
+    love.graphics.draw(tiles.image, tiles.boats[3], player.screenX + 8,
+    player.screenY + 8, math.rad(player.angle), 1, 1, 8, 8 )
 
     camera:relax()
 
