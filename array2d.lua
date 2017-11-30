@@ -52,7 +52,8 @@ local module = {}
 function module:array(width, height, default)
 
   local a = {}
-  default = default or 0
+
+  if type(default) == "nil" then default = 0 end
 
   for x=1, width do
     a[x] = {}
@@ -139,8 +140,8 @@ function module:countNeighbours(a, px, py)
   local height = #a[1]
   local count = 0
   local average = 0
-  
-  
+
+
   for ix=-1,1 do
     for iy=-1,1 do
       if ix == 0 and iy == 0 then
@@ -487,11 +488,11 @@ end
 
 --- Alter the value of each point to the average of all it's non-zero neighbours.
 function module:average(a)
-    
+
     -- reference a copy to get results that are not affected by this function
     local cp = self:copy(a)
     local width, height = #a, #a[1]
-    
+
     local function averageNeighbours(x, y)
         local avg = 0
         local directionsX = { 0, -1, 1,  0, 0,  -1, -1,  1, 1 }    -- self / left/right/top/bottom / topleft/topright/botleft/botright
@@ -503,13 +504,13 @@ function module:average(a)
         end
         return avg / #directionsX
     end
-    
+
     for x=1, width do
       for y=1, height do
         a[x][y] = averageNeighbours(x, y)
       end
-    end    
-    
+    end
+
 end
 
 
