@@ -41,7 +41,9 @@ module.legend = {
   ["Building"] = {192, 192, 64},
   ["Jetty"] = {128, 128, 128},
   ["Obstacle"] = {128, 64, 64},
-  ["Player"] = {255, 255, 255}
+  ["Player"] = {255, 255, 255},
+  ["Structure"] = {128, 0, 128, 64},
+  ["Fish"] = {128, 128, 0, 64}
 }
 
 function module:init()
@@ -51,14 +53,16 @@ function module:init()
         glob.lake = genie:generate(glob.defaultMapWidth,
         glob.defaultMapHeight, glob.defaultMapSeed,
         glob.defaultMapDensity, glob.defaultMapIterations)
-    
+
         self:reset()
     end
+
+    love.graphics.setFont( love.graphics.newFont( 8 ) )
 
 end
 
 function module:reset()
-    
+
     -- prepare the player boat
     boat:prepare(player)
     boat:launchBoat(player)
@@ -171,6 +175,12 @@ function module:draw()
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
+      local structure = glob.lake.structure[x][y]
+      if structure then
+        love.graphics.setColor(self.legend["Structure"])
+        love.graphics.rectangle("fill", x, y, 1, 1)
+      end
+
     end
   end
 
@@ -184,6 +194,12 @@ function module:draw()
   love.graphics.setColor(self.legend["Obstacle"])
   for _, jetty in ipairs(glob.lake.obstacles) do
     love.graphics.rectangle("fill", jetty.x, jetty.y, 1, 1)
+  end
+
+  -- Draw fish
+  love.graphics.setColor(self.legend["Fish"])
+  for _, fish in ipairs(glob.lake.fish) do
+    love.graphics.rectangle("fill", fish.x, fish.y, 1, 1)
   end
 
   -- player boat

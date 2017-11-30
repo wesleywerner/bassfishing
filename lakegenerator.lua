@@ -18,6 +18,7 @@
 ]]--
 
 local module = {}
+local lume = require("lume")
 local array2d = require("array2d")
 local boat = require("boat")
 
@@ -182,63 +183,141 @@ function module:createBoats(data, seed)
 
 end
 
+--- Build some boats
+function module:spawnFish(data, seed)
+
+    seed = seed or os.time()
+    math.randomseed(seed)
+
+    -- underwater structure is a map array
+    data.structure = array2d:array(data.width, data.height, false)
+    data.fish = {}
+
+    -- size up how much open water the lake has (count open water tiles)
+    local volume = 0
+    for x=1, data.width do
+        for y=1, data.height do
+            if data.contour[x][y] == 0 then
+                volume = volume + 1
+            end
+        end
+    end
+
+    -- fill n% with structure
+    local coverage = math.floor(volume * 0.1)
+
+    for coverid=1, coverage do
+
+        -- find a random tile
+        local x, y = 0, 0
+        repeat
+            x = math.random(1, data.width - 1)
+            y = math.random(1, data.height - 1)
+        until data.contour[x][y] == 0
+
+        -- deeper waters have a n% chance of having structure.
+        -- depth 0 is nearer the bottom.
+        local sanctuary = data.depth[x][y] < 0.4 and math.random() < 0.5
+
+        data.structure[x][y] = sanctuary
+
+        -- spawn some fish here
+        if sanctuary then
+
+            local fishes = math.random(0, 5)
+
+            for fishid=1, fishes do
+
+                -- the weight of the fish is weighted more towards small
+                local weight = 0
+                local size = lume.weightedchoice({
+                    ["small"] = 10,
+                    ["medium"] = 5,
+                    ["large"] = 0 })
+
+                if size == "small" then
+                    weight = lume.round( lume.random(0.3, 0.9), 0.1)
+                elseif size == "medium" then
+                    weight = lume.round( lume.random(1, 1.9), 0.1)
+                else
+                    weight = lume.round( lume.random(2, 5), 0.1)
+                end
+
+                table.insert(data.fish, {
+                    x = x,
+                    y = y,
+                    sactuaryX = x,
+                    sactuaryY = y,
+                    weight = weight
+                })
+
+
+            end
+
+        end
+
+    end
+
+end
+
 --- Return a new generated map
 function module:generate(width, height, seed, density, iterations)
 
-      local data = {}
-      data.width = width
-      data.height = height
-      data.seed = seed
-      data.density = density
-      data.iterations = iterations
+    local data = {}
+    data.width = width
+    data.height = height
+    data.seed = seed
+    data.density = density
+    data.iterations = iterations
 
-      -- generate the contour map: a 2D boolean array where land is "true".
-      data.contour = array2d:array(width, height)
-      -- add random noise to start our contours
-      array2d:noise(data.contour, seed, density)
-      -- add variety by placing some random land masses (or plain blocks if you prefer)
-      self:largeNoise(data.contour, seed, density)
-      -- close off the map with a border
-      array2d:addBorder(data.contour)
-      -- put it through cellular evolution
-      array2d:cellulate(data.contour, iterations)
-      -- fill in the gaps
-      array2d:fillHoles(data.contour)
+    -- generate the contour map: a 2D boolean array where land is "true".
+    data.contour = array2d:array(width, height)
+    -- add random noise to start our contours
+    array2d:noise(data.contour, seed, density)
+    -- add variety by placing some random land masses (or plain blocks if you prefer)
+    self:largeNoise(data.contour, seed, density)
+    -- close off the map with a border
+    array2d:addBorder(data.contour)
+    -- put it through cellular evolution
+    array2d:cellulate(data.contour, iterations)
+    -- fill in the gaps
+    array2d:fillHoles(data.contour)
 
-      -- generate the water depth (values 0..1 where 1 is near the surface)
-      data.depth = array2d:array(width, height)
-      array2d:noise(data.depth, seed, density + 0.1)
-      self:largeNoise(data.depth, seed, density + 0.2)
-      array2d:cellulate(data.depth, iterations)
-      -- smooth out the water bed
-      array2d:average(data.depth)
+    -- generate the water depth (values 0..1 where 1 is near the surface)
+    data.depth = array2d:array(width, height)
+    array2d:noise(data.depth, seed, density + 0.1)
+    self:largeNoise(data.depth, seed, density + 0.2)
+    array2d:cellulate(data.depth, iterations)
+    -- smooth out the water bed
+    array2d:average(data.depth)
 
-      -- generate aquatic plants
-      -- number each island of plants to draw groups of the same sprite.
-      data.plants = array2d:array(width, height)
-      array2d:noise(data.plants, seed, density + 0.01)
-      self:largeNoise(data.plants, seed, density + 0.05)
-      array2d:cellulate(data.plants, math.floor(iterations / 6))
-      array2d:clipExcludeContour(data.plants, data.contour)
-      array2d:numberRegions(data.plants)
+    -- generate aquatic plants
+    -- number each island of plants to draw groups of the same sprite.
+    data.plants = array2d:array(width, height)
+    array2d:noise(data.plants, seed, density + 0.01)
+    self:largeNoise(data.plants, seed, density + 0.05)
+    array2d:cellulate(data.plants, math.floor(iterations / 6))
+    array2d:clipExcludeContour(data.plants, data.contour)
+    array2d:numberRegions(data.plants)
 
-      -- generate trees (cellular evolution around the contour)
-      data.trees = array2d:array(width, height)
-      array2d:noise(data.trees, seed, 0.45) -- n% of the surface
-      array2d:cellulate(data.trees, 6)
-      array2d:clipIncludeContour(data.trees, data.contour)
-      array2d:numberRegions(data.trees)
+    -- generate trees (cellular evolution around the contour)
+    data.trees = array2d:array(width, height)
+    array2d:noise(data.trees, seed, 0.45) -- n% of the surface
+    array2d:cellulate(data.trees, 6)
+    array2d:clipIncludeContour(data.trees, data.contour)
+    array2d:numberRegions(data.trees)
 
-      -- generate buildings (dotted around the contour)
-      data.buildings = array2d:array(width, height)
-      array2d:noise(data.buildings, seed, 0.01)  -- n% of the surface
-      array2d:clipIncludeContour(data.buildings, data.contour)
+    -- generate buildings (dotted around the contour)
+    data.buildings = array2d:array(width, height)
+    array2d:noise(data.buildings, seed, 0.01)  -- n% of the surface
+    array2d:clipIncludeContour(data.buildings, data.contour)
 
-      self:placeJetties(data, seed)
-      self:createObstacles(data, seed)
-      self:createBoats(data, seed)
+    self:placeJetties(data, seed)
+    self:createObstacles(data, seed)
+    self:createBoats(data, seed)
+    self:spawnFish(data, seed)
 
-      return data
+    return data
 
 end
 

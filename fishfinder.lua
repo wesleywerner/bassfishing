@@ -37,20 +37,30 @@ local player = require("player")
 function module:update()
 
     local depth = glob.lake.depth[player.x][player.y]
-    local fish = math.random(0, 1) == 1
+    local structure = glob.lake.structure[player.x][player.y]
+    local fishamt = 0
+
+    -- count fish
+    for _, fish in ipairs(glob.lake.fish) do
+        if fish.x == player.x and fish.y == player.y then
+            fishamt = fishamt + 1
+        end
+    end
 
     -- Fill the points list if empty
     if #self.points == 0 then
         for n=1, self.history do
             table.insert(self.points, {
                 depth = depth,
-                fish = false
+                fish = 0,
+                structure = structure
             })
         end
     else
         table.insert(self.points, {
             depth = depth,
-            fish = fish
+            fish = fishamt,
+            structure = structure
         })
     end
 
@@ -95,7 +105,7 @@ function module:draw()
             for n, point in ipairs(self.points) do
 
                 -- history moves from right to left
-                local px = ( self.width / (self.history-1) ) * (n-1)
+                local px = ( self.width / (self.history) ) * (n-1)
 
                 -- depth 0=bottom 1=surface
                 local py = self.height - ( self.height * point.depth )
@@ -103,8 +113,12 @@ function module:draw()
                 table.insert(vertices, py)
 
                 -- draw a fish
-                if point.fish then
-                    love.graphics.print("^", px, py - 20)
+                for fishid=1, point.fish do
+                    love.graphics.print("^", px, py - 20 - (fishid*2))
+                end
+
+                if point.structure then
+                    love.graphics.print("=", px, py - 60)
                 end
 
             end
