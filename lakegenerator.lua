@@ -34,100 +34,103 @@ local boat = require("boat")
 -- Percent of array width to try cover.
 function module:largeNoise(a, seed, density)
 
-  seed = seed or os.time()
-  math.randomseed(seed)
+    seed = seed or os.time()
+    math.randomseed(seed)
 
-  local width = #a
-  local height = #a[1]
-  local iterations = width * density
+    local width = #a
+    local height = #a[1]
+    local iterations = width * density
 
-  for iteration=1, iterations do
+    for iteration=1, iterations do
 
-    -- random position
-    local blockx = math.random(1, width)
-    local blocky = math.random(1, height)
-    local blockw = math.floor(math.random(1, width * 0.2))  -- % of size
-    local blockh = math.floor(math.random(1, height * 0.2))
+        -- random position
+        local blockx = math.random(1, width)
+        local blocky = math.random(1, height)
+        local blockw = math.floor(math.random(1, width * 0.2))  -- % of size
+        local blockh = math.floor(math.random(1, height * 0.2))
 
-    for offsetx=1, blockw do
-      for offsety=1, blockh do
+        for offsetx=1, blockw do
+            for offsety=1, blockh do
+                -- wrap around
+                local x = math.max(1, (blockx + offsetx) % width)
+                local y = math.max(1, (blocky + offsety) % height)
+                a[x][y] = math.random()
+            end
+        end
 
-        -- wrap around
-        local x = math.max(1, (blockx + offsetx) % width)
-        local y = math.max(1, (blocky + offsety) % height)
-        a[x][y] = math.random()
-
-      end
     end
-  end
 
 end
 
 
 --- Place jetties on a map conforming to a contour.
-function module:placeJetties(a, seed)
+function module:placeJetties(data, seed)
 
-  local list = {}
+    data.jetties = {}
 
-  for i=1, 4 do
-    -- next seed since we are in a loop
-    seed = seed + 1
-    local coastalpoint = array2d:findCoastline(a, seed)
-    coastalpoint.jetty = true
-    table.insert(list, coastalpoint)
-  end
-
-  return list
+    for i=1, 4 do
+        -- next seed since we are in a loop
+        seed = seed + 1
+        local coastalpoint = array2d:findCoastline(data.contour, seed)
+        coastalpoint.jetty = true
+        table.insert(data.jetties, coastalpoint)
+    end
 
 end
 
 --- Create some water obstacles
-function module:createObstacles(a, seed)
-
-  seed = seed or os.time()
-  math.randomseed(seed)
-
-  local list = {}
-
-  for i=1, 30 do
-    -- next seed since we are in a loop
-    seed = seed + 10
-    local coastalpoint = array2d:findCoastline(a, seed)
-
-    -- is it a rock, a log or a moored boat?
-    local what = math.random(1, 2)
-    if what == 1 then
-      coastalpoint.rock = true
-    elseif what == 2 then
-      coastalpoint.log = true
-    end
-
-    -- avoid placing over other obstacles
-    local duplicate = false
-    for obsi, obs in ipairs(list) do
-      if coastalpoint.x == obs.x and coastalpoint.y == obs.y then
-        duplicate = true
-      end
-    end
-
-    if not duplicate then
-      table.insert(list, coastalpoint)
-    end
-
-  end
-
-  return list
-
-end
-
---- Build some boats
-function module:createBoats(a, seed)
+function module:createObstacles(data, seed)
 
     seed = seed or os.time()
     math.randomseed(seed)
 
-    local width, height = #a, #a[1]
-    local list = {}
+    data.obstacles = {}
+
+    for i=1, 30 do
+
+        -- next seed since we are in a loop
+        seed = seed + 10
+        local coastalpoint = array2d:findCoastline(data.contour, seed)
+
+        -- is it a rock, a log or a moored boat?
+        local what = math.random(1, 2)
+        if what == 1 then
+            coastalpoint.rock = true
+        elseif what == 2 then
+            coastalpoint.log = true
+        end
+
+        -- avoid placing over other obstacles
+        local skip = false
+        for obsi, obs in ipairs(data.obstacles) do
+            if coastalpoint.x == obs.x and coastalpoint.y == obs.y then
+                skip = true
+            end
+        end
+
+        -- remove obstacles covering jetties
+        for _, jetty in ipairs(data.jetties) do
+            if coastalpoint.x == jetty.x and coastalpoint.y == jetty.y then
+                skip = true
+            end
+        end
+
+        if not skip then
+            table.insert(data.obstacles, coastalpoint)
+        end
+
+    end
+
+end
+
+--- Build some boats
+function module:createBoats(data, seed)
+
+    seed = seed or os.time()
+    math.randomseed(seed)
+
+    data.boats = {}
+
     local colors = {
         {224, 0, 0},
         {0, 224, 0},
@@ -143,116 +146,99 @@ function module:createBoats(a, seed)
         -- next seed since we are in a loop
         seed = seed + 10
 
-        -- find a random open point on the contour
+        -- find a random open point
         local x, y = 0, 0
         repeat
-            x = math.random(1, width-1)
-            y = math.random(1, height-1)
-        until a[x][y] == 0
+            x = math.random(1, data.width - 1)
+            y = math.random(1, data.height - 1)
+        until data.contour[x][y] == 0
 
         -- assign a random color
         local boatcolor = colors[math.random(1, #colors)]
 
         -- avoid placing over other boats
-        local duplicate = false
-        for _, b in ipairs(list) do
+        local skip = false
+        for _, b in ipairs(data.boats) do
           if b.x == x and b.y == y then
-            duplicate = true
+            skip = true
           end
         end
 
-        if not duplicate then
-            table.insert(list, {
+        if not skip then
+            table.insert(data.boats, {
                 x = x,
                 y = y,
                 color = boatcolor,
-                boat = true
+                boat = true,
+                AI = true
             })
         end
     end
 
     -- prepare the boats
-    for _, craft in ipairs(list) do
-        craft.AI = true
+    for _, craft in ipairs(data.boats) do
         boat:prepare(craft)
     end
-
-    return list
 
 end
 
 --- Return a new generated map
 function module:generate(width, height, seed, density, iterations)
 
-  local data = {}
-  data.width = width
-  data.height = height
-  data.seed = seed
-  data.density = density
-  data.iterations = iterations
+      local data = {}
+      data.width = width
+      data.height = height
+      data.seed = seed
+      data.density = density
+      data.iterations = iterations
 
-  -- generate the contour map: a 2D boolean array where land is "true".
-  data.contour = array2d:array(width, height)
-  -- add random noise to start our contours
-  array2d:noise(data.contour, seed, density)
-  -- add variety by placing some random land masses (or plain blocks if you prefer)
-  self:largeNoise(data.contour, seed, density)
-  -- close off the map with a border
-  array2d:addBorder(data.contour)
-  -- put it through cellular evolution
-  array2d:cellulate(data.contour, iterations)
-  -- fill in the gaps
-  array2d:fillHoles(data.contour)
+      -- generate the contour map: a 2D boolean array where land is "true".
+      data.contour = array2d:array(width, height)
+      -- add random noise to start our contours
+      array2d:noise(data.contour, seed, density)
+      -- add variety by placing some random land masses (or plain blocks if you prefer)
+      self:largeNoise(data.contour, seed, density)
+      -- close off the map with a border
+      array2d:addBorder(data.contour)
+      -- put it through cellular evolution
+      array2d:cellulate(data.contour, iterations)
+      -- fill in the gaps
+      array2d:fillHoles(data.contour)
 
-  -- generate the water depth (values 0..1 where 1 is near the surface)
-  data.depth = array2d:array(width, height)
-  array2d:noise(data.depth, seed, density + 0.1)
-  self:largeNoise(data.depth, seed, density + 0.2)
-  array2d:cellulate(data.depth, iterations)
-  -- smooth out the water bed
-  array2d:average(data.depth)
+      -- generate the water depth (values 0..1 where 1 is near the surface)
+      data.depth = array2d:array(width, height)
+      array2d:noise(data.depth, seed, density + 0.1)
+      self:largeNoise(data.depth, seed, density + 0.2)
+      array2d:cellulate(data.depth, iterations)
+      -- smooth out the water bed
+      array2d:average(data.depth)
 
-  -- generate aquatic plants
-  -- number each island of plants to draw groups of the same sprite.
-  data.plants = array2d:array(width, height)
-  array2d:noise(data.plants, seed, density + 0.01)
-  self:largeNoise(data.plants, seed, density + 0.05)
-  array2d:cellulate(data.plants, math.floor(iterations / 6))
-  array2d:clipExcludeContour(data.plants, data.contour)
-  array2d:numberRegions(data.plants)
+      -- generate aquatic plants
+      -- number each island of plants to draw groups of the same sprite.
+      data.plants = array2d:array(width, height)
+      array2d:noise(data.plants, seed, density + 0.01)
+      self:largeNoise(data.plants, seed, density + 0.05)
+      array2d:cellulate(data.plants, math.floor(iterations / 6))
+      array2d:clipExcludeContour(data.plants, data.contour)
+      array2d:numberRegions(data.plants)
 
-  -- generate trees (cellular evolution around the contour)
-  data.trees = array2d:array(width, height)
-  array2d:noise(data.trees, seed, 0.45) -- n% of the surface
-  array2d:cellulate(data.trees, 6)
-  array2d:clipIncludeContour(data.trees, data.contour)
-  array2d:numberRegions(data.trees)
+      -- generate trees (cellular evolution around the contour)
+      data.trees = array2d:array(width, height)
+      array2d:noise(data.trees, seed, 0.45) -- n% of the surface
+      array2d:cellulate(data.trees, 6)
+      array2d:clipIncludeContour(data.trees, data.contour)
+      array2d:numberRegions(data.trees)
 
-  -- generate buildings (dotted around the contour)
-  data.buildings = array2d:array(width, height)
-  array2d:noise(data.buildings, seed, 0.01)  -- n% of the surface
-  array2d:clipIncludeContour(data.buildings, data.contour)
+      -- generate buildings (dotted around the contour)
+      data.buildings = array2d:array(width, height)
+      array2d:noise(data.buildings, seed, 0.01)  -- n% of the surface
+      array2d:clipIncludeContour(data.buildings, data.contour)
 
-  -- place jetties
-  data.jetties = self:placeJetties(data.contour, seed)
+      self:placeJetties(data, seed)
+      self:createObstacles(data, seed)
+      self:createBoats(data, seed)
 
-  -- add obstacles (logs, rocks, moored boats)
-  data.obstacles = self:createObstacles(data.contour, seed)
-
-  -- add other boats
-  data.boats = self:createBoats(data.contour, seed)
-
-  -- remove obstacles covering jetties
-  for obsi, obs in ipairs(data.obstacles) do
-    for _, jetty in ipairs(data.jetties) do
-      if obs.x == jetty.x and obs.y == jetty.y then
-        table.remove(data.obstacles, obsi)
-      end
-    end
-  end
-
-
-  return data
+      return data
 
 end
 
