@@ -127,6 +127,8 @@ function module:draw()
         -- insert a bottom-right vertice as the last position.
         -- this completes a polygon
         table.insert(vertices, self.width)
+        table.insert(vertices, vertices[#vertices-1])
+        table.insert(vertices, self.width)
         table.insert(vertices, self.height + 1) -- ensure end point is an extremity
 
         love.graphics.setColor(foregroundcolor)
