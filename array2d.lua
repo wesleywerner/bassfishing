@@ -313,7 +313,7 @@ function module:getListOfIslands(a)
 
   local width, height = #a, #a[1]
 
-  -- make a list of all the holes in the map and their size.
+  -- make a list of all the islands in the map and their size.
   -- we use a copy of the map for this, as it will destroy the map.
   local cp = self:copy(a)
   local list = {}
