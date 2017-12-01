@@ -359,14 +359,17 @@ function module:findIsland(a)
 end
 
 --- Flood fill. Returns the size of the filled area.
+-- Also returns a table of the points filled as a second return value.
 function module:floodFill(a, x, y, oldvalue, newvalue)
 
   local width, height = #a, #a[1]
   local filledSize = 0
   local stack = {}
+  local points = {}
 
   -- add the first point to check
   table.insert(stack, {x=x, y=y} )
+  table.insert(points, {x=x, y=y} )
 
   while #stack > 0 do
     -- get stack point
@@ -385,13 +388,14 @@ function module:floodFill(a, x, y, oldvalue, newvalue)
         if a[px][py] == oldvalue then
           -- add it to the stack of points to check
           table.insert(stack, {x=px, y=py} )
+          table.insert(points, {x=px, y=py} )
         end
       end
     end
 
   end
 
-  return filledSize
+  return filledSize, points
 
 end
 
