@@ -90,17 +90,17 @@
 local module = {
     
     -- % chance a fish decides to seek food
-    chanceToFeed = 0.1,    -- 0.01  -- TODO: reset chanceToFeed
+    chanceToFeed = 0.05,    -- 0.01  -- TODO: reset chanceToFeed
     
     -- the minimum depth underneath aquatic plants for fish to consider it a feeding zone
     -- (bottom 0>1 surface)
-    feedingZoneDepth = 0.4,
+    --feedingZoneDepth = 0.4,
     
     -- distance (in map coordinates) to stay near the feeding zone
-    feedingRadius = 2,
+    feedingRadius = 0,
     
     -- distance (in map coordinates) to stay near home
-    sanctuaryRadius = 2,
+    sanctuaryRadius = 0,
     
 }
 
@@ -156,8 +156,7 @@ function module:update()
             if self:swimToFeed(fish) then
                 
                 -- the fish is satieted
-                if math.random() < self.chanceToFeed then
-                    self:debug(fish, "fish is full")
+                if math.random() < (self.chanceToFeed * 2) then
                     fish.feeding = false
                 end
                 
@@ -187,30 +186,38 @@ end
 function module:assignNearestFeedingZone(fish)
     
     -- get a list of all aquatic plant islands
-    local zones = {}
     local plantIslands = array2d:getListOfIslands(glob.lake.plants)
     
-    for _, island in ipairs(plantIslands) do
-        
-        local isOverShallowWater = glob.lake.depth[island.pos.x][island.pos.y] > self.feedingZoneDepth
-        
-        if isOverShallowWater then
-            local distance = lume.distance(fish.x, fish.y, island.pos.x, island.pos.y)
-            table.insert(zones, { x=island.pos.x, y=island.pos.y, distance=distance })
-        end
-    
-    end
-    
-    -- sort by distance to the fish
-    table.sort(zones, function(a, b) return a.distance < b.distance end)
+    -- sorry fish, no feeding areas for you :(
+    if #plantIslands == 0 then return end
 
-    -- pick a random feeding zone from the top n options
-    if #zones > 0 then
-        local top = math.min(#zones, 3)
-        local chosenZone = zones[math.random(1, top)]
-        fish.feedingZone = { x=chosenZone.x, y=chosenZone.y }
+    -- get the distance to each plant island
+    for _, island in ipairs(plantIslands) do
+        island.distance = lume.distance(fish.x, fish.y, island.pos.x, island.pos.y)
     end
+
+    -- sort by nearest distance first
+    table.sort(plantIslands, function(a, b) return a.distance < b.distance end)
     
+    -- pick a random top(n) feeding zone
+    local topchoice = math.random(1, math.min(#plantIslands, 3) )
+    local favoriteIsland = plantIslands[topchoice]
+    
+    -- now we find a random point inside the chosen island (patches of aquatic plants can cover large areas)
+    
+    -- make a copy of the plants map (it gets destroyed with flood fill)
+    local plantmap = array2d:copy(glob.lake.plants)
+        
+    -- get all the points in this island
+    local fillSize, filledPoints = array2d:floodFill( plantmap, 
+        favoriteIsland.pos.x, favoriteIsland.pos.y, favoriteIsland.pos.value, 0 )
+        
+    -- pick a random position inside the island area
+    local luckyPoint = filledPoints[ math.random(1, #filledPoints) ]
+    
+    fish.feedingZone = { x=luckyPoint.x, y=luckyPoint.y }
+    self:debug(fish, "heading to zone " .. topchoice, "at", luckyPoint.x, luckyPoint.y)
+
 end
 
 --- Move a fish closer to it's sanctuary.
@@ -218,7 +225,6 @@ function module:swimHome(fish)
     
     local distanceToHome = lume.distance(fish.x, fish.y, fish.sanctuary.x, fish.sanctuary.y)
     if distanceToHome <= self.sanctuaryRadius then
-        self:debug(fish, "fish is now home")
         return true
     end
     
@@ -244,11 +250,8 @@ function module:swimToFeed(fish)
     
     local distanceToZone = lume.distance(fish.x, fish.y, fish.feedingZone.x, fish.feedingZone.y)
     if distanceToZone <= self.feedingRadius then
-        self:debug(fish, "fish is now in the feeding zone")
         return true
     end
-    
-    self:debug(fish, "distance to feeding zone: " .. distanceToZone)
     
     if fish.x < fish.feedingZone.x then
         fish.x = fish.x + 1
