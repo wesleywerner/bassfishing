@@ -29,7 +29,7 @@ local fishfinder = require("fishfinder")
 local tiles = require("tiles")
 local boat = require("boat")
 local player = require("player")
-local boatAI = require("ai")
+local boatAI = require("boat-ai")
 local scale = 2
 
 
