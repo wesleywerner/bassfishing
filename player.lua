@@ -19,7 +19,12 @@
 ]]--
 
 local module = {
-    speed = 0
+    
+    -- current boat cruising speed
+    speed = 0,
+    
+    -- maximum boat speed
+    maxSpeed = 10,
 }
 
 local boat = require("boat")
@@ -48,6 +53,11 @@ function module:forward()
     if self.stuck then
         return
     end
+    
+    -- limit speed (when using a trolling motor etc)
+    if self.speed > self.maxSpeed then
+        return
+    end
 
     boat:forward(self)
 end
@@ -58,6 +68,11 @@ function module:reverse()
     -- this also prevents a boat zooming over obstacles without crunching into them
     -- since moving into open water while stuck is a valid move.
     if self.stuck then
+        return
+    end
+
+    -- limit speed (when using a trolling motor etc)
+    if self.speed > self.maxSpeed then
         return
     end
 
