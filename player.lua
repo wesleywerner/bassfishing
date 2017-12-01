@@ -18,11 +18,15 @@
 
 ]]--
 
-local module = {}
+local module = {
+    speed = 0
+}
+
 local boat = require("boat")
 local lume = require("lume")
 local states = require("states")
 local messages = require("messages")
+local tiles = require("tiles")
 
 
 function module:left()
@@ -60,16 +64,60 @@ function module:reverse()
     boat:reverse(self)
 end
 
+--- Calculate the boat cruising speed by the distance on-screen from it's goal position
+function module:findBoatSpeed(dt)
+        
+    -- distance to the goal
+    local distanceToGoal = lume.distance(self.screenX, self.screenY, self.screenGoalX, self.screenGoalY)
+    
+    --distanceToGoal = lume.round(distanceToGoal, 0.1)
+    
+    -- work in tile units
+    local currentSpeed = math.floor(distanceToGoal / (tiles.size / 2))
+    
+    -- compensate for diagonal movement (which counts as more tiles)
+    local isdiagonal = self.angleTo % 90 == 45
+    if isdiagonal then
+        currentSpeed = math.max(0, currentSpeed - 1)
+    end
+    
+    -- take the current speed if faster, otherwise gradually reduce the boat speed
+    if currentSpeed > self.speed then
+        self.speed = currentSpeed
+        -- clear engine cut-off timer
+        self.engineCutoff = nil
+    elseif self.speed > 0 then
+        -- clamp to 1 to simulate the boat idling
+        self.speed = math.max(1, self.speed - dt)
+    end
+        
+    -- if the boat is idling use a timer to cut the engine off
+    if currentSpeed == 0 and self.speed == 1 then
+        
+        self.engineCutoff = (self.engineCutoff or 5) - (dt)
+        if self.engineCutoff < 0 then
+            self.speed = 0
+            self.engineCutoff = nil
+        end
+
+    end
+    
+    return distanceToGoal
+
+end
+
 
 function module:update(dt)
     
     -- update player boat screen position and angle
     boat:update(self, dt)
+    
+    local distanceToGoal = self:findBoatSpeed(dt)
 
     -- show a crunch screen
     if self.stuck then
         -- but only when the boat is near it's goal on screen (compensates for movement lerping)
-        if lume.distance(self.screenX, self.screenY, self.screenGoalX, self.screenGoalY) < 8 then
+        if distanceToGoal < 8 then
 
             -- customize the obstruction message
             local timelost = math.random(4, 10)

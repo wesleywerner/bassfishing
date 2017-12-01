@@ -140,6 +140,8 @@ function module:draw()
     -- fish finder
     love.graphics.setColor(255, 255, 255)
     fishfinder:draw()
+    
+    love.graphics.print(string.format("boat speed: %d", player.speed))
 
 end
 
