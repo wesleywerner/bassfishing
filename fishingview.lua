@@ -30,6 +30,7 @@ local tiles = require("tiles")
 local boat = require("boat")
 local player = require("player")
 local boatAI = require("boat-ai")
+local fishAI = require("fish-ai")
 local scale = 2
 
 
@@ -68,18 +69,22 @@ function module:keypressed(key)
     elseif key == "f10" then
         states:push("debug map")
     elseif key == "left" or key == "kp4" then
+        fishAI:update()
         boatAI:move()
         player:left()
         fishfinder:update()
     elseif key == "right" or key == "kp6" then
+        fishAI:update()
         boatAI:move()
         player:right()
         fishfinder:update()
     elseif key == "up" or key == "kp8" then
+        fishAI:update()
         boatAI:move()
         player:forward()
         fishfinder:update()
     elseif key == "down" or key == "kp2" then
+        fishAI:update()
         boatAI:move()
         player:reverse()
         fishfinder:update()
@@ -126,10 +131,14 @@ function module:draw()
     player.screenY + 8, math.rad(player.angle), 1, 1, 8, 8 )
 
     -- fish (debugging)
-    love.graphics.setColor(255, 255, 255, 32)
     for _, fish in ipairs(glob.lake.fish) do
-        love.graphics.circle("line", (fish.x-1) * tiles.size + 8,
-        (fish.y-1) * tiles.size + 8, fish.weight)
+        if fish.feeding then
+            love.graphics.setColor(255, 255, 255, 128)
+        else
+            love.graphics.setColor(255, 255, 255, 32)
+        end
+        love.graphics.circle("fill", (fish.x-1) * tiles.size + 8,
+        (fish.y-1) * tiles.size + 8, fish.weight*2)
     end
 
     camera:relax()

@@ -1,0 +1,255 @@
+--[[
+   fish-ai.lua
+
+   Copyright 2017 wesley werner <wesley.werner@gmail.com>
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program. If not, see http://www.gnu.org/licenses/.
+
+]]--
+
+--[[
+
+    http://www.umpquavalleybassmasters.com/bassbook.htm
+
+    * "You may find structure which at the moment is not holding bass
+    but you will NEVER find bass without structure."
+
+    *  The larger the bass become, the more likely they are to prefer
+    deeper water and the harder it is for fishermen to find them.
+
+    * To find relief from bright light the bass must head for the
+    depths and remain at some level where sunlight cannot penetrate or
+    retreat into the shaded comfort of "colored" water or places where
+    there are expanses of very heavily matted bottom weed-beds, lily
+    pads, submerged brush, or felled trees.
+
+    * Reduced light penetration, such as during low-light periods of
+    early morning or late evening or even after dark, might see the
+    bass move to shallower water upon occasion. Cold front weather
+    conditions might see them move considerably deeper! As a general
+    rule, bass will go as deep as need be to feel safe and avoid bright
+    light.
+
+    * The place where a school of bass rests in deep water between
+    feeding cycles is called the sanctuary.
+
+    * Because the sanctuary is normally in deeper water, pinpointing
+    its exact location is nearly impossible.
+
+    * When in the sanctuary, the school of bass is in a rather inactive
+    state and can seldom be tempted into biting or provoked into
+    striking.
+
+    * The school of bass will occasionally, most frequently on a
+    schedule, migrate or travel from the sanctuary to some other area a
+    short distance away, usually into somewhat shallower water, and
+    they are now in a highly active feeding state.
+
+    * The largemouth seems most comfortable when the water is between
+    65 and 75 F. As the water chills, their metabolism starts to slow
+    down and in cold water bass are very sluggish.
+
+    * Bass become uncomfortable when the water temperatures rise above
+    80. That's when the bass will be found along shaded or windy
+    shorelines where wave action pumps oxygen into the water, or among
+    aquatic plants which produce oxygen.
+
+    * Bass need not to be feeding for you to catch them; instincts
+    other than hunger will cause them to strike. Mere curiosity, an
+    instinctive attack reaction
+
+    * Weather has far more effect on fishermen than on fish anywhere.
+    If you can find bass at all, it is possible to catch them whether
+    it is raining and windy or calm with bright sunshine.
+
+    * The importance of fishing a lure close to the bottom cannot be
+    overemphasized.
+
+    * The more quietly an angler behaves, the better his chances.
+    Banging a tackle box against the bottom of a boat, having creaky or
+    loose oarlocks, rowing or paddling with splashing action, and other
+    noise producing activities are to be avoided because they frighten
+    the bass. When frightened, the bass become uneasy and on-guard and
+    either quickly leave the area or cease feeding.
+
+    * As a bass gets bigger, it gets tougher to fool.
+
+]]--
+
+local module = {
+    
+    -- % chance a fish decides to seek food
+    chanceToFeed = 0.01,
+    
+}
+
+local array2d = require("array2d")
+local glob = require("globals")
+local lume = require("lume")
+
+--- Returns a new fish object
+function module:newFish(x, y)
+    
+    -- fish size is a weighted chance
+    local weight = 0
+    local size = lume.weightedchoice({
+        ["small"] = 10,
+        ["medium"] = 5,
+        ["large"] = 2 })
+
+    -- set weight based on size
+    if size == "small" then
+        weight = lume.round( lume.random(0.3, 0.9), 0.01)
+    elseif size == "medium" then
+        weight = lume.round( lume.random(1, 1.9), 0.01)
+    else
+        weight = lume.round( lume.random(2, 5), 0.01)
+    end
+    
+    return {
+        x = x,
+        y = y,
+        size = size,
+        weight = weight,
+        
+        -- fish return the their sanctuary when not feeding
+        sanctuary = { x=x, y=y },
+        
+        -- fish can be spooked by loud noises while feeding (outboard motors, boat collisions)
+        spooked = false,
+        
+        -- hungry fish seek out shallower waters especially where there is aquatic plants
+        feeding = false,
+        feedingZone = {},
+    }
+    
+end
+
+--- Update all fish
+function module:update()
+    
+    for _, fish in ipairs(glob.lake.fish) do
+    
+        if fish.feeding then
+            
+            if self:swimToFeed(fish) then
+                -- the fish is now feeding and may get full
+                if math.random() < 0.5 then
+                    fish.feeding = false
+                end
+            end
+        
+        else
+            
+            -- move back to the sanctuary
+            if self:swimHome(fish) then
+            
+                -- fish is home and getting hungry
+                fish.feeding = math.random() < self.chanceToFeed
+                
+                if fish.feeding then
+                    self:assignNearestFeedingZone(fish)
+                end
+                
+            end
+            
+        end
+    
+    end
+
+end
+
+--- Assign the nearest feeding zone to a fish.
+function module:assignNearestFeedingZone(fish)
+    
+    -- get a list of all aquatic plant islands
+    local zones = {}
+    local plantIslands = array2d:getListOfIslands(glob.lake.plants)
+    
+    for _, island in ipairs(plantIslands) do
+        
+        local isOverShallowWater = glob.lake.depth[island.pos.x][island.pos.y] > 0.5
+        
+        if isOverShallowWater then
+            local distance = lume.distance(fish.x, fish.y, island.pos.x, island.pos.y)
+            table.insert(zones, { x=island.pos.x, y=island.pos.y, distance=distance })
+        end
+    
+    end
+    
+    -- sort by distance to the fish
+    table.sort(zones, function(a, b) return a.distance < b.distance end)
+    
+    -- pick the nearest
+    if #zones > 0 then
+        local chosenZone = zones[1]
+        fish.feedingZone = { x=chosenZone.x, y=chosenZone.y }
+    end
+    
+end
+
+--- Move a fish closer to it's sanctuary.
+function module:swimHome(fish)
+    
+    -- fish is already home
+    if fish.x == fish.sanctuary.x and fish.y == fish.sanctuary.y then
+        return true
+    end
+    
+    local dx = (fish.x < fish.sanctuary.x) and 1 or -1
+    local dy = (fish.y < fish.sanctuary.y) and 1 or -1
+    
+    fish.x = fish.x + dx
+    fish.y = fish.y + dy    
+    
+    return false
+    
+end
+
+--- Move a fish closer to it's feeding zone.
+-- Returns true when in the zone
+function module:swimToFeed(fish)
+    
+    -- fish is already in the zone
+    if fish.x == fish.feedingZone.x and fish.y == fish.feedingZone.y then
+        return true
+    end
+    
+    local distanceToZone = lume.distance(fish.x, fish.y, fish.feedingZone.x, fish.feedingZone.y)
+    print("distance to zone", distanceToZone)
+    
+    if fish.x < fish.feedingZone.x then
+        fish.x = fish.x + 1
+    elseif fish.x > fish.feedingZone.x then
+        fish.x = fish.x - 1
+    end
+    
+    if fish.y < fish.feedingZone.y then
+        fish.y = fish.y + 1
+    elseif fish.y > fish.feedingZone.y then
+        fish.y = fish.y - 1
+    end
+    
+    --local dx = (fish.x < fish.feedingZone.x) and 1 or -1
+    --local dy = (fish.y < fish.feedingZone.y) and 1 or -1
+    --
+    --fish.x = fish.x + dx
+    --fish.y = fish.y + dy    
+    
+    return false
+    
+end
+
+
+return module

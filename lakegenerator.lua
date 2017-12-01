@@ -21,7 +21,7 @@ local module = {}
 local lume = require("lume")
 local array2d = require("array2d")
 local boat = require("boat")
-
+local fishAI = require("fish-ai")
 
 --- Adds large chunks of noise simulating land mass
 --
@@ -227,36 +227,18 @@ function module:spawnFish(data, seed)
             local fishes = math.random(0, 5)
 
             for fishid=1, fishes do
-
-                -- the weight of the fish is weighted more towards small
-                local weight = 0
-                local size = lume.weightedchoice({
-                    ["small"] = 10,
-                    ["medium"] = 5,
-                    ["large"] = 0 })
-
-                if size == "small" then
-                    weight = lume.round( lume.random(0.3, 0.9), 0.1)
-                elseif size == "medium" then
-                    weight = lume.round( lume.random(1, 1.9), 0.1)
-                else
-                    weight = lume.round( lume.random(2, 5), 0.1)
-                end
-
-                table.insert(data.fish, {
-                    x = x,
-                    y = y,
-                    sactuaryX = x,
-                    sactuaryY = y,
-                    weight = weight
-                })
-
-
+                table.insert(data.fish, fishAI:newFish(x, y))
             end
 
         end
 
     end
+    
+    -- debug
+    --table.sort(data.fish, function(a, b) return a.weight < b.weight end)
+    --for _, fish in ipairs(data.fish) do
+    --    print(fish.size, fish.weight)
+    --end
 
 end
 
