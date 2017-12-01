@@ -90,7 +90,17 @@
 local module = {
     
     -- % chance a fish decides to seek food
-    chanceToFeed = 0.01,
+    chanceToFeed = 0.1,    -- 0.01  -- TODO: reset chanceToFeed
+    
+    -- the minimum depth underneath aquatic plants for fish to consider it a feeding zone
+    -- (bottom 0>1 surface)
+    feedingZoneDepth = 0.4,
+    
+    -- distance (in map coordinates) to stay near the feeding zone
+    feedingRadius = 2,
+    
+    -- distance (in map coordinates) to stay near home
+    sanctuaryRadius = 2,
     
 }
 
@@ -144,10 +154,13 @@ function module:update()
         if fish.feeding then
             
             if self:swimToFeed(fish) then
-                -- the fish is now feeding and may get full
-                if math.random() < 0.5 then
+                
+                -- the fish is satieted
+                if math.random() < self.chanceToFeed then
+                    self:debug(fish, "fish is full")
                     fish.feeding = false
                 end
+                
             end
         
         else
@@ -179,7 +192,7 @@ function module:assignNearestFeedingZone(fish)
     
     for _, island in ipairs(plantIslands) do
         
-        local isOverShallowWater = glob.lake.depth[island.pos.x][island.pos.y] > 0.5
+        local isOverShallowWater = glob.lake.depth[island.pos.x][island.pos.y] > self.feedingZoneDepth
         
         if isOverShallowWater then
             local distance = lume.distance(fish.x, fish.y, island.pos.x, island.pos.y)
@@ -190,10 +203,11 @@ function module:assignNearestFeedingZone(fish)
     
     -- sort by distance to the fish
     table.sort(zones, function(a, b) return a.distance < b.distance end)
-    
-    -- pick the nearest
+
+    -- pick a random feeding zone from the top n options
     if #zones > 0 then
-        local chosenZone = zones[1]
+        local top = math.min(#zones, 3)
+        local chosenZone = zones[math.random(1, top)]
         fish.feedingZone = { x=chosenZone.x, y=chosenZone.y }
     end
     
@@ -202,16 +216,23 @@ end
 --- Move a fish closer to it's sanctuary.
 function module:swimHome(fish)
     
-    -- fish is already home
-    if fish.x == fish.sanctuary.x and fish.y == fish.sanctuary.y then
+    local distanceToHome = lume.distance(fish.x, fish.y, fish.sanctuary.x, fish.sanctuary.y)
+    if distanceToHome <= self.sanctuaryRadius then
+        self:debug(fish, "fish is now home")
         return true
     end
     
-    local dx = (fish.x < fish.sanctuary.x) and 1 or -1
-    local dy = (fish.y < fish.sanctuary.y) and 1 or -1
+    if fish.x < fish.sanctuary.x then
+        fish.x = fish.x + 1
+    elseif fish.x > fish.sanctuary.x then
+        fish.x = fish.x - 1
+    end
     
-    fish.x = fish.x + dx
-    fish.y = fish.y + dy    
+    if fish.y < fish.sanctuary.y then
+        fish.y = fish.y + 1
+    elseif fish.y > fish.sanctuary.y then
+        fish.y = fish.y - 1
+    end
     
     return false
     
@@ -221,13 +242,13 @@ end
 -- Returns true when in the zone
 function module:swimToFeed(fish)
     
-    -- fish is already in the zone
-    if fish.x == fish.feedingZone.x and fish.y == fish.feedingZone.y then
+    local distanceToZone = lume.distance(fish.x, fish.y, fish.feedingZone.x, fish.feedingZone.y)
+    if distanceToZone <= self.feedingRadius then
+        self:debug(fish, "fish is now in the feeding zone")
         return true
     end
     
-    local distanceToZone = lume.distance(fish.x, fish.y, fish.feedingZone.x, fish.feedingZone.y)
-    print("distance to zone", distanceToZone)
+    self:debug(fish, "distance to feeding zone: " .. distanceToZone)
     
     if fish.x < fish.feedingZone.x then
         fish.x = fish.x + 1
@@ -241,14 +262,14 @@ function module:swimToFeed(fish)
         fish.y = fish.y - 1
     end
     
-    --local dx = (fish.x < fish.feedingZone.x) and 1 or -1
-    --local dy = (fish.y < fish.feedingZone.y) and 1 or -1
-    --
-    --fish.x = fish.x + dx
-    --fish.y = fish.y + dy    
-    
     return false
     
+end
+
+function module:debug(fish, message)
+    if fish.track then
+        print(message)
+    end
 end
 
 
