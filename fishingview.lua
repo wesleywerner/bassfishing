@@ -133,14 +133,14 @@ function module:draw()
     -- fish (debugging)
     for _, fish in ipairs(glob.lake.fish) do
         if fish.feeding then
-            love.graphics.setColor(255, 255, 255, 128)
+            love.graphics.setColor(255, 255, 255, 255)
+            love.graphics.circle("fill", (fish.x-1) * tiles.size + 8, (fish.y-1) * tiles.size + 8, fish.weight*2)
         else
-            love.graphics.setColor(255, 255, 255, 32)
+            love.graphics.setColor(128, 128, 128, 192)
+            love.graphics.circle("fill", (fish.x-1) * tiles.size + 8, (fish.y-1) * tiles.size + 8, fish.weight*2)
         end
-        love.graphics.circle("fill", (fish.x-1) * tiles.size + 8,
-        (fish.y-1) * tiles.size + 8, fish.weight*2)
     end
-
+    
     camera:relax()
 
     -- debug camera window
