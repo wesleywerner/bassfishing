@@ -96,49 +96,44 @@ function module:draw()
         love.graphics.rectangle("line", 0, 0, self.width, self.height)
         love.graphics.setLineWidth( 1 )
 
-        -- draw land
-        if #self.points > 3 then
+        -- build the list of depth vertices
+        local vertices = { 0, self.height + 1 } -- ensure start point is an extremity
 
-            -- build the list of depth vertices
-            local vertices = { 0, self.height + 1 } -- ensure start point is an extremity
+        for n, point in ipairs(self.points) do
 
-            for n, point in ipairs(self.points) do
+            -- history moves from right to left
+            local px = ( self.width / (self.history) ) * (n-1)
 
-                -- history moves from right to left
-                local px = ( self.width / (self.history) ) * (n-1)
+            -- depth 0=bottom 1=surface
+            local py = self.height - ( self.height * point.depth )
 
-                -- depth 0=bottom 1=surface
-                local py = self.height - ( self.height * point.depth )
+            -- vary the bottom for variety
+            py = math.max(1, py - math.random(0, 6))
 
-                -- vary the bottom for variety
-                py = math.max(1, py - math.random(0, 6))
+            table.insert(vertices, px)
+            table.insert(vertices, py)
 
-                table.insert(vertices, px)
-                table.insert(vertices, py)
-
-                -- draw a fish
-                for fishid=1, point.fish do
-                    love.graphics.print("^", px, py - 20 - (fishid*2))
-                end
-
-                if point.structure then
-                    love.graphics.print("=", px, py - 60)
-                end
-
+            -- draw a fish
+            for fishid=1, point.fish do
+                love.graphics.print("^", px, py - 20 - (fishid*2))
             end
 
-            -- insert a bottom-left vertice at no 1, and bottom-right vertice at last position.
-            -- this completes a polygon
-            table.insert(vertices, self.width)
-            table.insert(vertices, self.height + 1) -- ensure end point is an extremity
-
-            love.graphics.setColor(foregroundcolor)
-            love.graphics.setLineJoin("none")
-            local triangles = love.math.triangulate ( vertices )
-            for triNo, triangle in ipairs ( triangles ) do
-                love.graphics.polygon ( "fill", triangle )
+            if point.structure then
+                love.graphics.print("=", px, py - 60)
             end
 
+        end
+
+        -- insert a bottom-right vertice as the last position.
+        -- this completes a polygon
+        table.insert(vertices, self.width)
+        table.insert(vertices, self.height + 1) -- ensure end point is an extremity
+
+        love.graphics.setColor(foregroundcolor)
+        love.graphics.setLineJoin("none")
+        local triangles = love.math.triangulate ( vertices )
+        for triNo, triangle in ipairs ( triangles ) do
+            love.graphics.polygon ( "fill", triangle )
         end
 
         love.graphics.setCanvas()
