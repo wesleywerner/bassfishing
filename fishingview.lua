@@ -117,7 +117,11 @@ function module:draw()
     -- fish (debugging)
     for _, fish in ipairs(glob.lake.fish) do
         love.graphics.setColor(0, 128, 255, 64)
-        love.graphics.draw(tiles.image, tiles.fish, fish.screenX, fish.screenY)
+        if fish.feeding then
+            love.graphics.draw(tiles.image, tiles.fish.feed, fish.screenX, fish.screenY)
+        else
+            love.graphics.draw(tiles.image, tiles.fish.home, fish.screenX, fish.screenY)
+        end
     end
 
     -- draw other boats
