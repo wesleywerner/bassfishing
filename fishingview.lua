@@ -31,7 +31,7 @@ local boat = require("boat")
 local player = require("player")
 local boatAI = require("boat-ai")
 local fishAI = require("fish-ai")
-local scale = 2
+local scale = 1
 
 
 function module:init()
@@ -69,22 +69,22 @@ function module:keypressed(key)
     elseif key == "f10" then
         states:push("debug map")
     elseif key == "left" or key == "kp4" then
-        fishAI:update()
+        fishAI:move()
         boatAI:move()
         player:left()
         fishfinder:update()
     elseif key == "right" or key == "kp6" then
-        fishAI:update()
+        fishAI:move()
         boatAI:move()
         player:right()
         fishfinder:update()
     elseif key == "up" or key == "kp8" then
-        fishAI:update()
+        fishAI:move()
         boatAI:move()
         player:forward()
         fishfinder:update()
     elseif key == "down" or key == "kp2" then
-        fishAI:update()
+        fishAI:move()
         boatAI:move()
         player:reverse()
         fishfinder:update()
@@ -125,22 +125,18 @@ function module:draw()
 
     end
 
+    -- fish (debugging)
+    for _, fish in ipairs(glob.lake.fish) do
+        love.graphics.setColor(0, 128, 255, 64)
+        love.graphics.draw(tiles.image, tiles.fish,
+        (fish.x-1) * tiles.size + 8, (fish.y-1) * tiles.size + 8)
+    end
+
     -- draw player boat
     love.graphics.setColor(0, 255, 255)
     love.graphics.draw(tiles.image, tiles.boats[3], player.screenX + 8,
     player.screenY + 8, math.rad(player.angle), 1, 1, 8, 8 )
 
-    -- fish (debugging)
-    for _, fish in ipairs(glob.lake.fish) do
-        if fish.feeding then
-            love.graphics.setColor(255, 255, 255, 255)
-            love.graphics.circle("fill", (fish.x-1) * tiles.size + 8, (fish.y-1) * tiles.size + 8, fish.weight*2)
-        else
-            love.graphics.setColor(128, 128, 128, 192)
-            love.graphics.circle("fill", (fish.x-1) * tiles.size + 8, (fish.y-1) * tiles.size + 8, fish.weight*2)
-        end
-    end
-    
     camera:relax()
 
     -- debug camera window
@@ -149,7 +145,7 @@ function module:draw()
     -- fish finder
     love.graphics.setColor(255, 255, 255)
     fishfinder:draw()
-    
+
     love.graphics.print(string.format("boat speed: %d", player.speed))
 
 end

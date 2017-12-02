@@ -88,20 +88,20 @@
 ]]--
 
 local module = {
-    
+
     -- % chance a fish decides to seek food
     chanceToFeed = 0.05,    -- 0.01  -- TODO: reset chanceToFeed
-    
+
     -- the minimum depth underneath aquatic plants for fish to consider it a feeding zone
     -- (bottom 0>1 surface)
     --feedingZoneDepth = 0.4,
-    
+
     -- distance (in map coordinates) to stay near the feeding zone
     feedingRadius = 0,
-    
+
     -- distance (in map coordinates) to stay near home
     sanctuaryRadius = 0,
-    
+
 }
 
 local array2d = require("array2d")
@@ -110,7 +110,7 @@ local lume = require("lume")
 
 --- Returns a new fish object
 function module:newFish(x, y)
-    
+
     -- fish size is a weighted chance
     local weight = 0
     local size = lume.weightedchoice({
@@ -126,68 +126,68 @@ function module:newFish(x, y)
     else
         weight = lume.round( lume.random(2, 5), 0.01)
     end
-    
+
     return {
         x = x,
         y = y,
         size = size,
         weight = weight,
-        
+
         -- fish return the their sanctuary when not feeding
         sanctuary = { x=x, y=y },
-        
+
         -- fish can be spooked by loud noises while feeding (outboard motors, boat collisions)
         spooked = false,
-        
+
         -- hungry fish seek out shallower waters especially where there is aquatic plants
         feeding = false,
         feedingZone = {},
     }
-    
+
 end
 
 --- Update all fish
-function module:update()
-    
+function module:move()
+
     for _, fish in ipairs(glob.lake.fish) do
-    
+
         if fish.feeding then
-            
+
             if self:swimToFeed(fish) then
-                
+
                 -- the fish is satieted
                 if math.random() < (self.chanceToFeed * 2) then
                     fish.feeding = false
                 end
-                
+
             end
-        
+
         else
-            
+
             -- move back to the sanctuary
             if self:swimHome(fish) then
-            
+
                 -- fish is home and getting hungry
                 fish.feeding = math.random() < self.chanceToFeed
-                
+
                 if fish.feeding then
                     self:assignNearestFeedingZone(fish)
                 end
-                
+
             end
-            
+
         end
-    
+
     end
 
 end
 
 --- Assign the nearest feeding zone to a fish.
 function module:assignNearestFeedingZone(fish)
-    
+
     -- get a list of all aquatic plant islands
     local plantIslands = array2d:getListOfIslands(glob.lake.plants)
-    
+
     -- sorry fish, no feeding areas for you :(
     if #plantIslands == 0 then return end
 
@@ -198,23 +198,23 @@ function module:assignNearestFeedingZone(fish)
 
     -- sort by nearest distance first
     table.sort(plantIslands, function(a, b) return a.distance < b.distance end)
-    
+
     -- pick a random top(n) feeding zone
     local topchoice = math.random(1, math.min(#plantIslands, 3) )
     local favoriteIsland = plantIslands[topchoice]
-    
+
     -- now we find a random point inside the chosen island (patches of aquatic plants can cover large areas)
-    
+
     -- make a copy of the plants map (it gets destroyed with flood fill)
     local plantmap = array2d:copy(glob.lake.plants)
-        
+
     -- get all the points in this island
-    local fillSize, filledPoints = array2d:floodFill( plantmap, 
+    local fillSize, filledPoints = array2d:floodFill( plantmap,
         favoriteIsland.pos.x, favoriteIsland.pos.y, favoriteIsland.pos.value, 0 )
-        
+
     -- pick a random position inside the island area
     local luckyPoint = filledPoints[ math.random(1, #filledPoints) ]
-    
+
     fish.feedingZone = { x=luckyPoint.x, y=luckyPoint.y }
     self:debug(fish, "heading to zone " .. topchoice, "at", luckyPoint.x, luckyPoint.y)
 
@@ -222,51 +222,51 @@ end
 
 --- Move a fish closer to it's sanctuary.
 function module:swimHome(fish)
-    
+
     local distanceToHome = lume.distance(fish.x, fish.y, fish.sanctuary.x, fish.sanctuary.y)
     if distanceToHome <= self.sanctuaryRadius then
         return true
     end
-    
+
     if fish.x < fish.sanctuary.x then
         fish.x = fish.x + 1
     elseif fish.x > fish.sanctuary.x then
         fish.x = fish.x - 1
     end
-    
+
     if fish.y < fish.sanctuary.y then
         fish.y = fish.y + 1
     elseif fish.y > fish.sanctuary.y then
         fish.y = fish.y - 1
     end
-    
+
     return false
-    
+
 end
 
 --- Move a fish closer to it's feeding zone.
 -- Returns true when in the zone
 function module:swimToFeed(fish)
-    
+
     local distanceToZone = lume.distance(fish.x, fish.y, fish.feedingZone.x, fish.feedingZone.y)
     if distanceToZone <= self.feedingRadius then
         return true
     end
-    
+
     if fish.x < fish.feedingZone.x then
         fish.x = fish.x + 1
     elseif fish.x > fish.feedingZone.x then
         fish.x = fish.x - 1
     end
-    
+
     if fish.y < fish.feedingZone.y then
         fish.y = fish.y + 1
     elseif fish.y > fish.feedingZone.y then
         fish.y = fish.y - 1
     end
-    
+
     return false
-    
+
 end
 
 function module:debug(fish, message)
