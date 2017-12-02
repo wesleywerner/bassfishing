@@ -51,18 +51,18 @@ local module = {}
 -- An indexed table as a 2D array.
 function module:array(width, height, default)
 
-  local a = {}
+    local a = {}
 
-  if type(default) == "nil" then default = 0 end
+    if type(default) == "nil" then default = 0 end
 
-  for x=1, width do
-    a[x] = {}
-    for y=1, height do
-      a[x][y] = default
+    for x=1, width do
+        a[x] = {}
+        for y=1, height do
+            a[x][y] = default
+        end
     end
-  end
 
-  return a
+    return a
 
 end
 
@@ -82,14 +82,14 @@ end
 -- @treturn table
 function module:iter(a, test, assignment)
 
-  local width, height = #a, #a[1]
-  for x=1, width do
-    for y=1, height do
-      if test(a[x][y], x, y) then
-        a[x][y] = assignment(a[x][y], x, y)
-      end
+    local width, height = #a, #a[1]
+    for x=1, width do
+        for y=1, height do
+            if test(a[x][y], x, y) then
+                a[x][y] = assignment(a[x][y], x, y)
+            end
+        end
     end
-  end
 
 end
 
@@ -106,17 +106,17 @@ end
 -- Weight of the chance of placing a value, 0>n>1
 function module:noise(a, seed, density)
 
-  seed = seed or os.time()
-  math.randomseed(seed)
+    seed = seed or os.time()
+    math.randomseed(seed)
 
-  self:iter(a,
-    function(value)
-      return math.random() < density
-    end,
-    function(value)
-      return math.random()  -- used to return 1
-    end
-    )
+    self:iter(a,
+        function(value)
+            return math.random() < density
+        end,
+        function(value)
+            return math.random()    -- used to return 1
+        end
+        )
 
 end
 
@@ -136,130 +136,130 @@ end
 -- Count of neighbours with non-zero values.
 function module:countNeighbours(a, px, py)
 
-  local width = #a
-  local height = #a[1]
-  local count = 0
-  local average = 0
+    local width = #a
+    local height = #a[1]
+    local count = 0
+    local average = 0
 
 
-  for ix=-1,1 do
-    for iy=-1,1 do
-      if ix == 0 and iy == 0 then
-        -- skip counting ourselves
-      else
-        local nx = px+ix
-        local ny = py+iy
-        -- consider a boundary as a positive.
-        -- this helps to fill in the edges of the map.
-        if nx < 1 or ny < 1 or nx > width or ny > height then
-          -- comment the line below to generate open-sea like islands
-          count = count + 1
-        elseif a[nx][ny] > 0 then
-          -- count if this neighbour is positive
-          count = count + 1
-          average = average + a[nx][ny]
+    for ix=-1,1 do
+        for iy=-1,1 do
+            if ix == 0 and iy == 0 then
+                -- skip counting ourselves
+            else
+                local nx = px+ix
+                local ny = py+iy
+                -- consider a boundary as a positive.
+                -- this helps to fill in the edges of the map.
+                if nx < 1 or ny < 1 or nx > width or ny > height then
+                    -- comment the line below to generate open-sea like islands
+                    count = count + 1
+                elseif a[nx][ny] > 0 then
+                    -- count if this neighbour is positive
+                    count = count + 1
+                    average = average + a[nx][ny]
+                end
+            end
         end
-      end
     end
-  end
-  return count, (average / count)
+    return count, (average / count)
 
 end
 
 --- Apply cellular automata to a map
 function module:cellulate(a, iterations)
 
-  -- tweakers:
-  -- the deathLimit is a good tweak.
+    -- tweakers:
+    -- the deathLimit is a good tweak.
 
-  -- minimum living neighbours to survive (for living cells)
-  local deathLimit = 4
-  -- minimum living neighbours to reproduce (for dead cells)
-  local birthLimit = 4
+    -- minimum living neighbours to survive (for living cells)
+    local deathLimit = 4
+    -- minimum living neighbours to reproduce (for dead cells)
+    local birthLimit = 4
 
-  local width = #a
-  local height = #a[1]
+    local width = #a
+    local height = #a[1]
 
-  -- work-on copy
-  local b = self:array(width, height)
+    -- work-on copy
+    local b = self:array(width, height)
 
-  for iter=1, iterations do
-    for x=1, width do
-      for y=1, height do
-        -- this cell is alive if truthy
-        local alive = a[x][y] > 0
-        -- copy the cell
-        b[x][y] = a[x][y]
-        -- count neighbours at this point
-        local neighbours, average = self:countNeighbours(a, x, y)
-        -- alone cells die off without enough neighbours
-        if alive and neighbours < deathLimit then
-          -- the cell dies
-          b[x][y] = 0
-        elseif not alive and neighbours > birthLimit then
-          -- a new cell is born
-          b[x][y] = average
+    for iter=1, iterations do
+        for x=1, width do
+            for y=1, height do
+                -- this cell is alive if truthy
+                local alive = a[x][y] > 0
+                -- copy the cell
+                b[x][y] = a[x][y]
+                -- count neighbours at this point
+                local neighbours, average = self:countNeighbours(a, x, y)
+                -- alone cells die off without enough neighbours
+                if alive and neighbours < deathLimit then
+                    -- the cell dies
+                    b[x][y] = 0
+                elseif not alive and neighbours > birthLimit then
+                    -- a new cell is born
+                    b[x][y] = average
+                end
+            end
         end
-      end
-    end
 
-    -- copy results
-    for x=1, width do
-      for y=1, height do
-        a[x][y] = b[x][y]
-      end
-    end
+        -- copy results
+        for x=1, width do
+            for y=1, height do
+                a[x][y] = b[x][y]
+            end
+        end
 
-  end -- do another iteration
+    end -- do another iteration
 
 end
 
 --- Place a border around the array
 function module:addBorder(a)
 
-  local width = #a
-  local height = #a[1]
+    local width = #a
+    local height = #a[1]
 
-  for x=1, width do
-    a[x][1] = 1
-    a[x][height] = 1
-  end
-  for y=1, height do
-    a[1][y] = 1
-    a[width][y] = 1
-  end
+    for x=1, width do
+        a[x][1] = 1
+        a[x][height] = 1
+    end
+    for y=1, height do
+        a[1][y] = 1
+        a[width][y] = 1
+    end
 
 end
 
 --- Copy an array
 function module:copy(a)
-  local width, height = #a, #a[1]
-  local b = self:array(width, height)
-  for x=1, width do
-    for y=1, height do
-      b[x][y] = a[x][y]
+    local width, height = #a, #a[1]
+    local b = self:array(width, height)
+    for x=1, width do
+        for y=1, height do
+            b[x][y] = a[x][y]
+        end
     end
-  end
-  return b
+    return b
 end
 
 --- Fills all but the largest hole on a map.
 function module:fillHoles(a)
 
-  local holes = self:getListOfHoles(a)
+    local holes = self:getListOfHoles(a)
 
-  -- sort the list, smallest hole first
-  table.sort(holes, function(a, b)
-    return a.size < b.size
-  end)
+    -- sort the list, smallest hole first
+    table.sort(holes, function(a, b)
+        return a.size < b.size
+    end)
 
-  -- remove the largest hole from the list
-  table.remove(holes)
+    -- remove the largest hole from the list
+    table.remove(holes)
 
-  -- fill the remaining holes on the original array
-  for _, hole in ipairs(holes) do
-    self:floodFill(a, hole.pos.x, hole.pos.y, 0, 1)
-  end
+    -- fill the remaining holes on the original array
+    for _, hole in ipairs(holes) do
+        self:floodFill(a, hole.pos.x, hole.pos.y, 0, 1)
+    end
 
 end
 
@@ -267,22 +267,22 @@ end
 --- Assign a number to each island in a map.
 function module:numberRegions(a)
 
-  -- to make this work, we must ensure that all values in the array
-  -- won't clash with our numbering scheme. we change all non-zero
-  -- values to a temporary value first.
-  self:iter(a,
-    function(value)
-      return value > 0
-    end,
-    function(value)
-      return 1000
-    end)
+    -- to make this work, we must ensure that all values in the array
+    -- won't clash with our numbering scheme. we change all non-zero
+    -- values to a temporary value first.
+    self:iter(a,
+        function(value)
+            return value > 0
+        end,
+        function(value)
+            return 1000
+        end)
 
-  local regions = self:getListOfIslands(a)
+    local regions = self:getListOfIslands(a)
 
-  for i, reg in ipairs(regions) do
-    self:floodFill(a, reg.pos.x, reg.pos.y, 1000, i)
-  end
+    for i, reg in ipairs(regions) do
+        self:floodFill(a, reg.pos.x, reg.pos.y, 1000, i)
+    end
 
 end
 
@@ -290,42 +290,42 @@ end
 --- Get a list of holes in a map.
 function module:getListOfHoles(a)
 
-  local width, height = #a, #a[1]
+    local width, height = #a, #a[1]
 
-  -- make a list of all the holes in the map and their size.
-  -- we use a copy of the map for this, as it will destroy the map.
-  local cp = self:copy(a)
-  local list = {}
-  local nexthole = self:findHole(cp)
+    -- make a list of all the holes in the map and their size.
+    -- we use a copy of the map for this, as it will destroy the map.
+    local cp = self:copy(a)
+    local list = {}
+    local nexthole = self:findHole(cp)
 
-  while nexthole ~= nil do
-    local filledSize = self:floodFill(cp, nexthole.x, nexthole.y, 0, 1)
-    table.insert(list, { pos=nexthole, size=filledSize })
-    nexthole = self:findHole(cp)
-  end
+    while nexthole ~= nil do
+        local filledSize = self:floodFill(cp, nexthole.x, nexthole.y, 0, 1)
+        table.insert(list, { pos=nexthole, size=filledSize })
+        nexthole = self:findHole(cp)
+    end
 
-  return list
+    return list
 
 end
 
 --- Get a list of islands in a map.
 function module:getListOfIslands(a)
 
-  local width, height = #a, #a[1]
+    local width, height = #a, #a[1]
 
-  -- make a list of all the islands in the map and their size.
-  -- we use a copy of the map for this, as it will destroy the map.
-  local cp = self:copy(a)
-  local list = {}
-  local nextisland = self:findIsland(cp)
+    -- make a list of all the islands in the map and their size.
+    -- we use a copy of the map for this, as it will destroy the map.
+    local cp = self:copy(a)
+    local list = {}
+    local nextisland = self:findIsland(cp)
 
-  while nextisland ~= nil do
-    local filledSize = self:floodFill(cp, nextisland.x, nextisland.y, nextisland.value, 0)
-    table.insert(list, { pos=nextisland, size=filledSize })
-    nextisland = self:findIsland(cp)
-  end
+    while nextisland ~= nil do
+        local filledSize = self:floodFill(cp, nextisland.x, nextisland.y, nextisland.value, 0)
+        table.insert(list, { pos=nextisland, size=filledSize })
+        nextisland = self:findIsland(cp)
+    end
 
-  return list
+    return list
 
 end
 
@@ -333,28 +333,28 @@ end
 -- Returns nil if none are found.
 function module:findHole(a)
 
-  local width, height = #a, #a[1]
-  for x=1, width do
-    for y=1, height do
-      if a[x][y] == 0 then
-        return { x=x, y=y }
-      end
+    local width, height = #a, #a[1]
+    for x=1, width do
+        for y=1, height do
+            if a[x][y] == 0 then
+                return { x=x, y=y }
+            end
+        end
     end
-  end
 
 end
 
 --- Find a cell in a map that is truthy.
 function module:findIsland(a)
 
-  local width, height = #a, #a[1]
-  for x=1, width do
-    for y=1, height do
-      if a[x][y] > 0 then
-        return { x=x, y=y, value=a[x][y] }
-      end
+    local width, height = #a, #a[1]
+    for x=1, width do
+        for y=1, height do
+            if a[x][y] > 0 then
+                return { x=x, y=y, value=a[x][y] }
+            end
+        end
     end
-  end
 
 end
 
@@ -362,68 +362,68 @@ end
 -- Also returns a table of the points filled as a second return value.
 function module:floodFill(a, x, y, oldvalue, newvalue)
 
-  local width, height = #a, #a[1]
-  local filledSize = 0
-  local stack = {}
-  local points = {}
+    local width, height = #a, #a[1]
+    local filledSize = 0
+    local stack = {}
+    local points = {}
 
-  -- add the first point to check
-  table.insert(stack, {x=x, y=y} )
-  table.insert(points, {x=x, y=y} )
+    -- add the first point to check
+    table.insert(stack, {x=x, y=y} )
+    table.insert(points, {x=x, y=y} )
 
-  while #stack > 0 do
-    -- get stack point
-    local point = table.remove(stack)
-    -- fill this point
-    a[point.x][point.y] = newvalue
-    filledSize = filledSize + 1
-    -- test if we need to add neighbours to the stack
-    local offsets = { {0,-1}, {1,0}, {0,1}, {-1,0} }
-    for _, offset in ipairs(offsets) do
-      local px = point.x + offset[1]
-      local py = point.y + offset[2]
-      -- within bounds
-      if px > 0 and py > 0 and px <= width and py <= height then
-        -- if the neighbour is falsy
-        if a[px][py] == oldvalue then
-          -- add it to the stack of points to check
-          table.insert(stack, {x=px, y=py} )
-          table.insert(points, {x=px, y=py} )
+    while #stack > 0 do
+        -- get stack point
+        local point = table.remove(stack)
+        -- fill this point
+        a[point.x][point.y] = newvalue
+        filledSize = filledSize + 1
+        -- test if we need to add neighbours to the stack
+        local offsets = { {0,-1}, {1,0}, {0,1}, {-1,0} }
+        for _, offset in ipairs(offsets) do
+            local px = point.x + offset[1]
+            local py = point.y + offset[2]
+            -- within bounds
+            if px > 0 and py > 0 and px <= width and py <= height then
+                -- if the neighbour is falsy
+                if a[px][py] == oldvalue then
+                    -- add it to the stack of points to check
+                    table.insert(stack, {x=px, y=py} )
+                    table.insert(points, {x=px, y=py} )
+                end
+            end
         end
-      end
+
     end
 
-  end
-
-  return filledSize, points
+    return filledSize, points
 
 end
 
 --- Sets all cells in an array falsy where they are also falsy on a contour map.
 function module:clipIncludeContour(a, contour)
-  local width, height = #contour, #contour[1]
+    local width, height = #contour, #contour[1]
 
-  for x=1, width do
-    for y=1, height do
-      if contour[x][y] == 0 then
-        a[x][y] = 0
-      end
+    for x=1, width do
+        for y=1, height do
+            if contour[x][y] == 0 then
+                a[x][y] = 0
+            end
+        end
     end
-  end
 
 end
 
 --- Opposite of clipIncludeContour
 function module:clipExcludeContour(a, contour)
-  local width, height = #contour, #contour[1]
+    local width, height = #contour, #contour[1]
 
-  for x=1, width do
-    for y=1, height do
-      if contour[x][y] > 0 then
-        a[x][y] = 0
-      end
+    for x=1, width do
+        for y=1, height do
+            if contour[x][y] > 0 then
+                a[x][y] = 0
+            end
+        end
     end
-  end
 
 end
 
@@ -444,49 +444,49 @@ end
 -- @treturn CoastlineResult
 function module:findCoastline(a, seed, startTest, endTest)
 
-  -- use default provided test functions
-  startTest = startTest or function(value) return value == 0 end
-  endTest = endTest or function(value) return value > 0 end
+    -- use default provided test functions
+    startTest = startTest or function(value) return value == 0 end
+    endTest = endTest or function(value) return value > 0 end
 
-  seed = seed or os.time()
-  math.randomseed(seed)
+    seed = seed or os.time()
+    math.randomseed(seed)
 
-  local width, height = #a, #a[1]
+    local width, height = #a, #a[1]
 
-  -- find a random open point on the contour
-  local x, y = 0, 0
-  repeat
-    x = math.random(2, width-1)
-    y = math.random(2, height-1)
-  until startTest(a[x][y])
+    -- find a random open point on the contour
+    local x, y = 0, 0
+    repeat
+        x = math.random(2, width-1)
+        y = math.random(2, height-1)
+    until startTest(a[x][y])
 
-  -- find the shoreline in a random direction
-  local ox, oy = 0, 0
+    -- find the shoreline in a random direction
+    local ox, oy = 0, 0
 
-  -- move either up/down or left/right
-  repeat
-    ox, oy = math.random(-1, 1), math.random(-1, 1)
-  until (ox == 0 and oy ~= 0) or (ox ~= 0 and oy == 0)
+    -- move either up/down or left/right
+    repeat
+        ox, oy = math.random(-1, 1), math.random(-1, 1)
+    until (ox == 0 and oy ~= 0) or (ox ~= 0 and oy == 0)
 
-  -- move in direction until we hit land
-  while not endTest(a[x+ox][y+oy]) do
-    x = x + ox
-    y = y + oy
-  end
+    -- move in direction until we hit land
+    while not endTest(a[x+ox][y+oy]) do
+        x = x + ox
+        y = y + oy
+    end
 
-  --- Costline find result
-  -- @table CoastlineResult
-  -- @tfield number x
-  -- @tfield number y
-  -- @tfield boolean horizontal
-  -- @tfield boolean vertical
+    --- Costline find result
+    -- @table CoastlineResult
+    -- @tfield number x
+    -- @tfield number y
+    -- @tfield boolean horizontal
+    -- @tfield boolean vertical
 
-  return {
-    x=x,
-    y=y,
-    horizontal=ox ~= 0,
-    vertical=oy ~= 0
-  }
+    return {
+        x=x,
+        y=y,
+        horizontal=ox ~= 0,
+        vertical=oy ~= 0
+    }
 
 end
 
@@ -510,9 +510,9 @@ function module:average(a)
     end
 
     for x=1, width do
-      for y=1, height do
-        a[x][y] = averageNeighbours(x, y)
-      end
+        for y=1, height do
+            a[x][y] = averageNeighbours(x, y)
+        end
     end
 
 end
