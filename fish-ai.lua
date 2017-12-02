@@ -107,6 +107,7 @@ local module = {
 local array2d = require("array2d")
 local glob = require("globals")
 local lume = require("lume")
+local luastar = require("lua-star")
 
 --- Returns a new fish object
 function module:newFish(x, y)
@@ -141,7 +142,8 @@ function module:newFish(x, y)
 
         -- hungry fish seek out shallower waters especially where there is aquatic plants
         feeding = false,
-        feedingZone = {},
+        feedingZone = { },
+        path = { }
     }
 
 end
@@ -220,27 +222,23 @@ function module:assignNearestFeedingZone(fish)
 
 end
 
+local function getMapPositionOpen(x, y)
+    return glob.lake.contour[x][y] == 0
+end
+
+
 --- Move a fish closer to it's sanctuary.
 function module:swimHome(fish)
 
-    local distanceToHome = lume.distance(fish.x, fish.y, fish.sanctuary.x, fish.sanctuary.y)
-    if distanceToHome <= self.sanctuaryRadius then
-        return true
+    -- get a new path
+    if #fish.path == 0 then
+        local start = { x = fish.x, y = fish.y }
+        local goal = { x = fish.sanctuary.x, y = fish.sanctuary.y }
+        fish.path = luastar:find( glob.lake.width, glob.lake.height,
+            start, goal, getMapPositionOpen, true)
     end
 
-    if fish.x < fish.sanctuary.x then
-        fish.x = fish.x + 1
-    elseif fish.x > fish.sanctuary.x then
-        fish.x = fish.x - 1
-    end
-
-    if fish.y < fish.sanctuary.y then
-        fish.y = fish.y + 1
-    elseif fish.y > fish.sanctuary.y then
-        fish.y = fish.y - 1
-    end
-
-    return false
+    return self:moveAlongPath(fish)
 
 end
 
@@ -248,24 +246,31 @@ end
 -- Returns true when in the zone
 function module:swimToFeed(fish)
 
-    local distanceToZone = lume.distance(fish.x, fish.y, fish.feedingZone.x, fish.feedingZone.y)
-    if distanceToZone <= self.feedingRadius then
+    -- get a new path
+    if #fish.path == 0 then
+        local start = { x = fish.x, y = fish.y }
+        local goal = { x = fish.feedingZone.x, y = fish.feedingZone.y }
+        fish.path = luastar:find( glob.lake.width, glob.lake.height,
+            start, goal, getMapPositionOpen, false)
+    end
+
+    return self:moveAlongPath(fish)
+
+end
+
+function module:moveAlongPath(fish)
+
+    -- reached our destination
+    if #fish.path == 0 then
         return true
     end
 
-    if fish.x < fish.feedingZone.x then
-        fish.x = fish.x + 1
-    elseif fish.x > fish.feedingZone.x then
-        fish.x = fish.x - 1
-    end
+    -- move along the remaining path
+    local next = table.remove(fish.path, 1)
+    fish.x, fish.y = next.x, next.y
 
-    if fish.y < fish.feedingZone.y then
-        fish.y = fish.y + 1
-    elseif fish.y > fish.feedingZone.y then
-        fish.y = fish.y - 1
-    end
-
-    return false
+    -- still en-route if there are path points left
+    return #fish.path == 0
 
 end
 
