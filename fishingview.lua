@@ -32,6 +32,7 @@ local player = require("player")
 local boatAI = require("boat-ai")
 local fishAI = require("fish-ai")
 local scale = 2
+local drawDebug = false
 
 
 function module:init()
@@ -88,6 +89,8 @@ function module:keypressed(key)
         boatAI:move()
         player:reverse()
         fishfinder:update()
+    elseif key == "tab" then
+        drawDebug = not drawDebug
     end
 end
 
@@ -95,7 +98,7 @@ function module:update(dt)
 
     boatAI:update(dt)
     player:update(dt)
-    fishAI:update(dt)
+    if drawDebug then fishAI:update(dt) end
 
     camera:center(player.screenX * scale, player.screenY * scale)
     camera:update(dt)
@@ -115,12 +118,14 @@ function module:draw()
     love.graphics.draw(maprender.image)
 
     -- fish (debugging)
-    for _, fish in ipairs(glob.lake.fish) do
-        love.graphics.setColor(0, 128, 255, 64)
-        if fish.feeding then
-            love.graphics.draw(tiles.image, tiles.fish.feed, fish.screenX, fish.screenY)
-        else
-            love.graphics.draw(tiles.image, tiles.fish.home, fish.screenX, fish.screenY)
+    if drawDebug then
+        for _, fish in ipairs(glob.lake.fish) do
+            love.graphics.setColor(0, 128, 255, 64)
+            if fish.feeding then
+                love.graphics.draw(tiles.image, tiles.fish.feed, fish.screenX, fish.screenY)
+            else
+                love.graphics.draw(tiles.image, tiles.fish.home, fish.screenX, fish.screenY)
+            end
         end
     end
 
@@ -130,7 +135,7 @@ function module:draw()
         love.graphics.draw(tiles.image, tiles.boats[3], craft.screenX + 8,
         craft.screenY + 8, math.rad(craft.angle), 1, 1, 8, 8 )
 
-        if craft.stuck then
+        if drawDebug and craft.stuck then
             love.graphics.rectangle("line", craft.screenX, craft.screenY, 16, 16)
         end
 
@@ -143,7 +148,8 @@ function module:draw()
 
     camera:relax()
 
-    -- debug camera window
+    -- camera window
+    love.graphics.setColor(255, 255, 255)
     love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
 
     -- fish finder
