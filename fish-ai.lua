@@ -143,7 +143,14 @@ function module:newFish(x, y)
         -- hungry fish seek out shallower waters especially where there is aquatic plants
         feeding = false,
         feedingZone = { },
-        path = { }
+
+        -- movement path
+        path = { },
+
+        -- position on screen in pixels
+        screenX = nil,
+        screenY = nil,
+
     }
 
 end
@@ -280,5 +287,36 @@ function module:debug(fish, message)
     end
 end
 
+
+--- Updates the on-screen position
+function module:update(dt)
+
+    for _, fish in ipairs(glob.lake.fish) do
+
+        -- the screen position goal
+        fish.screenGoalX = (fish.x - 1) * 16
+        fish.screenGoalY = (fish.y - 1) * 16
+
+        -- start in-place if the screen position is empty
+        if not fish.screenX or not fish.screenY then
+            fish.screenX = fish.screenGoalX
+            fish.screenY = fish.screenGoalY
+        end
+
+        -- remember the old position, and reset the movement counter when this changes
+        if fish.fromScreenX ~= fish.screenGoalX or fish.fromScreenY ~= fish.screenGoalY then
+            fish.fromScreenX = fish.screenX
+            fish.fromScreenY = fish.screenY
+            fish.movementFrame = 0
+        end
+
+        -- lerp position
+        fish.movementFrame = fish.movementFrame + dt * 4
+        fish.screenX = lume.lerp(fish.fromScreenX, fish.screenGoalX, fish.movementFrame)
+        fish.screenY = lume.lerp(fish.fromScreenY, fish.screenGoalY, fish.movementFrame)
+
+    end
+
+end
 
 return module

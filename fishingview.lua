@@ -31,7 +31,7 @@ local boat = require("boat")
 local player = require("player")
 local boatAI = require("boat-ai")
 local fishAI = require("fish-ai")
-local scale = 1
+local scale = 2
 
 
 function module:init()
@@ -95,6 +95,7 @@ function module:update(dt)
 
     boatAI:update(dt)
     player:update(dt)
+    fishAI:update(dt)
 
     camera:center(player.screenX * scale, player.screenY * scale)
     camera:update(dt)
@@ -113,6 +114,12 @@ function module:draw()
     love.graphics.scale(scale, scale)
     love.graphics.draw(maprender.image)
 
+    -- fish (debugging)
+    for _, fish in ipairs(glob.lake.fish) do
+        love.graphics.setColor(0, 128, 255, 64)
+        love.graphics.draw(tiles.image, tiles.fish, fish.screenX, fish.screenY)
+    end
+
     -- draw other boats
     for _, craft in ipairs(glob.lake.boats) do
         love.graphics.setColor(craft.color)
@@ -123,13 +130,6 @@ function module:draw()
             love.graphics.rectangle("line", craft.screenX, craft.screenY, 16, 16)
         end
 
-    end
-
-    -- fish (debugging)
-    for _, fish in ipairs(glob.lake.fish) do
-        love.graphics.setColor(0, 128, 255, 64)
-        love.graphics.draw(tiles.image, tiles.fish,
-        (fish.x-1) * tiles.size + 8, (fish.y-1) * tiles.size + 8)
     end
 
     -- draw player boat
