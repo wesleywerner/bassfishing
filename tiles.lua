@@ -89,4 +89,6 @@ tiles.boats = {
   love.graphics.newQuad(416, 48, 16, 16, tiles.w, tiles.h),
 }
 
+tiles.fish = love.graphics.newQuad(384, 96, 16, 16, tiles.w, tiles.h)
+
 return tiles
