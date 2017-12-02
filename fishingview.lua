@@ -37,6 +37,9 @@ local drawDebug = false
 
 function module:init()
 
+    self.windowWidth = love.graphics.getWidth( )
+    self.windowHeight = love.graphics.getHeight( )
+
     -- create a new map on the global module.
     if not glob.lake then
         glob.lake = genie:generate(glob.defaultMapWidth,
@@ -54,10 +57,6 @@ function module:init()
     end
 
     -- set up our fish finder
-    fishfinder.top = camera.frameTop
-    fishfinder.left = camera.frameLeft + camera.frameWidth + 2
-    fishfinder.width = love.graphics.getWidth( ) - fishfinder.left - 2
-    fishfinder.height = fishfinder.width
     fishfinder:update()
 
     love.graphics.setFont( love.graphics.newFont( 20 ) )
@@ -153,8 +152,12 @@ function module:draw()
     love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
 
     -- fish finder
+    love.graphics.push()
+    love.graphics.translate(self.windowWidth - 170, 20)
     love.graphics.setColor(255, 255, 255)
     fishfinder:draw()
+    love.graphics.pop()
+
 
     love.graphics.print(string.format("boat speed: %d", player.speed))
 

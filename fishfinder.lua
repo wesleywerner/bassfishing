@@ -25,12 +25,14 @@ local module = {
     points = {},
     -- true when rendering to canvas is required
     refresh = true,
-    -- size and position
-    top = 0,
-    left = 0,
-    width = 200,
-    height = 200
+    -- size and position of the graph (to fit within the background)
+    left = 27,
+    top = 12,
+    width = 110,
+    height = 100,
+    background = love.graphics.newImage("res/fishfinder3000.png")
 }
+
 local glob = require("globals")
 local player = require("player")
 
@@ -75,26 +77,19 @@ end
 
 function module:draw()
 
-    -- render to canvas
     if self.refresh then
 
-        love.graphics.push()
+        -- render to canvas
         local backgroundcolor = { 140, 185, 164 }
         local foregroundcolor = { 0, 85, 182, 128 }
 
+        -- create new graph canvas
+        love.graphics.push()
+        love.graphics.origin()
         self.image = nil
         self.image = love.graphics.newCanvas( self.width, self.height )
         love.graphics.setCanvas(self.image)
-
-        -- background
-        love.graphics.setColor(backgroundcolor)
-        love.graphics.rectangle("fill", 0, 0, self.width, self.height)
-
-        -- border
-        love.graphics.setLineWidth( 6 )
         love.graphics.setColor(foregroundcolor)
-        love.graphics.rectangle("line", 0, 0, self.width, self.height)
-        love.graphics.setLineWidth( 1 )
 
         -- build the list of depth vertices
         local vertices = { 0, self.height + 1 } -- ensure start point is an extremity
@@ -131,7 +126,6 @@ function module:draw()
         table.insert(vertices, self.width)
         table.insert(vertices, self.height + 1) -- ensure end point is an extremity
 
-        love.graphics.setColor(foregroundcolor)
         love.graphics.setLineJoin("none")
         local triangles = love.math.triangulate ( vertices )
         for triNo, triangle in ipairs ( triangles ) do
@@ -141,12 +135,13 @@ function module:draw()
         love.graphics.setCanvas()
         love.graphics.setColor(255, 255, 255)
         love.graphics.setLineWidth( 1 )
-        love.graphics.pop()
 
         self.refresh = false
+        love.graphics.pop()
 
     end
 
+    love.graphics.draw(self.background, 0, 0)
     love.graphics.draw(self.image, self.left, self.top)
 
 end
