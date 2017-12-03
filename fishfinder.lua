@@ -25,12 +25,21 @@ local module = {
     points = {},
     -- true when rendering to canvas is required
     refresh = true,
-    -- size and position of the graph (to fit within the background)
+
+    -- position of the graph (to fit within the background)
     left = 27,
     top = 12,
-    width = 110,
-    height = 100,
-    background = love.graphics.newImage("res/fishfinder3000.png")
+
+    -- size of the graph
+    graphWidth = 110,
+    graphHeight = 100,
+
+    -- border image
+    background = nil,
+
+    -- total size
+    width = 0,
+    height = 0,
 }
 
 local glob = require("globals")
@@ -75,32 +84,44 @@ function module:update()
 
 end
 
-function module:draw()
+function module:render()
+
 
     if self.refresh then
+
+        if not self.background then
+
+            -- border image
+            self.background = love.graphics.newImage("res/fishfinder3000.png")
+
+            -- total size
+            self.width = self.background:getWidth()
+            self.height = self.background:getHeight()
+
+        end
+
+        love.graphics.push()
 
         -- render to canvas
         local backgroundcolor = { 140, 185, 164 }
         local foregroundcolor = { 0, 85, 182, 128 }
 
         -- create new graph canvas
-        love.graphics.push()
-        love.graphics.origin()
         self.image = nil
-        self.image = love.graphics.newCanvas( self.width, self.height )
+        self.image = love.graphics.newCanvas( self.graphWidth, self.graphHeight )
         love.graphics.setCanvas(self.image)
         love.graphics.setColor(foregroundcolor)
 
         -- build the list of depth vertices
-        local vertices = { 0, self.height + 1 } -- ensure start point is an extremity
+        local vertices = { 0, self.graphHeight + 1 } -- ensure start point is an extremity
 
         for n, point in ipairs(self.points) do
 
             -- history moves from right to left
-            local px = ( self.width / (self.history) ) * (n-1)
+            local px = ( self.graphWidth / (self.history) ) * (n-1)
 
             -- depth 0=bottom 1=surface
-            local py = self.height - ( self.height * point.depth )
+            local py = self.graphHeight - ( self.graphHeight * point.depth )
 
             -- vary the bottom for variety
             py = math.max(1, py - math.random(0, 6))
@@ -121,10 +142,10 @@ function module:draw()
 
         -- insert a bottom-right vertice as the last position.
         -- this completes a polygon
-        table.insert(vertices, self.width)
+        table.insert(vertices, self.graphWidth)
         table.insert(vertices, vertices[#vertices-1])
-        table.insert(vertices, self.width)
-        table.insert(vertices, self.height + 1) -- ensure end point is an extremity
+        table.insert(vertices, self.graphWidth)
+        table.insert(vertices, self.graphHeight + 1) -- ensure end point is an extremity
 
         love.graphics.setLineJoin("none")
         local triangles = love.math.triangulate ( vertices )
@@ -140,6 +161,10 @@ function module:draw()
         love.graphics.pop()
 
     end
+
+end
+
+function module:draw()
 
     love.graphics.draw(self.background, 0, 0)
     love.graphics.draw(self.image, self.left, self.top)

@@ -108,6 +108,7 @@ function module:draw()
 
     -- must render the map outside any transformations
     maprender:render()
+    fishfinder:render()
 
     camera:pose()
 
@@ -153,11 +154,11 @@ function module:draw()
 
     -- fish finder
     love.graphics.push()
-    love.graphics.translate(self.windowWidth - 170, 20)
+    love.graphics.translate(self.windowWidth - fishfinder.width * 1, 20)
+    love.graphics.scale(1, 1)
     love.graphics.setColor(255, 255, 255)
     fishfinder:draw()
     love.graphics.pop()
-
 
     love.graphics.print(string.format("boat speed: %d", player.speed))
 
