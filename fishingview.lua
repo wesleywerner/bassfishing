@@ -112,7 +112,10 @@ function module:mousepressed( x, y, button, istouch )
         competitors:move()
         fishfinder:update()
         -- TODO: provide lure data to the strike
-        fishAI:attemptStrike(player.castOffset.x, player.castOffset.y)
+        local fish = fishAI:attemptStrike(player.castOffset.x, player.castOffset.y)
+        if fish then
+            player:landFish(fish)
+        end
     end
 end
 

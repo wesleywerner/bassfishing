@@ -111,6 +111,17 @@ function module:aimCast( x, y )
 
 end
 
+--- Land a fish that striked
+function module:landFish(fish)
+
+    print("Landed!")
+
+    local message = string.format("You landed a %s fish of %.2f kg", fish.size, fish.weight)
+
+    states:push("message", { title="FISH ON", message=message, shake=false } )
+
+end
+
 function module:update(dt)
 
     -- update player boat screen position and angle

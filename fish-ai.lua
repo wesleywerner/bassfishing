@@ -102,6 +102,9 @@ local module = {
     -- distance (in map coordinates) to stay near home
     sanctuaryRadius = 0,
 
+    -- distance (in map coordinates) from a cast to consider striking it
+    strikeRange = 1
+
 }
 
 local array2d = require("array2d")
@@ -226,7 +229,6 @@ function module:assignNearestFeedingZone(fish)
     local luckyPoint = filledPoints[ math.random(1, #filledPoints) ]
 
     fish.feedingZone = { x=luckyPoint.x, y=luckyPoint.y }
-    self:debug(fish, "heading to zone " .. topchoice, "at", luckyPoint.x, luckyPoint.y)
 
 end
 
@@ -279,6 +281,37 @@ function module:moveAlongPath(fish)
 
     -- still en-route if there are path points left
     return #fish.path == 0
+
+end
+
+--- Strike a fish near the given map position
+function module:attemptStrike(x, y)
+
+    -- find fish near the cast that are busy feeding
+    for _, fish in ipairs(glob.lake.fish) do
+
+        local distance = lume.distance(x, y, fish.x, fish.y)
+
+        if distance <= self.strikeRange then
+
+            if fish.feeding then
+
+                print("fish can strike!", fish.x, fish.y)
+
+                -- TODO: build rules when this fish may strike
+                -- * weather conditions
+                -- * fish lure preferance
+                -- * structure interference
+                -- * distance from feeding zone
+                -- * size
+
+                return fish
+
+            end
+
+        end
+
+    end
 
 end
 
