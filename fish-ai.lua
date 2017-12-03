@@ -90,7 +90,7 @@
 local module = {
 
     -- % chance a fish decides to seek food
-    chanceToFeed = 0.05,    -- 0.01  -- TODO: reset chanceToFeed
+    chanceToFeed = 0.01,    -- 0.01  -- TODO: reset chanceToFeed
 
     -- the minimum depth underneath aquatic plants for fish to consider it a feeding zone
     -- (bottom 0>1 surface)
