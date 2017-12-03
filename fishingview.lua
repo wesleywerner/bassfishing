@@ -105,17 +105,27 @@ function module:mousemoved( x, y, dx, dy, istouch )
 end
 
 function module:mousepressed( x, y, button, istouch )
+
+    -- test if the point is inside the camera frame
     x, y = camera:pointToFrame(x, y)
+
     if x and y then
+
+        -- test if there is a cast aimed
+        if not player.castOffset then return end
+
         -- update turns TODO: move to a turn function?
         fishAI:move()
         competitors:move()
         fishfinder:update()
+
         -- TODO: provide lure data to the strike
         local fish = fishAI:attemptStrike(player.castOffset.x, player.castOffset.y)
+
         if fish then
             player:landFish(fish)
         end
+
     end
 end
 
