@@ -21,6 +21,7 @@
 local tiles = {}
 
 tiles.size = 16
+tiles.center = tiles.size / 2
 tiles.image = love.graphics.newImage("res/newtiles.png")
 tiles.w, tiles.h = tiles.image:getDimensions()
 
