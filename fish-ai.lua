@@ -108,6 +108,7 @@ local array2d = require("array2d")
 local glob = require("globals")
 local lume = require("lume")
 local luastar = require("lua-star")
+local tiles = require("tiles")
 
 --- Returns a new fish object
 function module:newFish(x, y)
@@ -317,6 +318,17 @@ function module:update(dt)
 
     end
 
+end
+
+function module:draw()
+    for _, fish in ipairs(glob.lake.fish) do
+        love.graphics.setColor(0, 128, 255, 64)
+        if fish.feeding then
+            love.graphics.draw(tiles.image, tiles.fish.feed, fish.screenX, fish.screenY)
+        else
+            love.graphics.draw(tiles.image, tiles.fish.home, fish.screenX, fish.screenY)
+        end
+    end
 end
 
 return module

@@ -29,7 +29,7 @@ local fishfinder = require("fishfinder")
 local tiles = require("tiles")
 local boat = require("boat")
 local player = require("player")
-local boatAI = require("boat-ai")
+local competitors = require("boat-ai")
 local fishAI = require("fish-ai")
 local weather = require("weather")
 local scale = 2
@@ -74,22 +74,22 @@ function module:keypressed(key)
         states:push("debug map")
     elseif key == "left" or key == "kp4" then
         fishAI:move()
-        boatAI:move()
+        competitors:move()
         player:left()
         fishfinder:update()
     elseif key == "right" or key == "kp6" then
         fishAI:move()
-        boatAI:move()
+        competitors:move()
         player:right()
         fishfinder:update()
     elseif key == "up" or key == "kp8" then
         fishAI:move()
-        boatAI:move()
+        competitors:move()
         player:forward()
         fishfinder:update()
     elseif key == "down" or key == "kp2" then
         fishAI:move()
-        boatAI:move()
+        competitors:move()
         player:reverse()
         fishfinder:update()
     elseif key == "tab" then
@@ -99,7 +99,7 @@ end
 
 function module:update(dt)
 
-    boatAI:update(dt)
+    competitors:update(dt)
     player:update(dt)
     if drawDebug then fishAI:update(dt) end
 
@@ -122,33 +122,13 @@ function module:draw()
     love.graphics.draw(maprender.image)
 
     -- fish (debugging)
-    if drawDebug then
-        for _, fish in ipairs(glob.lake.fish) do
-            love.graphics.setColor(0, 128, 255, 64)
-            if fish.feeding then
-                love.graphics.draw(tiles.image, tiles.fish.feed, fish.screenX, fish.screenY)
-            else
-                love.graphics.draw(tiles.image, tiles.fish.home, fish.screenX, fish.screenY)
-            end
-        end
-    end
+    if drawDebug then fishAI:draw() end
 
     -- draw other boats
-    for _, craft in ipairs(glob.lake.boats) do
-        love.graphics.setColor(craft.color)
-        love.graphics.draw(tiles.image, tiles.boats[3], craft.screenX + 8,
-        craft.screenY + 8, math.rad(craft.angle), 1, 1, 8, 8 )
-
-        if drawDebug and craft.stuck then
-            love.graphics.rectangle("line", craft.screenX, craft.screenY, 16, 16)
-        end
-
-    end
+    competitors:draw()
 
     -- draw player boat
-    love.graphics.setColor(0, 255, 255)
-    love.graphics.draw(tiles.image, tiles.boats[3], player.screenX + 8,
-    player.screenY + 8, math.rad(player.angle), 1, 1, 8, 8 )
+    player:draw()
 
     camera:relax()
 
@@ -157,12 +137,8 @@ function module:draw()
     love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
 
     -- fish finder
-    love.graphics.push()
     love.graphics.translate(self.windowWidth - fishfinder.width * 1, 20)
-    love.graphics.scale(1, 1)
-    love.graphics.setColor(255, 255, 255)
     fishfinder:draw()
-    love.graphics.pop()
 
     love.graphics.print(string.format("boat speed: %d", player.speed))
 

@@ -22,6 +22,7 @@ local module = {}
 local glob = require("globals")
 local lume = require("lume")
 local boat = require("boat")
+local tiles = require("tiles")
 
 
 function module:update(dt)
@@ -65,6 +66,14 @@ function module:move()
         end
     end
 
+end
+
+function module:draw()
+    for _, craft in ipairs(glob.lake.boats) do
+        love.graphics.setColor(craft.color)
+        love.graphics.draw(tiles.image, tiles.boats[3], craft.screenX + 8,
+        craft.screenY + 8, math.rad(craft.angle), 1, 1, 8, 8 )
+    end
 end
 
 return module
