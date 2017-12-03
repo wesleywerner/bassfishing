@@ -104,11 +104,24 @@ function module:update(dt)
 end
 
 function module:keypressed(key)
-    self:get().object:keypressed(key)
+    local object = self:get().object
+    if object.keypressed then
+        self:get().object:keypressed(key)
+    end
 end
 
 function module:mousemoved( x, y, dx, dy, istouch )
-    self:get().object:mousemoved( x, y, dx, dy, istouch )
+    local object = self:get().object
+    if object.mousemoved then
+        self:get().object:mousemoved( x, y, dx, dy, istouch )
+    end
+end
+
+function module:mousepressed( x, y, button, istouch )
+    local object = self:get().object
+    if object.mousepressed then
+        object:mousepressed( x, y, button, istouch )
+    end
 end
 
 function module:draw()

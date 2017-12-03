@@ -104,6 +104,18 @@ function module:mousemoved( x, y, dx, dy, istouch )
     end
 end
 
+function module:mousepressed( x, y, button, istouch )
+    x, y = camera:pointToFrame(x, y)
+    if x and y then
+        -- update turns TODO: move to a turn function?
+        fishAI:move()
+        competitors:move()
+        fishfinder:update()
+        -- TODO: provide lure data to the strike
+        fishAI:attemptStrike(player.castOffset.x, player.castOffset.y)
+    end
+end
+
 function module:update(dt)
 
     competitors:update(dt)

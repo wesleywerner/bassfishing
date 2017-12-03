@@ -47,6 +47,12 @@ function love.mousemoved( x, y, dx, dy, istouch )
 
 end
 
+function love.mousepressed( x, y, button, istouch )
+
+    states:mousepressed( x, y, button, istouch )
+
+end
+
 function love.draw()
 
     states:draw()
