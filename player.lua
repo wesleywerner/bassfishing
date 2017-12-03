@@ -102,7 +102,12 @@ function module:aimCast( x, y )
 
     -- origin is the player boat position
     x, y = glob:limitPointToCircle(self.screenX, self.screenY, x, y, self.castRange)
-    self.castOffset = { x = x, y = y }
+    self.castOffset = {
+        screenX = x,
+        screenY = y,
+        x = 1 + math.floor(x / tiles.size),
+        y = 1 + math.floor(y / tiles.size)
+        }
 
 end
 
@@ -160,7 +165,7 @@ function module:draw()
     if self.castOffset then
         -- cast crosshair
         love.graphics.setColor(0, 255, 255)
-        love.graphics.circle("line", self.castOffset.x, self.castOffset.y, 4)
+        love.graphics.circle("line", self.castOffset.screenX, self.castOffset.screenY, 4)
         -- cast range
         love.graphics.setColor(0, 255, 255, 16)
         love.graphics.circle("fill", self.screenX, self.screenY, self.castRange)
