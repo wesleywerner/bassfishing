@@ -32,7 +32,7 @@ local module = {
 
     -- size of the graph
     graphWidth = 110,
-    graphHeight = 100,
+    graphHeight = 114,
 
     -- border image
     background = nil,
@@ -44,6 +44,7 @@ local module = {
 
 local glob = require("globals")
 local player = require("player")
+local weather = require("weather")
 
 function module:update()
 
@@ -101,6 +102,7 @@ function module:render()
         end
 
         love.graphics.push()
+        --love.graphics.setFont( love.graphics.newFont( 20 ) )
 
         -- render to canvas
         local backgroundcolor = { 140, 185, 164 }
@@ -147,11 +149,15 @@ function module:render()
         table.insert(vertices, self.graphWidth)
         table.insert(vertices, self.graphHeight + 1) -- ensure end point is an extremity
 
+        -- draw the graph
         love.graphics.setLineJoin("none")
         local triangles = love.math.triangulate ( vertices )
         for triNo, triangle in ipairs ( triangles ) do
             love.graphics.polygon ( "fill", triangle )
         end
+
+        -- print the water temperature
+        love.graphics.print(string.format("%d°C", weather.waterTemperature), 0, 0)
 
         love.graphics.setCanvas()
         love.graphics.setColor(255, 255, 255)

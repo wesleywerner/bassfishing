@@ -31,6 +31,7 @@ local boat = require("boat")
 local player = require("player")
 local boatAI = require("boat-ai")
 local fishAI = require("fish-ai")
+local weather = require("weather")
 local scale = 2
 local drawDebug = false
 
@@ -58,6 +59,9 @@ function module:init()
 
     -- set up our fish finder
     fishfinder:update()
+
+    -- change the weather (TODO: should move to a next day state)
+    weather:change()
 
     love.graphics.setFont( love.graphics.newFont( 20 ) )
 
