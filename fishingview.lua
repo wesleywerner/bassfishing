@@ -144,8 +144,10 @@ function module:draw()
     love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
 
     -- fish finder
+    love.graphics.push()
     love.graphics.translate(self.windowWidth - fishfinder.width * 1, 20)
     fishfinder:draw()
+    love.graphics.pop()
 
     love.graphics.print(string.format("boat speed: %d", player.speed))
 
