@@ -26,4 +26,62 @@ module.defaultMapSeed = 0
 module.defaultMapDensity = 0.25
 module.defaultMapIterations = 6
 
+local lume = require("lume")
+
+--- Returns a point on a circle.
+--
+-- @tparam number cx
+-- The origin of the circle
+--
+-- @tparam number cy
+-- The origin of the circle
+--
+-- @tparam number r
+-- The circle radius
+--
+-- @tparam number a
+-- The angle of the point to the origin.
+--
+-- @treturn number
+-- x, y
+function module:pointOnCircle(cx, cy, r, a)
+
+    x = cx + r * math.cos(a)
+    y = cy + r * math.sin(a)
+    return x, y
+
+end
+
+--- Clamp a point to a circular range.
+--
+-- @tparam number cx
+-- The origin of the circle
+--
+-- @tparam number cy
+-- The origin of the circle
+--
+-- @tparam number x
+-- The goal point to reach
+--
+-- @tparam number y
+-- The goal point to reach
+--
+-- @tparam number r
+-- The circle radius
+--
+-- @treturn number
+-- x, y
+function module:limitPointToCircle(cx, cy, x, y, r)
+
+    -- distance
+    local dist = lume.distance(cx, cy, x, y)
+    -- clamp radius
+    local r = math.min(r, dist)
+    -- angle
+    local a = lume.angle(cx, cy, x, y)
+
+    return self:pointOnCircle(cx, cy, r, a)
+
+end
+
 return module
