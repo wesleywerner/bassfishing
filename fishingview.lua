@@ -97,6 +97,13 @@ function module:keypressed(key)
     end
 end
 
+function module:mousemoved( x, y, dx, dy, istouch )
+    x, y = camera:pointToFrame(x, y)
+    if x and y then
+        player:aimCast( x / scale, y / scale )
+    end
+end
+
 function module:update(dt)
 
     competitors:update(dt)

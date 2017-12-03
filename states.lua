@@ -107,6 +107,10 @@ function module:keypressed(key)
     self:get().object:keypressed(key)
 end
 
+function module:mousemoved( x, y, dx, dy, istouch )
+    self:get().object:mousemoved( x, y, dx, dy, istouch )
+end
+
 function module:draw()
     self:get().object:draw()
 end
