@@ -281,5 +281,52 @@ function module:getObstacle(boat)
 
 end
 
+--- Returns the distance in pixels the boat is from it's goal.
+function module:distanceToGoal(boat)
+
+    return lume.distance(boat.screenX, boat.screenY, boat.screenGoalX, boat.screenGoalY)
+
+end
+
+--- Calculates the boat speed.
+-- dt is used because speed is determined by how often the boat is moved
+-- in real time.
+function module:calculateSpeed(boat, dt)
+
+    -- distance to the goal
+    boat.distanceToGoal = self:distanceToGoal(boat)
+
+    -- work in tile units
+    local currentSpeed = math.floor(boat.distanceToGoal / (tiles.size / 2))
+
+    -- compensate for diagonal movement which counts as more tiles
+    -- and we don't want that
+    local isdiagonal = boat.angleTo % 90 == 45
+    if isdiagonal then
+        currentSpeed = math.max(0, currentSpeed - 1)
+    end
+
+    -- take the current speed if faster, otherwise gradually reduce the speed
+    if currentSpeed > boat.speed then
+        boat.speed = currentSpeed
+        -- clear engine cut-off timer
+        boat.engineCutoff = nil
+    elseif boat.speed > 0 then
+        -- clamp to 1 to simulate the boat idling
+        boat.speed = math.max(1, boat.speed - dt)
+    end
+
+    -- if the boat is idling use a timer to cut the engine off
+    if currentSpeed == 0 and boat.speed == 1 then
+
+        boat.engineCutoff = (boat.engineCutoff or 5) - (dt)
+        if boat.engineCutoff < 0 then
+            boat.speed = 0
+            boat.engineCutoff = nil
+        end
+
+    end
+
+end
 
 return module
