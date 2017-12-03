@@ -22,33 +22,33 @@ local module = {}
 
 local glob = require("globals")
 local lume = require("lume")
-
+local tiles = require("tiles")
 
 --- Prepare a boat
 function module:prepare(boat)
-    
+
     -- movement counter
     boat.frame = 0
-    
+
     -- current boat angle
     boat.angle = 0
-    
+
     -- lerp the angle from this
     boat.angleFrom = 0
-    
+
     -- lerp the angle to this
     boat.angleTo = 0
-    
+
     -- lerp progress
     boat.angleFrame = 0
-    
+
     -- the boat is stuck after hitting the shore or an obstacle. we can only reverse out.
     boat.stuck = false
 
     -- position on screen in pixels
     boat.screenX = nil
     boat.screenY = nil
-    
+
     boat.color = boat.color or {255, 255, 255}
 
 end
@@ -94,15 +94,15 @@ function module:launchBoat(boat)
     -- clear the boat screen position so it can be launched at the correct place
     boat.screenX = nil
     boat.screenY = nil
-    
+
 end
 
 --- Updates the boat on-screen position
 function module:update(boat, dt)
 
     -- the screen position goal
-    boat.screenGoalX = (boat.x - 1) * 16
-    boat.screenGoalY = (boat.y - 1) * 16
+    boat.screenGoalX = ((boat.x - 1) * tiles.size) + tiles.center
+    boat.screenGoalY = ((boat.y - 1) * tiles.size) + tiles.center
 
     -- start in-place if the screen position is empty
     if not boat.screenX or not boat.screenY then
@@ -153,7 +153,7 @@ end
 
 --- Gets the new position of a boat given it's direction (1 forward, -1 reverse).
 function module:getNextPosition(boat, dir)
-    
+
     -- 45       90      135
     -- 0        BOAT    180
     -- 315      270     225
@@ -197,13 +197,13 @@ function module:getNextPosition(boat, dir)
         nextX = boat.x + neg
         nextY = boat.y + pos
     end
-    
+
     -- clamp to the map size
     nextX = lume.clamp(nextX, 1, glob.lake.width)
     nextY = lume.clamp(nextY, 1, glob.lake.height)
-    
+
     return nextX, nextY
-    
+
 end
 
 
@@ -213,7 +213,7 @@ function module:move(boat, dir)
     -- store last known good position before moving
     boat.previousX = boat.x
     boat.previousY = boat.y
-    
+
     -- apply the new position
     boat.x, boat.y = self:getNextPosition(boat, dir)
 
@@ -246,7 +246,7 @@ function module:getObstacle(boat)
 
     local lake = glob.lake
     local x, y = boat.x, boat.y
-    
+
     for _, obstacle in ipairs(lake.obstacles) do
         if obstacle.x == x and obstacle.y == y then
             return obstacle

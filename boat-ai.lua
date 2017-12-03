@@ -71,8 +71,8 @@ end
 function module:draw()
     for _, craft in ipairs(glob.lake.boats) do
         love.graphics.setColor(craft.color)
-        love.graphics.draw(tiles.image, tiles.boats[3], craft.screenX + 8,
-        craft.screenY + 8, math.rad(craft.angle), 1, 1, 8, 8 )
+        love.graphics.draw(tiles.image, tiles.boats[3], craft.screenX,
+        craft.screenY, math.rad(craft.angle), 1, 1, 8, 8 )
     end
 end
 
