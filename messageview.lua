@@ -33,6 +33,7 @@ function module:init(data)
     -- reset transforms
     love.graphics.origin()
 
+    self.timepassed = 0
     self.fade = 0
     self.shaking = data.shake and 60 or 0
 
@@ -72,13 +73,23 @@ end
 
 function module:keypressed(key)
 
-    if self.shaking < 1 or self.fade > 250 then
+    if self.timepassed > 1 then
+        states:pop()
+    end
+
+end
+
+function module:mousepressed( x, y, button, istouch )
+
+    if self.timepassed > 1 then
         states:pop()
     end
 
 end
 
 function module:update(dt)
+
+    self.timepassed = self.timepassed + dt
 
     if self.shaking < 1 then
         self.fade = math.min(255, self.fade + 10)
