@@ -18,6 +18,7 @@
 
 ]]--
 
+local tiles = require("tiles")
 local module = {
 
     -- current boat cruising speed
@@ -25,27 +26,35 @@ local module = {
 
     -- maximum boat speed
     maxSpeed = 10,
+
+    -- casting offset
+    castOffset = nil,
+
+    -- maximum cast range (in map coordinates)
+    castRange = 4 * tiles.size
 }
 
 local boat = require("boat")
 local lume = require("lume")
 local states = require("states")
 local messages = require("messages")
-local tiles = require("tiles")
+local glob = require("globals")
 
-
+--- Turn the boat left
 function module:left()
     if not self.stuck then
         boat:turn(self, -45)
     end
 end
 
+--- Turn the boat right
 function module:right()
     if not self.stuck then
         boat:turn(self, 45)
     end
 end
 
+--- Move the boat forward
 function module:forward()
     -- prevent movement while stuck until the crunch screen has shown.
     -- this also prevents a boat zooming over obstacles without crunching into them
@@ -60,9 +69,13 @@ function module:forward()
     end
 
     boat:forward(self)
+
+    -- clear the cast aim
+    self.castOffset = nil
+
 end
 
--- Move backward
+-- --- Move the boat backward
 function module:reverse()
     -- prevent movement while stuck until the crunch screen has shown.
     -- this also prevents a boat zooming over obstacles without crunching into them
@@ -77,7 +90,25 @@ function module:reverse()
     end
 
     boat:reverse(self)
+
+    -- clear the cast aim
+    self.castOffset = nil
+
 end
+
+function module:aimCast( x, y )
+
+    if not self.screenX then return end
+
+    -- origin (player boat)
+    local cx = self.screenX + tiles.center
+    local cy = self.screenY + tiles.center
+
+    x, y = glob:limitPointToCircle(cx, cy, x, y, self.castRange)
+    self.castOffset = { x = x, y = y }
+
+end
+
 
 --- Calculate the boat cruising speed by the distance on-screen from it's goal position
 function module:findBoatSpeed(dt)
@@ -164,8 +195,20 @@ end
 function module:draw()
 
     love.graphics.setColor(0, 255, 255)
+
+    -- the boat
     love.graphics.draw(tiles.image, tiles.boats[3], self.screenX + 8,
     self.screenY + 8, math.rad(self.angle), 1, 1, 8, 8 )
+
+    -- casting crosshair
+    if self.castOffset then
+        love.graphics.setColor(0, 255, 255)
+        love.graphics.circle("line", self.castOffset.x, self.castOffset.y, 4)
+        --
+        love.graphics.setColor(0, 255, 255, 32)
+        love.graphics.circle("fill", self.screenX, self.screenY, self.castRange)
+
+    end
 
 end
 
