@@ -272,27 +272,23 @@ function module:spawnFishFeedingZones(data, x, y)
             return value
         end)
 
-    -- sort by nearest LAST. This will make fish try travel as far as possible to feed.
-    -- this ensures better feeding coverage over the map.
-    table.sort(nearbyPlants, function(a, b) return a.distance < b.distance end)
-
     -- path finding callback to return true if a position is open to walk
     local getMapPositionOpen = function(x, y)
         return data.contour[x][y] == 0
     end
 
-    -- loop through the nearby plants list
     local done = false
 
     while not done do
 
-        -- get the next nearest point
-        local plantPoint = table.remove(nearbyPlants)
+        -- get a random plant point from the list of nearby plants
+        local id = math.random(1, #nearbyPlants)
+        local plantPoint = table.remove(nearbyPlants, id)
 
         -- get a path to this point
         local start = { x = x, y = y }
         local goal = { x = plantPoint.x, y = plantPoint.y }
-        local path = luastar:find( data.width, data.height, start, goal, getMapPositionOpen, true)
+        local path = luastar:find( data.width, data.height, start, goal, getMapPositionOpen, false)
 
         -- the path length must be within range.
         -- a plant can be nearby on the map, but could be seperated by a land mass
