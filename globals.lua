@@ -75,8 +75,15 @@ function module:limitPointToCircle(cx, cy, x, y, r)
 
     -- distance
     local dist = lume.distance(cx, cy, x, y)
-    -- clamp radius
-    local r = math.min(r, dist)
+    
+    -- if within the required range 
+    if dist <= r then
+        return x, y
+    end
+    
+    -- otherwise clamp the point to the radius limit
+    r = math.min(r, dist)
+    
     -- angle
     local a = lume.angle(cx, cy, x, y)
 
