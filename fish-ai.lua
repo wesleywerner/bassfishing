@@ -215,6 +215,30 @@ function module:findPathToHome(fish)
 
 end
 
+--- Put a fish back into the lake, it will find a way home.
+function module:releaseFishIntoLake(fish, x, y)
+
+    -- ensure it heads home first
+    fish.feeding = false
+    fish.x, fish.y = x, y
+
+    -- release location and destination
+    local start = { x = x, y = y }
+    local goal = { x = fish.sanctuary.x, y = fish.sanctuary.y }
+
+    -- helper function to map a path
+    local getMapPositionOpen = function(x, y)
+        return glob.lake.contour[x][y] == 0
+    end
+
+    -- find a path
+    fish.path = luastar:find( glob.lake.width, glob.lake.height, start, goal, getMapPositionOpen, false)
+
+    -- release it
+    table.insert( glob.lake.fish, fish )
+
+end
+
 function module:moveAlongPath(fish)
 
     -- reached our destination
@@ -363,6 +387,9 @@ end
 function module:draw()
     for _, fish in ipairs(glob.lake.fish) do
         love.graphics.setColor(0, 128, 255, 64)
+        if fish.track then
+            love.graphics.setColor(255, 128, 255, 255)
+        end
         if fish.feeding then
             love.graphics.draw(tiles.image, tiles.fish.feed, fish.screenX, fish.screenY)
         else
