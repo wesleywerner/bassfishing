@@ -31,7 +31,10 @@ local module = {
     castOffset = nil,
 
     -- maximum cast range (in map coordinates)
-    castRange = 4 * tiles.size
+    castRange = 4 * tiles.size,
+
+    -- the cast line drawn on screen
+    castLine = nil,
 }
 
 local boat = require("boat")
@@ -118,13 +121,19 @@ function module:cast()
     -- test if there is a cast aimed
     if not self.castOffset then return end
 
+    -- still reeling in the line
+    if self.castLine then return end
+
     -- TODO: provide lure data to the strike
     local lure = { color = "green" }
     local fish = fishAI:attemptStrike(self.castOffset.x, self.castOffset.y, lure)
 
-    if fish then
-        self:landFish(fish)
-    end
+    -- set the cast line
+    self.castLine = {
+        points = { self.castOffset.screenX, self.castOffset.screenY },
+        fade = 1,
+        fish = fish
+    }
 
 end
 
@@ -161,6 +170,18 @@ function module:update(dt)
 
     -- work out boat cruising speed and distance to the goal
     boat:calculateSpeed(self, dt)
+
+    -- reel in cast line
+    if self.castLine then
+        self.castLine.fade = self.castLine.fade - dt * 2
+        if self.castLine.fade < 0 then
+            -- there is a fish on the line!
+            if self.castLine.fish then
+                self:landFish(self.castLine.fish)
+            end
+            self.castLine = nil
+        end
+    end
 
     -- show a crunch screen
     if self.stuck then
@@ -205,6 +226,7 @@ function module:draw()
     love.graphics.draw(tiles.image, tiles.boats[3], self.screenX,
     self.screenY, math.rad(self.angle), 1, 1, 8, 8 )
 
+    -- the casting crosshair
     if self.castOffset then
         -- cast crosshair
         love.graphics.setColor(0, 255, 255)
@@ -212,6 +234,13 @@ function module:draw()
         -- cast range
         love.graphics.setColor(0, 255, 255, 16)
         love.graphics.circle("fill", self.screenX, self.screenY, self.castRange)
+    end
+
+    -- the cast line
+    if self.castLine then
+        love.graphics.setColor(255, 255, 255, self.castLine.fade * 255 )
+        love.graphics.setLineWidth(1)
+        love.graphics.line(self.screenX, self.screenY, unpack(self.castLine.points))
     end
 
 end
