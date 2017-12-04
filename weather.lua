@@ -66,9 +66,9 @@ function module:change()
     local highWindSpeed = 35
     local chanceOfRain = 0.3
     local frontDissipatingChance = 0.5
-    local cold = 18
+    local cold = 15
     local average = 22
-    local hot = 35
+    local hot = 30
     local coldFrontCloudsLimit = 0.5
     local coldFrontWindLimit = highWindSpeed / 2
     local clarities = { "clear", "murky" }
@@ -77,7 +77,7 @@ function module:change()
     self.cloudcover = math.random()
     self.rain = math.random() < 0.2
     self.airTemperature = math.random(average, hot)
-    self.waterTemperature = math.random(average, hot)
+    self.waterTemperature = math.random(average, hot - 5)
     self.waterClarity = clarities[math.random(1, #clarities)]
     self.windSpeed = math.random(0, highWindSpeed)
     self.windDirection = directions[math.random(1, #directions)]
@@ -113,7 +113,7 @@ function module:change()
     elseif self.coldfront then
         --print("A cold front is here!")
         self.airTemperature = math.random(cold, average)
-        self.waterTemperature = math.random(cold, average)
+        self.waterTemperature = math.random(cold, average - 2)
         self.rain = true
         self.cloudcover = 1
     elseif self.postfrontal then
