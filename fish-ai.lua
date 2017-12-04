@@ -92,12 +92,6 @@ local module = {
     -- % chance a fish decides to seek food
     chanceToFeed = 0.01,    -- 0.01  -- TODO: reset chanceToFeed
 
-    -- the number of feeding zones a fish can have
-    numberOfFeedingZones = 3,
-    
-    -- the maximum distance a fish will travel to a feeding zone (in map coordinates)
-    maxFeedingZoneDistance = 10,
-
     -- distance (in map coordinates) from a cast to consider striking it
     strikeRange = 1
 
@@ -142,14 +136,18 @@ function module:newFish(x, y)
 
         -- hungry fish seek out shallower waters especially where there is aquatic plants
         feeding = false,
-        feedingZone = { },
-
-        -- movement path
-        path = { },
 
         -- position on screen in pixels
         screenX = nil,
         screenY = nil,
+
+        -- current path of travel
+        path = { },
+
+        -- the number of the path the fish is using.
+        -- this is only set when heading out to feed and used to
+        -- head back home on the same path
+        pathNumber = 0
 
     }
 
@@ -162,11 +160,12 @@ function module:move()
 
         if fish.feeding then
 
-            if self:swimToFeed(fish) then
+            if self:moveAlongPath(fish) then
 
                 -- the fish is satieted
                 if math.random() < (self.chanceToFeed * 2) then
                     fish.feeding = false
+                    self:findPathToHome(fish)
                 end
 
             end
@@ -174,13 +173,13 @@ function module:move()
         else
 
             -- move back to the sanctuary
-            if self:swimHome(fish) then
+            if self:moveAlongPath(fish) then
 
                 -- fish is home and getting hungry
                 fish.feeding = math.random() < self.chanceToFeed
 
                 if fish.feeding then
-                    self:assignNearestFeedingZone(fish)
+                    self:findPathToFeed(fish)
                 end
 
             end
@@ -191,77 +190,24 @@ function module:move()
 
 end
 
---- Assign the nearest feeding zone to a fish.
--- TODO: remove assignNearestFeedingZone
-function module:assignNearestFeedingZone(fish)
+function module:findPathToFeed(fish)
 
-    -- get a list of all aquatic plant islands
-    local plantIslands = array2d:getListOfIslands(glob.lake.plants)
+    fish.pathNumber = math.random(1, #fish.feedingZones)
+    fish.path = { }
 
-    -- sorry fish, no feeding areas for you :(
-    if #plantIslands == 0 then return end
-
-    -- get the distance to each plant island
-    for _, island in ipairs(plantIslands) do
-        island.distance = lume.distance(fish.x, fish.y, island.pos.x, island.pos.y)
+    for _, p in ipairs( fish.feedingZones[fish.pathNumber] ) do
+        table.insert( fish.path, { x = p.x, y = p.y } )
     end
-
-    -- sort by nearest distance first
-    table.sort(plantIslands, function(a, b) return a.distance < b.distance end)
-
-    -- pick a random top(n) feeding zone
-    local topchoice = math.random(1, math.min(#plantIslands, 3) )
-    local favoriteIsland = plantIslands[topchoice]
-
-    -- now we find a random point inside the chosen island (patches of aquatic plants can cover large areas)
-
-    -- make a copy of the plants map (it gets destroyed with flood fill)
-    local plantmap = array2d:copy(glob.lake.plants)
-
-    -- get all the points in this island
-    local fillSize, filledPoints = array2d:floodFill( plantmap,
-        favoriteIsland.pos.x, favoriteIsland.pos.y, favoriteIsland.pos.value, 0 )
-
-    -- pick a random position inside the island area
-    local luckyPoint = filledPoints[ math.random(1, #filledPoints) ]
-
-    fish.feedingZone = { x=luckyPoint.x, y=luckyPoint.y }
 
 end
 
-local function getMapPositionOpen(x, y)
-    return glob.lake.contour[x][y] == 0
-end
+function module:findPathToHome(fish)
 
+    fish.path = { }
 
---- Move a fish closer to it's sanctuary.
-function module:swimHome(fish)
-
-    -- get a new path
-    if #fish.path == 0 then
-        local start = { x = fish.x, y = fish.y }
-        local goal = { x = fish.sanctuary.x, y = fish.sanctuary.y }
-        fish.path = luastar:find( glob.lake.width, glob.lake.height,
-            start, goal, getMapPositionOpen, true)
+    for _, p in ipairs( fish.feedingZones[fish.pathNumber] ) do
+        table.insert( fish.path, 1, { x = p.x, y = p.y } )
     end
-
-    return self:moveAlongPath(fish)
-
-end
-
---- Move a fish closer to it's feeding zone.
--- Returns true when in the zone
-function module:swimToFeed(fish)
-
-    -- get a new path
-    if #fish.path == 0 then
-        local start = { x = fish.x, y = fish.y }
-        local goal = { x = fish.feedingZone.x, y = fish.feedingZone.y }
-        fish.path = luastar:find( glob.lake.width, glob.lake.height,
-            start, goal, getMapPositionOpen, false)
-    end
-
-    return self:moveAlongPath(fish)
 
 end
 
