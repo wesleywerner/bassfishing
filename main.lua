@@ -19,9 +19,12 @@
 ]]--
 
 local states = require("states")
+local gamewidth, gameheight = 800, 600
+
 
 function love.load()
 
+    love.window.setMode( gamewidth, gameheight )
     love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
     states:add("fishing", require("fishingview"))
     states:add("message", require("messageview"))
