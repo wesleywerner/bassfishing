@@ -41,8 +41,9 @@ function module:init()
     self.windowWidth = love.graphics.getWidth( )
     self.windowHeight = love.graphics.getHeight( )
 
-    -- create a new map on the global module.
+    -- TODO: move to a state.
     if not glob.lake then
+
         glob.lake = genie:generate(glob.defaultMapWidth,
         glob.defaultMapHeight, glob.defaultMapSeed,
         glob.defaultMapDensity, glob.defaultMapIterations)
@@ -53,8 +54,18 @@ function module:init()
         -- add player boat to the boats list so it can be included in obstacle tests
         table.insert(glob.lake.boats, player)
 
-        camera:worldSize(glob.lake.width * tiles.size * scale, glob.lake.height * tiles.size * scale)
-        camera:frame(10, 10, love.graphics.getWidth( ) - 200, love.graphics.getHeight( ) - 20)
+        camera:worldSize(glob.lake.width * tiles.size * scale,
+        glob.lake.height * tiles.size * scale)
+
+        camera:frame(10, 10,
+            love.graphics.getWidth( ) - 200,
+            love.graphics.getHeight( ) - 22)
+
+    end
+
+    -- load the game border
+    if not self.borderImage then
+        self.borderImage = love.graphics.newImage("res/game-border.png")
     end
 
     -- set up our fish finder
@@ -141,6 +152,9 @@ function module:draw()
     maprender:render()
     fishfinder:render()
 
+    -- draw game border
+    love.graphics.draw(self.borderImage)
+
     camera:pose()
 
     -- draw the map
@@ -159,13 +173,9 @@ function module:draw()
 
     camera:relax()
 
-    -- camera window
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.rectangle("line", camera.frameLeft, camera.frameTop, camera.frameWidth, camera.frameHeight)
-
     -- fish finder
     love.graphics.push()
-    love.graphics.translate(self.windowWidth - fishfinder.width * 1, 20)
+    love.graphics.translate(628, 434)
     fishfinder:draw()
     love.graphics.pop()
 
