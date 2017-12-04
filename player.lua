@@ -130,6 +130,8 @@ function module:cast()
 
     -- set the cast line
     self.castLine = {
+        x = self.castOffset.x,
+        y = self.castOffset.y,
         points = { self.castOffset.screenX, self.castOffset.screenY },
         fade = 1,
         fish = fish
@@ -173,14 +175,29 @@ function module:update(dt)
 
     -- reel in cast line
     if self.castLine then
+
         self.castLine.fade = self.castLine.fade - dt * 2
         if self.castLine.fade < 0 then
+
             -- there is a fish on the line!
             if self.castLine.fish then
                 self:landFish(self.castLine.fish)
             end
+
+            -- we can snag on ground
+            if glob.lake.contour[self.castLine.x][self.castLine.y] > 0 then
+                if math.random() < 0.5 then
+                    states:push("message", { title="", message="You nearly lost your bait on a snag." } )
+                else
+                    states:push("message", { title="", message="You lost your bait on a snag. You lose 5 minutes tying a new lure." } )
+                end
+            end
+
+            -- clear the cast line, ready to cast again
             self.castLine = nil
+
         end
+
     end
 
     -- show a crunch screen
