@@ -39,6 +39,8 @@ local lume = require("lume")
 local states = require("states")
 local messages = require("messages")
 local glob = require("globals")
+local livewell = require("livewell")
+local fishAI = require("fish-ai")
 
 --- Turn the boat left
 function module:left()
@@ -121,9 +123,17 @@ function module:landFish(fish)
         end
     end
 
-    print("Landed!")
+    local release, lwmessage = livewell:add(fish)
 
-    local message = string.format("You landed a %s fish of %.2f kg", fish.size, fish.weight)
+    -- release the fish, it will swim back home
+    if release then
+        release.track = true
+        -- set the fish draw position to the player's for a smooth transition
+        release.screenX, release.screenY = nil, nil
+        fishAI:releaseFishIntoLake(release, self.x, self.y)
+    end
+
+    local message = string.format("You landed a %s fish of %.2f kg\n\n%s", fish.size, fish.weight, lwmessage)
 
     states:push("message", { title="FISH ON", message=message, shake=false } )
 
