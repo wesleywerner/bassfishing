@@ -131,13 +131,13 @@ function module:render()
             table.insert(vertices, px)
             table.insert(vertices, py)
 
-            -- draw a fish
-            for fishid=1, point.fish do
-                love.graphics.print("^", px, py - 20 - (fishid*2))
-            end
-
             if point.structure then
                 love.graphics.print("=", px, py - 60)
+            else
+                -- draw fish if not hidden by structure
+                for fishid=1, point.fish do
+                    love.graphics.print("^", px, py - 20 - (fishid*2))
+                end
             end
 
         end
