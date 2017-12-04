@@ -92,15 +92,11 @@ local module = {
     -- % chance a fish decides to seek food
     chanceToFeed = 0.01,    -- 0.01  -- TODO: reset chanceToFeed
 
-    -- the minimum depth underneath aquatic plants for fish to consider it a feeding zone
-    -- (bottom 0>1 surface)
-    --feedingZoneDepth = 0.4,
-
-    -- distance (in map coordinates) to stay near the feeding zone
-    feedingRadius = 0,
-
-    -- distance (in map coordinates) to stay near home
-    sanctuaryRadius = 0,
+    -- the number of feeding zones a fish can have
+    numberOfFeedingZones = 3,
+    
+    -- the maximum distance a fish will travel to a feeding zone (in map coordinates)
+    maxFeedingZoneDistance = 10,
 
     -- distance (in map coordinates) from a cast to consider striking it
     strikeRange = 1
@@ -196,6 +192,7 @@ function module:move()
 end
 
 --- Assign the nearest feeding zone to a fish.
+-- TODO: remove assignNearestFeedingZone
 function module:assignNearestFeedingZone(fish)
 
     -- get a list of all aquatic plant islands

@@ -22,6 +22,7 @@ local lume = require("lume")
 local array2d = require("array2d")
 local boat = require("boat")
 local fishAI = require("fish-ai")
+local luastar = require("lua-star")
 
 --- Adds large chunks of noise simulating land mass
 --
@@ -227,7 +228,11 @@ function module:spawnFish(data, seed)
             local fishes = math.random(0, 5)
 
             for fishid=1, fishes do
-                table.insert(data.fish, fishAI:newFish(x, y))
+                
+                local fish = fishAI:newFish(x, y)
+                fish.feedingZones = self:spawnFishFeedingZones(data, x, y)
+                table.insert(data.fish, fish)
+                
             end
 
         end
@@ -240,6 +245,110 @@ function module:spawnFish(data, seed)
     --    print(fish.size, fish.weight)
     --end
 
+end
+
+
+--- Return a list of paths to feeding zones near a position.
+function module:spawnFishFeedingZones(data, x, y)
+    
+    -- stores the list of paths to feeding zones
+    local listOfPaths = { }
+    
+    -- get a list of all aquatic plant islands
+    --local plantIslands = array2d:getListOfIslands(glob.lake.plants)
+    
+    -- make a list of feeding points within distance to each aquatic plant
+    local nearbyPlants = { }
+    
+    array2d:iter(data.plants,
+        function(value, px, py)
+            -- this point has plants
+            return value > 0
+        end, 
+        function(value, px, py)
+            local dist = lume.distance(x, y, px, py)
+            --if dist <= fishAI.maxFeedingZoneDistance then
+                table.insert(nearbyPlants, { x = px, y = py, distance = dist })
+            --end
+            -- preserve the plant array data, we don't need to change it
+            return value
+        end)
+
+    -- sort by nearest LAST
+    table.sort(nearbyPlants, function(a, b) return a.distance > b.distance end)
+    
+    -- path finding callback to return true if a position is open to walk
+    local getMapPositionOpen = function(x, y)
+        return data.contour[x][y] == 0
+    end
+
+    -- loop through the nearby plants list
+    local done = false
+    
+    while not done do
+        
+        -- get the next nearest point
+        local plantPoint = table.remove(nearbyPlants)
+       
+        -- get a path to this zone
+        local start = { x = x, y = y }
+        local goal = { x = plantPoint.x, y = plantPoint.y }
+        local path = luastar:find( data.width, data.height, start, goal, getMapPositionOpen, true)
+       
+        -- the path size must be within range
+        if #path <= fishAI.maxFeedingZoneDistance then
+           
+        end
+       
+        if #nearbyPlants == 0 then
+            done = true
+        end
+        
+    end
+    
+    -- the number of feeding zones is the maximum required, unless there are less available
+    local zoneCount = math.min( #nearbyPlants, fishAI.numberOfFeedingZones )
+    
+    -- calculate the path
+    
+    print("nearby plants count:", #nearbyPlants)
+
+--    -- sorry fish, no feeding areas for you :(
+--    if #plantIslands == 0 then return end
+
+--    -- calculate and store the distance to each plant island to the point (x, y)
+--    for _, island in ipairs(plantIslands) do
+--        island.distance = lume.distance(x, y, island.pos.x, island.pos.y)
+--    end
+
+--    -- sort by nearest distance LAST
+--    table.sort(plantIslands, function(a, b) return a.distance > b.distance end)
+    
+--    -- fill the list of paths with the number of zones required
+--    while #listOfPaths < self.numberOfFeedingZones do
+        
+        
+--    end
+    
+
+--    -- pick a random top(n) feeding zone
+--    local topchoice = math.random(1, math.min(#plantIslands, 3) )
+--    local favoriteIsland = plantIslands[topchoice]
+
+--    -- now we find a random point inside the chosen island (patches of aquatic plants can cover large areas)
+
+--    -- make a copy of the plants map (it gets destroyed with flood fill)
+--    local plantmap = array2d:copy(glob.lake.plants)
+
+--    -- get all the points in this island
+--    local fillSize, filledPoints = array2d:floodFill( plantmap,
+--        favoriteIsland.pos.x, favoriteIsland.pos.y, favoriteIsland.pos.value, 0 )
+
+--    -- pick a random position inside the island area
+--    local luckyPoint = filledPoints[ math.random(1, #filledPoints) ]
+
+--    fish.feedingZone = { x=luckyPoint.x, y=luckyPoint.y }
+    
 end
 
 --- Return a new generated map
