@@ -62,6 +62,11 @@ function module:init()
 
     -- change the weather (TODO: should move to a next day state)
     weather:change()
+    print("\nThe weather changed")
+    print(string.format("approachingfront\t: %s", tostring(weather.approachingfront) ))
+    print(string.format("postfrontal\t\t: %s", tostring(weather.postfrontal) ))
+    print(string.format("airTemperature\t\t: %d", weather.airTemperature ))
+    print(string.format("waterTemperature\t: %d", weather.waterTemperature ))
 
     love.graphics.setFont( love.graphics.newFont( 20 ) )
 
@@ -120,7 +125,8 @@ function module:mousepressed( x, y, button, istouch )
         fishfinder:update()
 
         -- TODO: provide lure data to the strike
-        local fish = fishAI:attemptStrike(player.castOffset.x, player.castOffset.y)
+        local lure = { color = "green" }
+        local fish = fishAI:attemptStrike(player.castOffset.x, player.castOffset.y, lure)
 
         if fish then
             player:landFish(fish)

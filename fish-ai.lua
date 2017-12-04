@@ -57,11 +57,11 @@
     they are now in a highly active feeding state.
 
     * The largemouth seems most comfortable when the water is between
-    65 and 75 F. As the water chills, their metabolism starts to slow
+    18 and 24 C. As the water chills, their metabolism starts to slow
     down and in cold water bass are very sluggish.
 
     * Bass become uncomfortable when the water temperatures rise above
-    80. That's when the bass will be found along shaded or windy
+    26.6 C. That's when the bass will be found along shaded or windy
     shorelines where wave action pumps oxygen into the water, or among
     aquatic plants which produce oxygen.
 
@@ -102,6 +102,7 @@ local glob = require("globals")
 local lume = require("lume")
 local luastar = require("lua-star")
 local tiles = require("tiles")
+local weather = require("weather")
 
 --- Returns a new fish object
 function module:newFish(x, y)
@@ -137,6 +138,9 @@ function module:newFish(x, y)
         -- hungry fish seek out shallower waters especially where there is aquatic plants
         feeding = false,
 
+        -- lure preference
+        lurepreference = { color = "red" },
+
         -- position on screen in pixels
         screenX = nil,
         screenY = nil,
@@ -147,7 +151,7 @@ function module:newFish(x, y)
         -- the number of the path the fish is using.
         -- this is only set when heading out to feed and used to
         -- head back home on the same path
-        pathNumber = 0
+        pathNumber = 0,
 
     }
 
@@ -228,18 +232,80 @@ function module:moveAlongPath(fish)
 end
 
 --- Strike a fish near the given map position
-function module:attemptStrike(x, y)
+-- * The largemouth seems most comfortable when the water is between
+--   18 and 24 C. As the water chills, their metabolism starts to slow
+--   down and in cold water bass are very sluggish.
+-- * Bass become uncomfortable when the water temperatures rise above
+--   26.6 C. That's when the bass will be found along shaded or windy
+--   shorelines where wave action pumps oxygen into the water, or among
+--   aquatic plants which produce oxygen.
+-- * The importance of fishing a lure close to the bottom cannot be overemphasized.
+-- * As a bass gets bigger, it gets tougher to fool.
+function module:attemptStrike(x, y, lure)
+
+    -- the % chance a fish will bite
+    local chanceToBite = {
+        ["large"] = 0.125,
+        ["medium"] = 0.2,
+        ["small"] = 0.3
+    }
 
     -- find fish near the cast that are busy feeding
     for _, fish in ipairs(glob.lake.fish) do
 
+        -- distance from fish to aimed cast
         local distance = lume.distance(x, y, fish.x, fish.y)
 
         if distance <= self.strikeRange then
 
             if fish.feeding then
 
-                print("fish can strike!", fish.x, fish.y)
+                -- the fish chance of biting by size
+                local fishChance = chanceToBite[fish.size]
+
+                -- atmospheric conditions affecting fish
+                if weather.approachingfront then
+                    -- approaching cold front feeding frenzy
+                    fishChance = fishChance * 2
+                    self:debug(fish, "A cold front is coming. chance doubled.")
+                elseif weather.postfrontal then
+                    -- post front
+                    fishChance = fishChance / 2
+                    self:debug(fish, "I gorged myself before the cold front. chance halved.")
+                end
+
+                -- water temperature conditions
+                if weather.waterTemperature < 18 then
+                    fishChance = fishChance / 2
+                    self:debug(fish, "I'm too cold to care. halved chance.")
+                end
+
+                -- fish lure preferance
+                if fish.lurepreference.color == lure.color then
+                    fishChance = fishChance * 1.5
+                    self:debug(fish, "I like this lure color. chance + 50%.")
+                --else
+                --    fishChance = fishChance / 2
+                --    self:debug(fish, "I hate this lure color. halved chance.")
+                end
+
+                local strikeRoll = math.random()
+                local strike = strikeRoll < fishChance
+
+                self:debug(fish, string.format("%s fish: rolled: %.2f, chance: %.2f", fish.size, strikeRoll, fishChance))
+
+                if strike then
+
+                    -- structure interference
+                    if glob.lake.structure[x][y] and fish.size == "large" then
+                        if math.random() < 0.25 then
+                            return false, "After a big fight the fish got away."
+                        end
+                    end
+
+                    return fish
+
+                end
 
                 -- TODO: build rules when this fish may strike
                 -- * weather conditions
@@ -247,8 +313,6 @@ function module:attemptStrike(x, y)
                 -- * structure interference
                 -- * distance from feeding zone
                 -- * size
-
-                return fish
 
             end
 
@@ -259,9 +323,9 @@ function module:attemptStrike(x, y)
 end
 
 function module:debug(fish, message)
-    if fish.track then
+    --if fish.track then
         print(message)
-    end
+    --end
 end
 
 
