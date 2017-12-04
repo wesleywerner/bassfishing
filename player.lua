@@ -113,6 +113,21 @@ function module:aimCast( x, y )
 
 end
 
+function module:cast()
+
+    -- test if there is a cast aimed
+    if not self.castOffset then return end
+
+    -- TODO: provide lure data to the strike
+    local lure = { color = "green" }
+    local fish = fishAI:attemptStrike(self.castOffset.x, self.castOffset.y, lure)
+
+    if fish then
+        self:landFish(fish)
+    end
+
+end
+
 --- Land a fish that striked
 function module:landFish(fish)
 
