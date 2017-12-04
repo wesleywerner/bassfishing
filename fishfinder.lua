@@ -106,7 +106,7 @@ function module:render()
 
         -- render to canvas
         local backgroundcolor = { 140, 185, 164 }
-        local foregroundcolor = { 0, 85, 182, 128 }
+        local foregroundcolor = { 85, 106, 130 }
 
         -- create new graph canvas
         self.image = nil
@@ -132,7 +132,11 @@ function module:render()
             table.insert(vertices, py)
 
             if point.structure then
-                love.graphics.print("=", px, py - 60)
+                --love.graphics.print("=", px, py - 60)
+                love.graphics.setPointSize( 4 )
+                for n=1, 30, 2 do
+                    love.graphics.points(px + math.random(-5, 5), py-n)
+                end
             else
                 -- draw fish if not hidden by structure
                 for fishid=1, point.fish do
