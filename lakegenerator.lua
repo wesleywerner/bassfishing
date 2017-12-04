@@ -207,6 +207,9 @@ function module:spawnFish(data, seed)
     -- fill n% with structure
     local coverage = math.floor(volume * 0.1)
 
+    -- track unique fish number
+    local fishid = 1
+
     for coverid=1, coverage do
 
         -- find a random tile
@@ -227,11 +230,13 @@ function module:spawnFish(data, seed)
 
             local fishes = math.random(0, 5)
 
-            for fishid=1, fishes do
+            for n=1, fishes do
 
                 local fish = fishAI:newFish(x, y)
+                fish.id = fishid
                 fish.feedingZones = self:spawnFishFeedingZones(data, x, y)
                 table.insert(data.fish, fish)
+                fishid = fishid + 1
 
             end
 
