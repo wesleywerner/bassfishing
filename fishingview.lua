@@ -32,7 +32,7 @@ local player = require("player")
 local competitors = require("boat-ai")
 local fishAI = require("fish-ai")
 local weather = require("weather")
-local infodisplay = require("info-display")
+local weatherdisplay = require("weather-display")
 local scale = 2
 local drawDebug = false
 
@@ -186,7 +186,7 @@ function module:draw()
 
     love.graphics.push()
     love.graphics.translate(612, 10)
-    infodisplay:draw()
+    weatherdisplay:draw()
     love.graphics.pop()
 
     love.graphics.push()
