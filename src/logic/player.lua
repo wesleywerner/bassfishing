@@ -235,36 +235,4 @@ function module:update(dt)
 
 end
 
-function module:drawBoat()
-
-    love.graphics.setColor(0, 255, 255)
-
-    -- the boat
-    love.graphics.draw(tiles.image, tiles.boats[3], self.screenX,
-    self.screenY, math.rad(self.angle), 1, 1, 8, 8 )
-
-    -- the casting crosshair
-    if self.castOffset then
-        -- cast crosshair
-        love.graphics.setColor(0, 255, 255)
-        love.graphics.circle("line", self.castOffset.screenX, self.castOffset.screenY, 4)
-        -- cast range
-        love.graphics.setColor(0, 255, 255, 16)
-        love.graphics.circle("fill", self.screenX, self.screenY, self.castRange)
-    end
-
-    -- the cast line
-    if self.castLine then
-        love.graphics.setColor(255, 255, 255, self.castLine.fade * 255 )
-        love.graphics.setLineWidth(1)
-        love.graphics.line(self.screenX, self.screenY, unpack(self.castLine.points))
-    end
-
-end
-
-function module:drawRodDetails()
-    love.graphics.setColor(glob.fonts.color)
-    love.graphics.print("Flip rod with chartreuse rapala")
-end
-
 return module

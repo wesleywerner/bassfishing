@@ -29,6 +29,7 @@ local fishfinder = require("views.fishfinder")
 local tiles = require("views.tiles")
 local boat = require("logic.boat")
 local player = require("logic.player")
+local playerView = require("views.player")
 local competitors = require("logic.boat-ai")
 local fishAI = require("logic.fish-ai")
 local weather = require("logic.weather")
@@ -177,7 +178,7 @@ function module:draw()
     competitors:draw()
 
     -- draw player boat
-    player:drawBoat()
+    playerView:drawBoat()
 
     camera:relax()
 
@@ -194,7 +195,7 @@ function module:draw()
 
     love.graphics.push()
     love.graphics.translate(10, 570)
-    player:drawRodDetails()
+    playerView:drawRodDetails()
     love.graphics.pop()
 
     love.graphics.push()
