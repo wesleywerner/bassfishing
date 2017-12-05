@@ -41,22 +41,36 @@ function module:add(fish)
 
     -- add the fish
     if #self.contents < self.capacity then
+
+        -- hilite the fish in the live well list for a visual effect
+        fish.hilite = 1
         table.insert( self.contents, fish )
-        message = "You add the fish to your livewell."
+        message = "You add the fish to your live well."
+
     else
+
         -- sort the livewell fish by size
         table.sort( self.contents, function(a, b) return a.weight < b.weight end )
+
         -- see if this fish is larger than the smallest fish in your livewell
-        local smallest = self.contents[1]
-        if smallest.weight < fish.weight then
+        local smallest = self.contents[1].weight
+
+        if smallest < fish.weight then
+
+            -- release our smallest fish
             release = table.remove( self.contents, 1 )
-            print("smallest id", smallest.id, "releasing id", release.id)
+
+            -- add the new fish
+            fish.hilite = 1
             table.insert( self.contents, fish )
-            message = "You release a smaller fish from your livewell and add this fish."
+
+            message = "You release a smaller fish from your live well and add this fish."
+
         else
             release = fish
-            message = "All the fish in your livewell are larger than this fish.\nYou release it."
+            message = "All the fish in your live well are larger than this fish.\nYou release it."
         end
+
     end
 
     -- sort the fish by weight
@@ -68,9 +82,7 @@ function module:add(fish)
         print(string.format("%d) %.2f kg (%s)", n.id, n.weight, n.size))
     end
 
-    -- force canvas to redraw
-    self.livewellCanvas = nil
-
+    -- return the fish to release (if any) and a message to the angler
     return release, message
 
 end
