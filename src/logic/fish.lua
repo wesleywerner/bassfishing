@@ -1,5 +1,5 @@
 --[[
-   fish-ai.lua
+   fish.lua
 
    Copyright 2017 wesley werner <wesley.werner@gmail.com>
 

@@ -24,7 +24,7 @@ local states = require("logic.states")
 local messages = require("views.messages")
 local glob = require("logic.globals")
 local livewell = require("logic.livewell")
-local fishAI = require("logic.fish-ai")
+local fishAI = require("logic.fish")
 local tiles = require("views.tiles")
 
 local module = {
