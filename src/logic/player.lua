@@ -139,15 +139,22 @@ function module:cast()
 
 end
 
---- Land a fish that striked
-function module:landFish(fish)
+--- Remove a fish from the water
+function module:pullFishFromWater(fish)
 
-    -- remove the fish from the pond
     for i, f in ipairs(glob.lake.fish) do
         if f.id == fish.id then
             table.remove(glob.lake.fish, i)
         end
     end
+
+end
+
+--- Land a fish that striked
+function module:landFish(fish)
+
+    -- remove the fish from the pond
+    self:pullFishFromWater(fish)
 
     local release, lwmessage = livewell:add(fish)
 
