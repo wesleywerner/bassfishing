@@ -48,7 +48,7 @@ function module:draw()
     love.graphics.printf("4h 30m", unpack(self.timepos))
 
     -- print temp, cloud cover and wind
-    love.graphics.printf(string.format("%dC", weather.airTemperature),
+    love.graphics.printf(string.format("%d°C", weather.airTemperature),
         unpack(self.temppos))
     love.graphics.printf(string.format("%d%%", weather.cloudcover),
         unpack(self.cloudpos))
@@ -71,6 +71,14 @@ function module:draw()
         icon = self.icons.hot
     elseif weather.rain then
         icon = self.icons.rainy
+    elseif weather.cloudcover > 30 and weather.windSpeed > 20 then
+        icon = self.icons.cloudygusts
+    elseif weather.cloudcover > 30 then
+        icon = self.icons.cloudy
+    elseif weather.windSpeed > 20 then
+        icon = self.icons.windy
+    elseif weather.cloudcover > 10 then
+        icon = self.icons.overcast
     end
 
     love.graphics.draw(self.icons.image, icon, unpack(self.iconpos))
