@@ -18,9 +18,10 @@
 
 ]]--
 
-local module = {
+local glob = require("globals")
+local weather = require("weather")
 
-    forecolor = { 146, 182, 222 },
+local module = {
 
     icons = nil,
 
@@ -35,15 +36,13 @@ local module = {
 
 }
 
-local weather = require("weather")
-
 function module:draw()
 
     love.graphics.push()
     --love.graphics.translate()
 
     -- print day and time
-    love.graphics.setColor(self.forecolor)
+    love.graphics.setColor(glob.fonts.color)
     love.graphics.print("Day 1", unpack(self.daypos))
     love.graphics.printf("4h 30m", unpack(self.timepos))
 

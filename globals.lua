@@ -28,6 +28,7 @@ module.defaultMapIterations = 6
 
 -- fonts
 module.fonts = { }
+module.fonts.color = { 146, 182, 222 }
 module.fonts.small = love.graphics.newFont( "res/TruenoRg.otf", 16 )
 module.fonts.medium = love.graphics.newFont( "res/TruenoRg.otf", 20 )
 module.fonts.large = love.graphics.newFont( "res/TruenoBlkOl.otf", 48 )
