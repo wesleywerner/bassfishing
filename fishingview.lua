@@ -33,6 +33,8 @@ local competitors = require("boat-ai")
 local fishAI = require("fish-ai")
 local weather = require("weather")
 local weatherdisplay = require("weather-display")
+local livewell = require("livewell")
+
 local scale = 2
 local drawDebug = false
 
@@ -155,6 +157,7 @@ function module:draw()
     -- must render the map outside any transformations
     maprender:render()
     fishfinder:render()
+    livewell:render()
 
     -- draw game border
     love.graphics.setColor(255, 255, 255)
@@ -192,6 +195,11 @@ function module:draw()
     love.graphics.push()
     love.graphics.translate(10, 570)
     player:drawRodDetails()
+    love.graphics.pop()
+
+    love.graphics.push()
+    love.graphics.translate(620, 188)
+    livewell:drawContents()
     love.graphics.pop()
 
 end

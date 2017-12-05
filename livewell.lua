@@ -18,6 +18,10 @@
 
 ]]--
 
+local messages = require("messages")
+local glob = require("globals")
+local tiles = require("tiles")
+
 local module = {
 
     -- the contents of the livewell
@@ -27,9 +31,6 @@ local module = {
     capacity = 5,
 
 }
-
---local states = require("states")
-local messages = require("messages")
 
 --- Adds a fish to the livewell.
 -- Returns the fish to release into the water, and any messages to display.
@@ -58,14 +59,52 @@ function module:add(fish)
         end
     end
 
-    -- debug
+    -- sort the fish by weight
     table.sort( self.contents, function(a, b) return a.weight < b.weight end )
+
+    -- debug
     print("\nLivewell contains:")
     for _, n in ipairs(self.contents) do
         print(string.format("%d) %.2f kg (%s)", n.id, n.weight, n.size))
     end
 
+    -- force canvas to redraw
+    self.livewellCanvas = nil
+
     return release, message
+
+end
+
+function module:render()
+
+    -- render to canvas when necessary
+    if not self.livewellCanvas then
+
+        local w, h = 160, 150
+        self.livewellCanvas = love.graphics.newCanvas( w, h )
+        love.graphics.setCanvas(self.livewellCanvas)
+
+        -- print fish details
+        love.graphics.setFont(glob.fonts.medium)
+        love.graphics.setColor(glob.fonts.color)
+        for i, fish in ipairs(self.contents) do
+            local py = (i - 1) * 24
+            love.graphics.draw(tiles.image, tiles.fish[fish.size], 0, py)
+            love.graphics.printf(string.format("%.2f kg", fish.weight), 0, py, w, "right")
+        end
+
+        -- release canvas
+        love.graphics.setCanvas()
+
+    end
+
+end
+
+function module:drawContents()
+
+    if self.livewellCanvas then
+        love.graphics.draw(self.livewellCanvas)
+    end
 
 end
 
