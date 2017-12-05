@@ -67,6 +67,8 @@ function module:draw()
 
     if weather.approachingfront then
         icon = self.icons.cloudygusts
+    elseif weather.coldfront then
+        icon = self.icons.coldfront
     elseif weather.isHot then
         icon = self.icons.hot
     elseif weather.rain then
@@ -107,6 +109,8 @@ if not module.icons then
     module.icons.cloudygusts = love.graphics.newQuad(300, 0, 60, 60, module.icons.w, module.icons.h)
     -- heavy clouds
     module.icons.cloudy = love.graphics.newQuad(360, 0, 60, 60, module.icons.w, module.icons.h)
+    -- cold front
+    module.icons.coldfront = love.graphics.newQuad(420, 0, 60, 60, module.icons.w, module.icons.h)
 
 end
 
