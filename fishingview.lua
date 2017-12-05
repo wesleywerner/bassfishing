@@ -32,6 +32,7 @@ local player = require("player")
 local competitors = require("boat-ai")
 local fishAI = require("fish-ai")
 local weather = require("weather")
+local infodisplay = require("info-display")
 local scale = 2
 local drawDebug = false
 
@@ -78,6 +79,7 @@ function module:init()
     print(string.format("postfrontal\t\t: %s", tostring(weather.postfrontal) ))
     print(string.format("airTemperature\t\t: %d", weather.airTemperature ))
     print(string.format("waterTemperature\t: %d", weather.waterTemperature ))
+    print(string.format("cloudcover\t\t: %f", weather.cloudcover ))
 
     love.graphics.setFont( love.graphics.newFont( 20 ) )
 
@@ -177,6 +179,11 @@ function module:draw()
     love.graphics.push()
     love.graphics.translate(628, 434)
     fishfinder:draw()
+    love.graphics.pop()
+
+    love.graphics.push()
+    love.graphics.translate(612, 10)
+    infodisplay:draw()
     love.graphics.pop()
 
     love.graphics.print(string.format("boat speed: %d", player.speed))

@@ -55,7 +55,7 @@ local module = {
 
     coldfront = false,
 
-    postfrontal = false,
+    postfrontal = false
 
 }
 
@@ -69,14 +69,18 @@ function module:change()
     local cold = 15
     local average = 22
     local hot = 30
-    local coldFrontCloudsLimit = 0.5
+    local coldFrontCloudsLimit = 50
     local coldFrontWindLimit = highWindSpeed / 2
     local clarities = { "clear", "murky" }
     local directions = { "N", "NE", "NW", "S", "SE", "SW", "E", "W" }
 
-    self.cloudcover = math.random()
+    -- air temperature considered hot
+    hotLimit = 26
+
+    self.cloudcover = math.random() * 100
     self.rain = math.random() < 0.2
     self.airTemperature = math.random(average, hot)
+    self.isHot = self.airTemperature > hotLimit
     self.waterTemperature = math.random(average, hot - 5)
     self.waterClarity = clarities[math.random(1, #clarities)]
     self.windSpeed = math.random(0, highWindSpeed)
@@ -115,7 +119,7 @@ function module:change()
         self.airTemperature = math.random(cold, average)
         self.waterTemperature = math.random(cold, average - 2)
         self.rain = true
-        self.cloudcover = 1
+        self.cloudcover = 100
     elseif self.postfrontal then
         --print("the front has passed")
     end
