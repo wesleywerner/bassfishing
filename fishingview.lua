@@ -83,7 +83,7 @@ function module:init()
     print(string.format("windSpeed\t\t: %d", weather.windSpeed ))
     print(string.format("rain\t\t\t: %s", tostring(weather.rain) ))
 
-    love.graphics.setFont( love.graphics.newFont( 20 ) )
+    love.graphics.setFont( glob.fonts.small )
 
 end
 

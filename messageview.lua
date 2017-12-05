@@ -21,7 +21,7 @@
 local module = {}
 local states = require("states")
 local lume = require("lume")
-
+local glob = require("globals")
 
 function module:init(data)
 
@@ -57,13 +57,13 @@ function module:init(data)
     -- print title
     if data.title then
         love.graphics.setColor(255, 255, 255)
-        love.graphics.setFont( love.graphics.newFont( 60 ) )
+        love.graphics.setFont( glob.fonts.large )
         love.graphics.printf(data.title, frameLeft, frameTop + 30, frameWidth, "center")
     end
 
     if data.message then
         love.graphics.setColor(255, 255, 255)
-        love.graphics.setFont( love.graphics.newFont( 20 ) )
+        love.graphics.setFont( glob.fonts.medium )
         love.graphics.printf(data.message, frameLeft, frameTop + 130, frameWidth, "center")
     end
 

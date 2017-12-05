@@ -26,6 +26,12 @@ module.defaultMapSeed = 0
 module.defaultMapDensity = 0.25
 module.defaultMapIterations = 6
 
+-- fonts
+module.fonts = { }
+module.fonts.small = love.graphics.newFont( "res/TruenoRg.otf", 16 )
+module.fonts.medium = love.graphics.newFont( "res/TruenoRg.otf", 20 )
+module.fonts.large = love.graphics.newFont( "res/TruenoBlkOl.otf", 48 )
+
 local lume = require("lume")
 
 --- Returns a point on a circle.
@@ -75,15 +81,15 @@ function module:limitPointToCircle(cx, cy, x, y, r)
 
     -- distance
     local dist = lume.distance(cx, cy, x, y)
-    
-    -- if within the required range 
+
+    -- if within the required range
     if dist <= r then
         return x, y
     end
-    
+
     -- otherwise clamp the point to the radius limit
     r = math.min(r, dist)
-    
+
     -- angle
     local a = lume.angle(cx, cy, x, y)
 
