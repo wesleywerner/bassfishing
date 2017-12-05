@@ -36,6 +36,7 @@ local fishView = require("views.fish")
 local weather = require("logic.weather")
 local weatherdisplay = require("views.weather-display")
 local livewell = require("logic.livewell")
+local livewellView = require("views.livewell")
 
 local scale = 2
 local drawDebug = false
@@ -159,7 +160,6 @@ function module:draw()
     -- must render the map outside any transformations
     maprender:render()
     fishfinder:render()
-    livewell:render()
 
     -- draw game border
     love.graphics.setColor(255, 255, 255)
@@ -201,7 +201,7 @@ function module:draw()
 
     love.graphics.push()
     love.graphics.translate(620, 188)
-    livewell:drawContents()
+    livewellView:draw()
     love.graphics.pop()
 
 end
