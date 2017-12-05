@@ -61,10 +61,12 @@ function module:init(data)
         love.graphics.printf(data.title, frameLeft, frameTop + 30, frameWidth, "center")
     end
 
+    -- print message
+    local border = 20
     if data.message then
         love.graphics.setColor(255, 255, 255)
         love.graphics.setFont( glob.fonts.medium )
-        love.graphics.printf(data.message, frameLeft, frameTop + 130, frameWidth, "center")
+        love.graphics.printf(data.message, frameLeft + border, frameTop + 110, frameWidth - border - border, "center")
     end
 
     love.graphics.setCanvas()
