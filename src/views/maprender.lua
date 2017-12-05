@@ -19,8 +19,8 @@
 ]]--
 
 local module = {}
-local glob = require("globals")
-local tiles = require("tiles")
+local glob = require("logic.globals")
+local tiles = require("views.tiles")
 
 
 --- Get the quad to draw a corner of water as interpolated by the land around it.
@@ -81,7 +81,7 @@ function module:render()
 
     for x=1, lake.width do
     for y=1, lake.height do
-        
+
         local drawx = (x-1) * tiles.size
         local drawy = (y-1) * tiles.size
 
@@ -103,7 +103,7 @@ function module:render()
                 love.graphics.draw(tiles.image, waterquad, drawx, drawy)
             end
         end
-        
+
         love.graphics.setColor(255, 255, 255)
 
         local plantid = lake.plants[x][y]

@@ -19,21 +19,21 @@
 ]]--
 
 local module = {}
-local glob = require("globals")
-local genie = require("lakegenerator")
-local states = require("states")
-local camera = require("camera")
-local maprender = require("maprender")
-local fishfinder = require("fishfinder")
+local glob = require("logic.globals")
+local genie = require("logic.lakegenerator")
+local states = require("logic.states")
+local camera = require("libs.camera")
+local maprender = require("views.maprender")
+local fishfinder = require("views.fishfinder")
 --local messages = require("messages")
-local tiles = require("tiles")
-local boat = require("boat")
-local player = require("player")
-local competitors = require("boat-ai")
-local fishAI = require("fish-ai")
-local weather = require("weather")
-local weatherdisplay = require("weather-display")
-local livewell = require("livewell")
+local tiles = require("views.tiles")
+local boat = require("logic.boat")
+local player = require("logic.player")
+local competitors = require("logic.boat-ai")
+local fishAI = require("logic.fish-ai")
+local weather = require("logic.weather")
+local weatherdisplay = require("views.weather-display")
+local livewell = require("logic.livewell")
 
 local scale = 2
 local drawDebug = false

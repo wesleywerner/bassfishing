@@ -42,9 +42,9 @@ local module = {
     height = 0,
 }
 
-local glob = require("globals")
-local player = require("player")
-local weather = require("weather")
+local glob = require("logic.globals")
+local player = require("logic.player")
+local weather = require("logic.weather")
 
 function module:update()
 

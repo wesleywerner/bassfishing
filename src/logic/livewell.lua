@@ -18,9 +18,9 @@
 
 ]]--
 
-local messages = require("messages")
-local glob = require("globals")
-local tiles = require("tiles")
+local messages = require("views.messages")
+local glob = require("logic.globals")
+local tiles = require("views.tiles")
 
 local module = {
 

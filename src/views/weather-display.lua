@@ -18,8 +18,8 @@
 
 ]]--
 
-local glob = require("globals")
-local weather = require("weather")
+local glob = require("logic.globals")
+local weather = require("logic.weather")
 
 local module = {
 

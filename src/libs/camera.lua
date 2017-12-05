@@ -45,7 +45,7 @@ local module = {
 
 }
 
-local lume = require("lume")
+local lume = require("libs.lume")
 
 function module:update(dt)
 

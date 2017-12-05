@@ -18,11 +18,11 @@
 ]]--
 
 local module = {}
-local lume = require("lume")
-local array2d = require("array2d")
-local boat = require("boat")
-local fishAI = require("fish-ai")
-local luastar = require("lua-star")
+local lume = require("libs.lume")
+local array2d = require("logic.array2d")
+local boat = require("logic.boat")
+local fishAI = require("logic.fish-ai")
+local luastar = require("libs.lua-star")
 
 --- Adds large chunks of noise simulating land mass
 --

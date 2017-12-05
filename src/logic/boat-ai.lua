@@ -19,10 +19,10 @@
 ]]--
 
 local module = {}
-local glob = require("globals")
-local lume = require("lume")
-local boat = require("boat")
-local tiles = require("tiles")
+local glob = require("logic.globals")
+local lume = require("libs.lume")
+local boat = require("logic.boat")
+local tiles = require("views.tiles")
 
 
 function module:update(dt)

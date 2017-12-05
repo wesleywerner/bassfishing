@@ -97,12 +97,12 @@ local module = {
 
 }
 
-local array2d = require("array2d")
-local glob = require("globals")
-local lume = require("lume")
-local luastar = require("lua-star")
-local tiles = require("tiles")
-local weather = require("weather")
+local array2d = require("logic.array2d")
+local glob = require("logic.globals")
+local lume = require("libs.lume")
+local luastar = require("libs.lua-star")
+local tiles = require("views.tiles")
+local weather = require("logic.weather")
 
 --- Returns a new fish object
 function module:newFish(x, y)

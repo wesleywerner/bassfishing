@@ -19,11 +19,11 @@
 ]]--
 
 local module = {}
-local glob = require("globals")
-local genie = require("lakegenerator")
-local states = require("states")
-local player = require("player")
-local boat = require("boat")
+local glob = require("logic.globals")
+local genie = require("logic.lakegenerator")
+local states = require("logic.states")
+local player = require("logic.player")
+local boat = require("logic.boat")
 
 -- set private values
 module.helptext = [[Bass fishing lake view.

@@ -33,7 +33,7 @@ module.fonts.small = love.graphics.newFont( "res/TruenoRg.otf", 16 )
 module.fonts.medium = love.graphics.newFont( "res/TruenoRg.otf", 20 )
 module.fonts.large = love.graphics.newFont( "res/TruenoBlkOl.otf", 48 )
 
-local lume = require("lume")
+local lume = require("libs.lume")
 
 --- Returns a point on a circle.
 --

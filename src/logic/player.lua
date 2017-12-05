@@ -18,14 +18,14 @@
 
 ]]--
 
-local boat = require("boat")
-local lume = require("lume")
-local states = require("states")
-local messages = require("messages")
-local glob = require("globals")
-local livewell = require("livewell")
-local fishAI = require("fish-ai")
-local tiles = require("tiles")
+local boat = require("logic.boat")
+local lume = require("libs.lume")
+local states = require("logic.states")
+local messages = require("views.messages")
+local glob = require("logic.globals")
+local livewell = require("logic.livewell")
+local fishAI = require("logic.fish-ai")
+local tiles = require("views.tiles")
 
 local module = {
 

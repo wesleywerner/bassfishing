@@ -19,9 +19,9 @@
 ]]--
 
 local module = {}
-local states = require("states")
-local lume = require("lume")
-local glob = require("globals")
+local states = require("logic.states")
+local lume = require("libs.lume")
+local glob = require("logic.globals")
 
 function module:init(data)
 

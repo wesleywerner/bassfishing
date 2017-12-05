@@ -20,9 +20,9 @@
 
 local module = {}
 
-local glob = require("globals")
-local lume = require("lume")
-local tiles = require("tiles")
+local glob = require("logic.globals")
+local lume = require("libs.lume")
+local tiles = require("views.tiles")
 
 --- Prepare a boat
 function module:prepare(boat)
