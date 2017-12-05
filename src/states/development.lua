@@ -97,7 +97,7 @@ function module:keypressed(key)
     if key == "escape" then
         states:pop()
     elseif key == "f10" then
-        states:push("debug map")
+        states:push("lakegen development")
     elseif key == "left" or key == "kp4" or key == "a" then
         fishAI:move()
         competitors:move()

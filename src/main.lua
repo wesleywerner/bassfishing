@@ -26,9 +26,9 @@ function love.load()
 
     love.window.setMode( gamewidth, gameheight )
     love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
-    states:add("fishing", require("views.fishingview"))
-    states:add("message", require("views.messageview"))
-    states:add("debug map", require("views.debugmapview"))
+    states:add("development", require("states.development"))
+    states:add("messagebox", require("states.messagebox"))
+    states:add("lakegen development", require("states.lakegen-development"))
 
 end
 

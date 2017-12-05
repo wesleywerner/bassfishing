@@ -161,7 +161,7 @@ function module:landFish(fish)
 
     local message = string.format("You landed a %s fish of %.2f kg\n\n%s", fish.size, fish.weight, lwmessage)
 
-    states:push("message", { title="FISH ON", message=message, shake=false } )
+    states:push("messagebox", { title="FISH ON", message=message, shake=false } )
 
 end
 
@@ -187,9 +187,9 @@ function module:update(dt)
             -- we can snag on ground
             if glob.lake.contour[self.castLine.x][self.castLine.y] > 0 then
                 if math.random() < 0.5 then
-                    states:push("message", { title="", message="You nearly lost your bait on a snag." } )
+                    states:push("messagebox", { title="", message="You nearly lost your bait on a snag." } )
                 else
-                    states:push("message", { title="", message="You lost your bait on a snag. You lose 5 minutes tying a new lure." } )
+                    states:push("messagebox", { title="", message="You lost your bait on a snag. You lose 5 minutes tying a new lure." } )
                 end
             end
 
@@ -225,7 +225,7 @@ function module:update(dt)
                 template = string.format(messages["jetty collision"], timelost)
             end
 
-            states:push("message", { title="CRUNCH!!!!", message=template, shake=true } )
+            states:push("messagebox", { title="CRUNCH!!!!", message=template, shake=true } )
 
             -- auto reverse out of the pickle
             boat:undoMove(self)
