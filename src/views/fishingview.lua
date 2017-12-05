@@ -32,6 +32,7 @@ local player = require("logic.player")
 local playerView = require("views.player")
 local competitors = require("logic.boat-ai")
 local fishAI = require("logic.fish")
+local fishView = require("views.fish")
 local weather = require("logic.weather")
 local weatherdisplay = require("views.weather-display")
 local livewell = require("logic.livewell")
@@ -172,7 +173,7 @@ function module:draw()
     love.graphics.draw(maprender.image)
 
     -- fish (debugging)
-    if drawDebug then fishAI:draw() end
+    if drawDebug then fishView:draw() end
 
     -- draw other boats
     competitors:draw()
