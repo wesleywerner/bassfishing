@@ -18,7 +18,15 @@
 
 ]]--
 
+local boat = require("boat")
+local lume = require("lume")
+local states = require("states")
+local messages = require("messages")
+local glob = require("globals")
+local livewell = require("livewell")
+local fishAI = require("fish-ai")
 local tiles = require("tiles")
+
 local module = {
 
     -- current boat cruising speed
@@ -36,14 +44,6 @@ local module = {
     -- the cast line drawn on screen
     castLine = nil,
 }
-
-local boat = require("boat")
-local lume = require("lume")
-local states = require("states")
-local messages = require("messages")
-local glob = require("globals")
-local livewell = require("livewell")
-local fishAI = require("fish-ai")
 
 --- Turn the boat left
 function module:left()
@@ -235,7 +235,7 @@ function module:update(dt)
 
 end
 
-function module:draw()
+function module:drawBoat()
 
     love.graphics.setColor(0, 255, 255)
 
@@ -260,6 +260,11 @@ function module:draw()
         love.graphics.line(self.screenX, self.screenY, unpack(self.castLine.points))
     end
 
+end
+
+function module:drawRodDetails()
+    love.graphics.setColor(glob.fonts.color)
+    love.graphics.print("Flip rod with chartreuse rapala")
 end
 
 return module

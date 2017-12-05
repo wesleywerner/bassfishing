@@ -60,7 +60,7 @@ function module:init()
 
         camera:frame(10, 10,
             love.graphics.getWidth( ) - 200,
-            love.graphics.getHeight( ) - 22)
+            love.graphics.getHeight( ) - 42)
 
     end
 
@@ -173,7 +173,7 @@ function module:draw()
     competitors:draw()
 
     -- draw player boat
-    player:draw()
+    player:drawBoat()
 
     camera:relax()
 
@@ -188,7 +188,10 @@ function module:draw()
     infodisplay:draw()
     love.graphics.pop()
 
-    love.graphics.print(string.format("boat speed: %d", player.speed))
+    love.graphics.push()
+    love.graphics.translate(10, 570)
+    player:drawRodDetails()
+    love.graphics.pop()
 
 end
 
