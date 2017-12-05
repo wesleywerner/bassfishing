@@ -80,6 +80,8 @@ function module:init()
     print(string.format("airTemperature\t\t: %d", weather.airTemperature ))
     print(string.format("waterTemperature\t: %d", weather.waterTemperature ))
     print(string.format("cloudcover\t\t: %f", weather.cloudcover ))
+    print(string.format("windSpeed\t\t: %d", weather.windSpeed ))
+    print(string.format("rain\t\t\t: %s", tostring(weather.rain) ))
 
     love.graphics.setFont( love.graphics.newFont( 20 ) )
 
@@ -90,22 +92,22 @@ function module:keypressed(key)
         states:pop()
     elseif key == "f10" then
         states:push("debug map")
-    elseif key == "left" or key == "kp4" then
+    elseif key == "left" or key == "kp4" or key == "a" then
         fishAI:move()
         competitors:move()
         player:left()
         fishfinder:update()
-    elseif key == "right" or key == "kp6" then
+    elseif key == "right" or key == "kp6" or key == "d" then
         fishAI:move()
         competitors:move()
         player:right()
         fishfinder:update()
-    elseif key == "up" or key == "kp8" then
+    elseif key == "up" or key == "kp8" or key == "w" then
         fishAI:move()
         competitors:move()
         player:forward()
         fishfinder:update()
-    elseif key == "down" or key == "kp2" then
+    elseif key == "down" or key == "kp2" or key == "s" then
         fishAI:move()
         competitors:move()
         player:reverse()
