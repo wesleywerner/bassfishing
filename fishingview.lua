@@ -157,6 +157,7 @@ function module:draw()
     fishfinder:render()
 
     -- draw game border
+    love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.borderImage)
 
     camera:pose()
