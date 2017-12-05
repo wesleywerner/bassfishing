@@ -80,7 +80,6 @@ function module:change()
     self.cloudcover = math.random() * 100
     self.rain = math.random() < 0.2
     self.airTemperature = math.random(average, hot)
-    self.isHot = self.airTemperature > hotLimit
     self.waterTemperature = math.random(average, hot - 5)
     self.waterClarity = clarities[math.random(1, #clarities)]
     self.windSpeed = math.random(0, highWindSpeed)
@@ -116,13 +115,15 @@ function module:change()
         --print("A cold front is approaching!")
     elseif self.coldfront then
         --print("A cold front is here!")
-        self.airTemperature = math.random(cold, average)
+        self.airTemperature = math.random(cold, average - 4)
         self.waterTemperature = math.random(cold, average - 2)
         self.rain = true
         self.cloudcover = 100
     elseif self.postfrontal then
         --print("the front has passed")
     end
+
+    self.isHot = self.airTemperature > hotLimit
 
     -- print(string.format("approachingfront\t: %s", tostring(self.approachingfront) ))
     -- print(string.format("coldfront\t\t: %s", tostring(self.coldfront) ))
