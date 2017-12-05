@@ -31,6 +31,7 @@ local boat = require("logic.boat")
 local player = require("logic.player")
 local playerView = require("views.player")
 local competitors = require("logic.competitors")
+local competitorsView = require("views.competitors")
 local fishAI = require("logic.fish")
 local fishView = require("views.fish")
 local weather = require("logic.weather")
@@ -176,7 +177,7 @@ function module:draw()
     if drawDebug then fishView:draw() end
 
     -- draw other boats
-    competitors:draw()
+    competitorsView:draw()
 
     -- draw player boat
     playerView:drawBoat()
