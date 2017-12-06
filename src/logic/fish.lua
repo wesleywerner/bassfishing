@@ -90,7 +90,7 @@
 local module = {
 
     -- % chance a fish decides to seek food
-    chanceToFeed = 0.01,    -- 0.01  -- TODO: reset chanceToFeed
+    chanceToFeed = 0.01,    -- TODO: tweak fish chanceToFeed to optimal fun
 
     -- distance (in map coordinates) from a cast to consider striking it
     strikeRange = 1
@@ -287,32 +287,32 @@ function module:attemptStrike(x, y, lure)
                 if weather.approachingfront then
                     -- approaching cold front feeding frenzy
                     fishChance = fishChance * 2
-                    self:debug(fish, "A cold front is coming. chance doubled.")
+                    game.dprint("A cold front is coming. chance doubled.")
                 elseif weather.postfrontal then
                     -- post front
                     fishChance = fishChance / 2
-                    self:debug(fish, "I gorged myself before the cold front. chance halved.")
+                    game.dprint("I gorged myself before the cold front. chance halved.")
                 end
 
                 -- water temperature conditions
                 if weather.waterTemperature < 18 then
                     fishChance = fishChance / 2
-                    self:debug(fish, "I'm too cold to care. halved chance.")
+                    game.dprint("I'm too cold to care. halved chance.")
                 end
 
                 -- fish lure preferance
                 if fish.lurepreference.color == lure.color then
                     fishChance = fishChance * 1.5
-                    self:debug(fish, "I like this lure color. chance + 50%.")
+                    game.dprint("I like this lure color. chance + 50%.")
                 --else
                 --    fishChance = fishChance / 2
-                --    self:debug(fish, "I hate this lure color. halved chance.")
+                --    game.dprint("I hate this lure color. halved chance.")
                 end
 
                 local strikeRoll = math.random()
                 local strike = strikeRoll < fishChance
 
-                self:debug(fish, string.format("%s fish: rolled: %.2f, chance: %.2f", fish.size, strikeRoll, fishChance))
+                game.dprint(string.format("%s fish: rolled: %.2f, chance: %.2f", fish.size, strikeRoll, fishChance))
 
                 if strike then
 
@@ -327,13 +327,6 @@ function module:attemptStrike(x, y, lure)
 
                 end
 
-                -- TODO: build rules when this fish may strike
-                -- * weather conditions
-                -- * fish lure preferance
-                -- * structure interference
-                -- * distance from feeding zone
-                -- * size
-
             end
 
         end
@@ -341,13 +334,6 @@ function module:attemptStrike(x, y, lure)
     end
 
 end
-
-function module:debug(fish, message)
-    --if fish.track then
-        print(message)
-    --end
-end
-
 
 --- Updates the on-screen position
 function module:update(dt)

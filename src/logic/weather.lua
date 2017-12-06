@@ -111,31 +111,31 @@ function module:change()
 
     -- adjust weather with the fronts
     if self.approachingfront then
-        --print("A cold front is approaching!")
+        game.dprint("A cold front is approaching!")
     elseif self.coldfront then
-        --print("A cold front is here!")
+        game.dprint("A cold front is here!")
         self.airTemperature = math.random(cold, average - 4)
         self.waterTemperature = math.random(cold, average - 2)
         self.rain = true
         self.cloudcover = 100
     elseif self.postfrontal then
-        --print("the front has passed")
+        game.dprint("the front has passed")
     end
 
     self.isHot = self.airTemperature > hotLimit
 
-    -- print(string.format("approachingfront\t: %s", tostring(self.approachingfront) ))
-    -- print(string.format("coldfront\t\t: %s", tostring(self.coldfront) ))
-    -- print(string.format("postfrontal\t\t: %s", tostring(self.postfrontal) ))
-    -- print(string.format("cloudcover\t\t: %f", self.cloudcover ))
-    -- print(string.format("rain\t\t\t: %s", tostring(self.rain) ))
-    -- print(string.format("airTemperature\t\t: %d", self.airTemperature ))
-    -- print(string.format("waterTemperature\t: %d", self.waterTemperature ))
-    -- print(string.format("waterClarity\t\t: %s", self.waterClarity ))
-    -- print(string.format("windSpeed\t\t: %d", self.windSpeed ))
-    -- print(string.format("windDirection\t\t: %s", self.windDirection ))
-    -- print(string.format("humidity\t\t: %f", self.humidity ))
-    -- print("")
+    game.dprint(string.format("approachingfront\t: %s", tostring(self.approachingfront) ))
+    game.dprint(string.format("coldfront\t\t: %s", tostring(self.coldfront) ))
+    game.dprint(string.format("postfrontal\t\t: %s", tostring(self.postfrontal) ))
+    game.dprint(string.format("cloudcover\t\t: %f", self.cloudcover ))
+    game.dprint(string.format("rain\t\t\t: %s", tostring(self.rain) ))
+    game.dprint(string.format("airTemperature\t\t: %d", self.airTemperature ))
+    game.dprint(string.format("waterTemperature\t: %d", self.waterTemperature ))
+    game.dprint(string.format("waterClarity\t\t: %s", self.waterClarity ))
+    game.dprint(string.format("windSpeed\t\t: %d", self.windSpeed ))
+    game.dprint(string.format("windDirection\t\t: %s", self.windDirection ))
+    game.dprint(string.format("humidity\t\t: %f", self.humidity ))
+    game.dprint("")
 
 end
 

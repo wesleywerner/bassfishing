@@ -20,6 +20,10 @@
 
 local module = { }
 
+-- enable debug printing
+module.debug = true
+module.dprint = function(...) if module.debug then print(...) end end
+
 -- global defaults
 module.window = { }
 module.window.width = 800

@@ -73,9 +73,11 @@ function module:add(fish)
     table.sort( self.contents, function(a, b) return a.weight < b.weight end )
 
     -- debug
-    print("\nLivewell contains:")
-    for _, n in ipairs(self.contents) do
-        print(string.format("%d) %.2f kg (%s)", n.id, n.weight, n.size))
+    if game.debug then
+        game.dprint("\nLivewell contains:")
+        for _, n in ipairs(self.contents) do
+            game.dprint(string.format("%d) %.2f kg (%s)", n.id, n.weight, n.size))
+        end
     end
 
     -- return the fish to release (if any) and a message to the angler

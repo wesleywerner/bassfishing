@@ -63,7 +63,7 @@ function module:push(name, data)
 
     -- ignore pushing the same state
     if #self.stack > 0 and self.stack[#self.stack].name == name then
-        print("not pushing same state")
+        game.dprint("not pushing the same state")
         return
     end
 
