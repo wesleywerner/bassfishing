@@ -24,7 +24,7 @@ local module = { }
 function module:prepare(boat)
 
     -- movement counter
-    boat.frame = 0
+    boat.movementFrame = 0
 
     -- current boat angle
     boat.angle = 0
@@ -110,13 +110,13 @@ function module:update(boat, dt)
     if boat.fromScreenX ~= boat.screenGoalX or boat.fromScreenY ~= boat.screenGoalY then
         boat.fromScreenX = boat.screenX
         boat.fromScreenY = boat.screenY
-        boat.frame = 0  -- TODO: rename to movementFrame
+        boat.movementFrame = 0
     end
 
     -- lerp the boat position
-    boat.frame = boat.frame + dt * 4
-    boat.screenX = game.lib.lume.lerp(boat.fromScreenX, boat.screenGoalX, boat.frame)
-    boat.screenY = game.lib.lume.lerp(boat.fromScreenY, boat.screenGoalY, boat.frame)
+    boat.movementFrame = boat.movementFrame + dt * 4
+    boat.screenX = game.lib.lume.lerp(boat.fromScreenX, boat.screenGoalX, boat.movementFrame)
+    boat.screenY = game.lib.lume.lerp(boat.fromScreenY, boat.screenGoalY, boat.movementFrame)
 
     -- lerp the boat angle
     boat.angleFrame = boat.angleFrame + dt * 2
