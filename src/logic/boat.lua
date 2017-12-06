@@ -18,11 +18,7 @@
 
 ]]--
 
-local module = {}
-
-local glob = require("logic.globals")
-local lume = require("libs.lume")
-local tiles = require("views.tiles")
+local module = { }
 
 --- Prepare a boat
 function module:prepare(boat)
@@ -56,13 +52,13 @@ end
 --- Find a jetty as the launch zone
 function module:launchBoat(boat)
 
-    if not glob.lake then
+    if not game.lake then
         error("Cannot launch the boat if there is no lake to fish on")
     end
 
     -- pick a random jetty
     math.randomseed(os.time())
-    boat.jetty = glob.lake.jetties[ math.random(1, #glob.lake.jetties) ]
+    boat.jetty = game.lake.jetties[ math.random(1, #game.lake.jetties) ]
 
     -- test for surrounding open water
     local tests = {
@@ -71,7 +67,7 @@ function module:launchBoat(boat)
             y = boat.jetty.y
         },
         {   -- right
-            x = math.min(glob.lake.width, boat.jetty.x + 2),
+            x = math.min(game.lake.width, boat.jetty.x + 2),
             y = boat.jetty.y
         },
         {   -- top
@@ -80,12 +76,12 @@ function module:launchBoat(boat)
         },
         {   -- bottom
             x = boat.jetty.x,
-            y = math.min(glob.lake.height, boat.jetty.y + 2)
+            y = math.min(game.lake.height, boat.jetty.y + 2)
         },
     }
 
     for _, test in ipairs(tests) do
-        if glob.lake.contour[test.x][test.y] == 0 then
+        if game.lake.contour[test.x][test.y] == 0 then
            boat.x = test.x
            boat.y = test.y
         end
@@ -101,8 +97,8 @@ end
 function module:update(boat, dt)
 
     -- the screen position goal
-    boat.screenGoalX = ((boat.x - 1) * tiles.size) + tiles.center
-    boat.screenGoalY = ((boat.y - 1) * tiles.size) + tiles.center
+    boat.screenGoalX = ((boat.x - 1) * game.view.tiles.size) + game.view.tiles.center
+    boat.screenGoalY = ((boat.y - 1) * game.view.tiles.size) + game.view.tiles.center
 
     -- start in-place if the screen position is empty
     if not boat.screenX or not boat.screenY then
@@ -119,12 +115,12 @@ function module:update(boat, dt)
 
     -- lerp the boat position
     boat.frame = boat.frame + dt * 4
-    boat.screenX = lume.lerp(boat.fromScreenX, boat.screenGoalX, boat.frame)
-    boat.screenY = lume.lerp(boat.fromScreenY, boat.screenGoalY, boat.frame)
+    boat.screenX = game.lib.lume.lerp(boat.fromScreenX, boat.screenGoalX, boat.frame)
+    boat.screenY = game.lib.lume.lerp(boat.fromScreenY, boat.screenGoalY, boat.frame)
 
     -- lerp the boat angle
     boat.angleFrame = boat.angleFrame + dt * 2
-    boat.angle = lume.lerp(boat.angleFrom, boat.angleTo, boat.angleFrame)
+    boat.angle = game.lib.lume.lerp(boat.angleFrom, boat.angleTo, boat.angleFrame)
 
 end
 
@@ -199,8 +195,8 @@ function module:getNextPosition(boat, dir)
     end
 
     -- clamp to the map size
-    nextX = lume.clamp(nextX, 1, glob.lake.width)
-    nextY = lume.clamp(nextY, 1, glob.lake.height)
+    nextX = game.lib.lume.clamp(nextX, 1, game.lake.width)
+    nextY = game.lib.lume.clamp(nextY, 1, game.lake.height)
 
     return nextX, nextY
 
@@ -244,7 +240,7 @@ end
 --- Returns an obstacle at a map position including jetties and land.
 function module:getObstacle(boat)
 
-    local lake = glob.lake
+    local lake = game.lake
     local x, y = boat.x, boat.y
 
     for _, obstacle in ipairs(lake.obstacles) do
@@ -284,7 +280,7 @@ end
 --- Returns the distance in pixels the boat is from it's goal.
 function module:distanceToGoal(boat)
 
-    return lume.distance(boat.screenX, boat.screenY, boat.screenGoalX, boat.screenGoalY)
+    return game.lib.lume.distance(boat.screenX, boat.screenY, boat.screenGoalX, boat.screenGoalY)
 
 end
 
@@ -297,7 +293,7 @@ function module:calculateSpeed(boat, dt)
     boat.distanceToGoal = self:distanceToGoal(boat)
 
     -- work in tile units
-    local currentSpeed = math.floor(boat.distanceToGoal / (tiles.size / 2))
+    local currentSpeed = math.floor(boat.distanceToGoal / (game.view.tiles.size / 2))
 
     -- compensate for diagonal movement which counts as more tiles
     -- and we don't want that

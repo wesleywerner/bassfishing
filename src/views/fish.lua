@@ -18,20 +18,20 @@
 
 ]]--
 
-local glob = require("logic.globals")
-local tiles = require("views.tiles")
 local module = { }
 
 function module:draw()
-    for _, fish in ipairs(glob.lake.fish) do
+    for _, fish in ipairs(game.lake.fish) do
         love.graphics.setColor(0, 128, 255, 64)
         if fish.track then
             love.graphics.setColor(255, 128, 255, 255)
         end
         if fish.feeding then
-            love.graphics.draw(tiles.image, tiles.fish.feed, fish.screenX, fish.screenY)
+            love.graphics.draw(game.view.tiles.image, game.view.tiles.fish.feed,
+                fish.screenX, fish.screenY)
         else
-            love.graphics.draw(tiles.image, tiles.fish.home, fish.screenX, fish.screenY)
+            love.graphics.draw(game.view.tiles.image, game.view.tiles.fish.home,
+                fish.screenX, fish.screenY)
         end
     end
 end

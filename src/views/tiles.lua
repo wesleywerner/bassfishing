@@ -25,6 +25,9 @@ tiles.center = tiles.size / 2
 tiles.image = love.graphics.newImage("res/tiles.png")
 tiles.w, tiles.h = tiles.image:getDimensions()
 
+-- use sharp interpolation
+tiles.image:setFilter("nearest", "nearest", 1)
+
 tiles.water = {}
 tiles.water.open = love.graphics.newQuad(80, 16, 16, 16, tiles.w, tiles.h)
 tiles.water.left = love.graphics.newQuad(48, 32, 16, 16, tiles.w, tiles.h)

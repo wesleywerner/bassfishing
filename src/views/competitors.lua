@@ -18,15 +18,13 @@
 
 ]]--
 
-local tiles = require("views.tiles")
-local glob = require("logic.globals")
 local module = { }
 
 function module:draw()
-    for _, craft in ipairs(glob.lake.boats) do
+    for _, craft in ipairs(game.lake.boats) do
         love.graphics.setColor(craft.color)
-        love.graphics.draw(tiles.image, tiles.boats[3], craft.screenX,
-        craft.screenY, math.rad(craft.angle), 1, 1, 8, 8 )
+        love.graphics.draw(game.view.tiles.image, game.view.tiles.boats[3],
+            craft.screenX, craft.screenY, math.rad(craft.angle), 1, 1, 8, 8 )
     end
 end
 

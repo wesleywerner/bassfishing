@@ -18,10 +18,6 @@
 
 ]]--
 
-local messages = require("views.messages")
-local glob = require("logic.globals")
-local tiles = require("views.tiles")
-
 local module = {
 
     -- the contents of the livewell

@@ -18,27 +18,30 @@
 
 ]]--
 
-local glob = require("logic.globals")
-local tiles = require("views.tiles")
-local player = require("logic.player")
 local module = { }
 
 function module:drawBoat()
 
+    local player = game.logic.player
     love.graphics.setColor(0, 255, 255)
 
     -- the boat
-    love.graphics.draw(tiles.image, tiles.boats[3], player.screenX,
-    player.screenY, math.rad(player.angle), 1, 1, 8, 8 )
+    love.graphics.draw(game.view.tiles.image, game.view.tiles.boats[3],
+        player.screenX, player.screenY, math.rad(player.angle), 1, 1,
+        8, 8 )
 
     -- the casting crosshair
     if player.castOffset then
+
         -- cast crosshair
         love.graphics.setColor(0, 255, 255)
-        love.graphics.circle("line", player.castOffset.screenX, player.castOffset.screenY, 4)
+        love.graphics.circle("line", player.castOffset.screenX,
+            player.castOffset.screenY, 4)
+
         -- cast range
         love.graphics.setColor(0, 255, 255, 16)
-        love.graphics.circle("fill", player.screenX, player.screenY, player.castRange)
+        love.graphics.circle("fill", player.screenX, player.screenY, player.castRange * game.view.tiles.size)
+
     end
 
     -- the cast line
@@ -51,7 +54,7 @@ function module:drawBoat()
 end
 
 function module:drawRodDetails()
-    love.graphics.setColor(glob.fonts.color)
+    love.graphics.setColor(game.fonts.color)
     love.graphics.print("Flip rod with chartreuse rapala")
 end
 

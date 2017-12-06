@@ -18,9 +18,6 @@
 
 ]]--
 
-local glob = require("logic.globals")
-local weather = require("logic.weather")
-
 local module = {
 
     icons = nil,
@@ -38,11 +35,11 @@ local module = {
 
 function module:draw()
 
+    local weather = game.logic.weather
     love.graphics.push()
-    --love.graphics.translate()
 
     -- print day and time
-    love.graphics.setColor(glob.fonts.color)
+    love.graphics.setColor(game.fonts.color)
     love.graphics.print("Day 1", unpack(self.daypos))
     love.graphics.printf("4h 30m", unpack(self.timepos))
 

@@ -1,5 +1,5 @@
 --[[
-   globals.lua
+   game.lua
 
    Copyright 2017 wesley werner <wesley.werner@gmail.com>
 
@@ -18,8 +18,12 @@
 
 ]]--
 
---TODO: this file no longer used
-local module = {}
+local module = { }
+
+-- global defaults
+module.window = { }
+module.window.width = 800
+module.window.height = 600
 
 module.defaultMapWidth = 80
 module.defaultMapHeight = 30
@@ -27,13 +31,49 @@ module.defaultMapSeed = 0
 module.defaultMapDensity = 0.25
 module.defaultMapIterations = 6
 
+-- collate modules
+module.state = { }
+module.logic = { }
+module.view = { }
+module.lib = { }
+
+-- game states
+module.states = require("logic.states")
+
+-- logic modules
+--module.logic.array2d = require("logic.array2d")
+module.logic.genie = require("logic.lakegenerator")
+module.logic.boat = require("logic.boat")
+module.logic.player = require("logic.player")
+module.logic.competitors = require("logic.competitors")
+module.logic.fish = require("logic.fish")
+module.logic.weather = require("logic.weather")
+module.logic.livewell = require("logic.livewell")
+
+-- view modules
+module.view.messages = require("views.messages")
+module.view.maprender = require("views.maprender")
+module.view.fishfinder = require("views.fishfinder")
+module.view.tiles = require("views.tiles")
+module.view.player = require("views.player")
+module.view.competitors = require("views.competitors")
+module.view.fish = require("views.fish")
+module.view.weather = require("views.weather-display")
+module.view.livewell = require("views.livewell")
+
+-- libraries
+module.lib.camera = require("libs.camera")
+module.lib.lume = require("libs.lume")
+module.lib.luastar = require("libs.lua-star")
+
 -- fonts
 module.fonts = { }
 module.fonts.color = { 146, 182, 222 }
-module.fonts.small = love.graphics.newFont( "res/TruenoRg.otf", 16 )
-module.fonts.medium = love.graphics.newFont( "res/TruenoRg.otf", 20 )
-module.fonts.large = love.graphics.newFont( "res/TruenoBlkOl.otf", 48 )
+module.fonts.small = love.graphics.newFont("res/TruenoRg.otf", 16)
+module.fonts.medium = love.graphics.newFont("res/TruenoRg.otf", 20)
+module.fonts.large = love.graphics.newFont("res/TruenoBlkOl.otf", 48)
 
+--TODO: Move these to one of our libs
 local lume = require("libs.lume")
 
 --- Returns a point on a circle.
@@ -98,5 +138,6 @@ function module:limitPointToCircle(cx, cy, x, y, r)
     return self:pointOnCircle(cx, cy, r, a)
 
 end
+
 
 return module

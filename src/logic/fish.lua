@@ -97,30 +97,23 @@ local module = {
 
 }
 
-local array2d = require("logic.array2d")
-local glob = require("logic.globals")
-local lume = require("libs.lume")
-local luastar = require("libs.lua-star")
-local tiles = require("views.tiles")
-local weather = require("logic.weather")
-
 --- Returns a new fish object
 function module:newFish(x, y)
 
     -- fish size is a weighted chance
     local weight = 0
-    local size = lume.weightedchoice({
+    local size = game.lib.lume.weightedchoice({
         ["small"] = 10,
         ["medium"] = 5,
         ["large"] = 2 })
 
     -- set weight based on size
     if size == "small" then
-        weight = lume.round( lume.random(0.3, 0.9), 0.01)
+        weight = game.lib.lume.round( game.lib.lume.random(0.3, 0.9), 0.01)
     elseif size == "medium" then
-        weight = lume.round( lume.random(1, 1.9), 0.01)
+        weight = game.lib.lume.round( game.lib.lume.random(1, 1.9), 0.01)
     else
-        weight = lume.round( lume.random(2, 5), 0.01)
+        weight = game.lib.lume.round( game.lib.lume.random(2, 5), 0.01)
     end
 
     return {
@@ -160,7 +153,7 @@ end
 --- Update all fish
 function module:move()
 
-    for _, fish in ipairs(glob.lake.fish) do
+    for _, fish in ipairs(game.lake.fish) do
 
         if fish.feeding then
 
@@ -228,14 +221,15 @@ function module:releaseFishIntoLake(fish, x, y)
 
     -- helper function to map a path
     local getMapPositionOpen = function(x, y)
-        return glob.lake.contour[x][y] == 0
+        return game.lake.contour[x][y] == 0
     end
 
     -- find a path
-    fish.path = luastar:find( glob.lake.width, glob.lake.height, start, goal, getMapPositionOpen, false)
+    fish.path = game.lib.luastar:find(game.lake.width,
+        game.lake.height, start, goal, getMapPositionOpen, false)
 
     -- release it
-    table.insert( glob.lake.fish, fish )
+    table.insert(game.lake.fish, fish)
 
 end
 
@@ -267,6 +261,8 @@ end
 -- * As a bass gets bigger, it gets tougher to fool.
 function module:attemptStrike(x, y, lure)
 
+    local weather = game.logic.weather
+
     -- the % chance a fish will bite
     local chanceToBite = {
         ["large"] = 0.125,
@@ -275,10 +271,10 @@ function module:attemptStrike(x, y, lure)
     }
 
     -- find fish near the cast that are busy feeding
-    for _, fish in ipairs(glob.lake.fish) do
+    for _, fish in ipairs(game.lake.fish) do
 
         -- distance from fish to aimed cast
-        local distance = lume.distance(x, y, fish.x, fish.y)
+        local distance = game.lib.lume.distance(x, y, fish.x, fish.y)
 
         if distance <= self.strikeRange then
 
@@ -321,7 +317,7 @@ function module:attemptStrike(x, y, lure)
                 if strike then
 
                     -- structure interference
-                    if glob.lake.structure[x][y] and fish.size == "large" then
+                    if game.lake.structure[x][y] and fish.size == "large" then
                         if math.random() < 0.25 then
                             return false, "After a big fight the fish got away."
                         end
@@ -356,7 +352,7 @@ end
 --- Updates the on-screen position
 function module:update(dt)
 
-    for _, fish in ipairs(glob.lake.fish) do
+    for _, fish in ipairs(game.lake.fish) do
 
         -- the screen position goal
         fish.screenGoalX = (fish.x - 1) * 16
@@ -377,8 +373,8 @@ function module:update(dt)
 
         -- lerp position
         fish.movementFrame = fish.movementFrame + dt * 4
-        fish.screenX = lume.lerp(fish.fromScreenX, fish.screenGoalX, fish.movementFrame)
-        fish.screenY = lume.lerp(fish.fromScreenY, fish.screenGoalY, fish.movementFrame)
+        fish.screenX = game.lib.lume.lerp(fish.fromScreenX, fish.screenGoalX, fish.movementFrame)
+        fish.screenY = game.lib.lume.lerp(fish.fromScreenY, fish.screenGoalY, fish.movementFrame)
 
     end
 

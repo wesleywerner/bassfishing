@@ -19,13 +19,12 @@
 ]]--
 
 local module = {}
-local glob = require("logic.globals")
-local tiles = require("views.tiles")
 
 
 --- Get the quad to draw a corner of water as interpolated by the land around it.
 local function getWaterCorner(a, x, y)
 
+    local tiles = game.view.tiles
     local leftX = math.max(1, x-1)
     local rightX = math.min(#a, x+1)
     local topY = math.max(1, y-1)
@@ -68,11 +67,12 @@ end
 function module:render()
 
     -- already rendered
-    if glob.lake.rendered then
+    if game.lake.rendered then
         return true
     end
 
-    local lake = glob.lake
+    local tiles = game.view.tiles
+    local lake = game.lake
 
     self.image = nil
     self.image = love.graphics.newCanvas( (lake.width+1) * tiles.size, (lake.height+1) * tiles.size )
@@ -157,7 +157,7 @@ function module:render()
     love.graphics.setCanvas()
 
     -- flag the map as rendered
-    glob.lake.rendered = true
+    game.lake.rendered = true
 
 end
 

@@ -18,15 +18,6 @@
 
 ]]--
 
-local boat = require("logic.boat")
-local lume = require("libs.lume")
-local states = require("logic.states")
-local messages = require("views.messages")
-local glob = require("logic.globals")
-local livewell = require("logic.livewell")
-local fishAI = require("logic.fish")
-local tiles = require("views.tiles")
-
 local module = {
 
     -- current boat cruising speed
@@ -39,7 +30,7 @@ local module = {
     castOffset = nil,
 
     -- maximum cast range (in map coordinates)
-    castRange = 4 * tiles.size,
+    castRange = 4,
 
     -- the cast line drawn on screen
     castLine = nil,
@@ -48,14 +39,14 @@ local module = {
 --- Turn the boat left
 function module:left()
     if not self.stuck then
-        boat:turn(self, -45)
+        game.logic.boat:turn(self, -45)
     end
 end
 
 --- Turn the boat right
 function module:right()
     if not self.stuck then
-        boat:turn(self, 45)
+        game.logic.boat:turn(self, 45)
     end
 end
 
@@ -73,7 +64,7 @@ function module:forward()
         return
     end
 
-    boat:forward(self)
+    game.logic.boat:forward(self)
 
     -- clear the cast aim
     self.castOffset = nil
@@ -94,7 +85,7 @@ function module:reverse()
         return
     end
 
-    boat:reverse(self)
+    game.logic.boat:reverse(self)
 
     -- clear the cast aim
     self.castOffset = nil
@@ -106,12 +97,14 @@ function module:aimCast( x, y )
     if not self.screenX then return end
 
     -- origin is the player boat position
-    x, y = glob:limitPointToCircle(self.screenX, self.screenY, x, y, self.castRange)
+    local range = self.castRange * game.view.tiles.size
+    x, y = game:limitPointToCircle(self.screenX, self.screenY, x, y, range)
+
     self.castOffset = {
         screenX = x,
         screenY = y,
-        x = 1 + math.floor(x / tiles.size),
-        y = 1 + math.floor(y / tiles.size)
+        x = 1 + math.floor(x / game.view.tiles.size),
+        y = 1 + math.floor(y / game.view.tiles.size)
         }
 
 end
@@ -126,7 +119,7 @@ function module:cast()
 
     -- TODO: provide lure data to the strike
     local lure = { color = "green" }
-    local fish = fishAI:attemptStrike(self.castOffset.x, self.castOffset.y, lure)
+    local fish = game.logic.fish:attemptStrike(self.castOffset.x, self.castOffset.y, lure)
 
     -- set the cast line
     self.castLine = {
@@ -142,9 +135,9 @@ end
 --- Remove a fish from the water
 function module:pullFishFromWater(fish)
 
-    for i, f in ipairs(glob.lake.fish) do
+    for i, f in ipairs(game.lake.fish) do
         if f.id == fish.id then
-            table.remove(glob.lake.fish, i)
+            table.remove(game.lake.fish, i)
         end
     end
 
@@ -156,29 +149,29 @@ function module:landFish(fish)
     -- remove the fish from the pond
     self:pullFishFromWater(fish)
 
-    local release, lwmessage = livewell:add(fish)
+    local release, lwmessage = game.logic.livewell:add(fish)
 
     -- release the fish, it will swim back home
     if release then
         release.track = true
         -- set the fish draw position to the player's for a smooth transition
         release.screenX, release.screenY = nil, nil
-        fishAI:releaseFishIntoLake(release, self.x, self.y)
+        game.logic.fish:releaseFishIntoLake(release, self.x, self.y)
     end
 
     local message = string.format("You landed a %s fish of %.2f kg\n\n%s", fish.size, fish.weight, lwmessage)
 
-    states:push("messagebox", { title="FISH ON", message=message, shake=false } )
+    game.states:push("messagebox", { title="FISH ON", message=message, shake=false } )
 
 end
 
 function module:update(dt)
 
     -- update player boat screen position and angle
-    boat:update(self, dt)
+    game.logic.boat:update(self, dt)
 
     -- work out boat cruising speed and distance to the goal
-    boat:calculateSpeed(self, dt)
+    game.logic.boat:calculateSpeed(self, dt)
 
     -- reel in cast line
     if self.castLine then
@@ -192,11 +185,11 @@ function module:update(dt)
             end
 
             -- we can snag on ground
-            if glob.lake.contour[self.castLine.x][self.castLine.y] > 0 then
+            if game.lake.contour[self.castLine.x][self.castLine.y] > 0 then
                 if math.random() < 0.5 then
-                    states:push("messagebox", { title="", message="You nearly lost your bait on a snag." } )
+                    game.states:push("messagebox", { title="", message="You nearly lost your bait on a snag." } )
                 else
-                    states:push("messagebox", { title="", message="You lost your bait on a snag. You lose 5 minutes tying a new lure." } )
+                    game.states:push("messagebox", { title="", message="You lost your bait on a snag. You lose 5 minutes tying a new lure." } )
                 end
             end
 
@@ -218,6 +211,8 @@ function module:update(dt)
             -- customize the obstruction message
             local timelost = math.random(4, 10)
             local template = ""
+            local messages = game.view.messages
+
             if self.stuck.building then
                 template = string.format(messages["building collision"], timelost)
             elseif self.stuck.land then
@@ -232,10 +227,10 @@ function module:update(dt)
                 template = string.format(messages["jetty collision"], timelost)
             end
 
-            states:push("messagebox", { title="CRUNCH!!!!", message=template, shake=true } )
+            game.states:push("messagebox", { title="CRUNCH!!!!", message=template, shake=true } )
 
             -- auto reverse out of the pickle
-            boat:undoMove(self)
+            game.logic.boat:undoMove(self)
             self.stuck = false
         end
     end

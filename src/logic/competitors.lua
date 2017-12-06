@@ -1,5 +1,5 @@
 --[[
-   boat-ai.lua
+   competitors.lua
 
    Copyright 2017 wesley werner <wesley.werner@gmail.com>
 
@@ -19,17 +19,12 @@
 ]]--
 
 local module = {}
-local glob = require("logic.globals")
-local lume = require("libs.lume")
-local boat = require("logic.boat")
-local tiles = require("views.tiles")
-
 
 function module:update(dt)
 
-    for _, craft in ipairs(glob.lake.boats) do
+    for _, craft in ipairs(game.lake.boats) do
         if craft.AI then
-            boat:update(craft, dt)
+            game.logic.boat:update(craft, dt)
         end
     end
 
@@ -38,28 +33,28 @@ end
 --- Move all the boats
 function module:move()
 
-    for _, craft in ipairs(glob.lake.boats) do
+    for _, craft in ipairs(game.lake.boats) do
 
         if craft.AI then
 
             -- move forward
-            boat:forward(craft)
+            game.logic.boat:forward(craft)
 
             -- the boat has collided with something
             if craft.stuck then
                 -- undo that move
-                boat:undoMove(craft)
+                game.logic.boat:undoMove(craft)
                 -- chance of staying put
                 if math.random() < 0.05 then
                     -- turn the boat around
-                    boat:turn(craft, math.random(-2, 2) * 45)
+                    game.logic.boat:turn(craft, math.random(-2, 2) * 45)
                 end
             else
                 -- chance of changing course
                 if math.random() < 0.1 then
                     -- turn the boat around
                     local adjustCourse = math.random(-1, 1) * 45
-                    boat:turn(craft, adjustCourse)
+                    game.logic.boat:turn(craft, adjustCourse)
                 end
             end
 

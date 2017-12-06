@@ -42,18 +42,15 @@ local module = {
     height = 0,
 }
 
-local glob = require("logic.globals")
-local player = require("logic.player")
-local weather = require("logic.weather")
-
 function module:update()
 
-    local depth = glob.lake.depth[player.x][player.y]
-    local structure = glob.lake.structure[player.x][player.y]
+    local player = game.logic.player
+    local depth = game.lake.depth[player.x][player.y]
+    local structure = game.lake.structure[player.x][player.y]
     local fishamt = 0
 
     -- count fish
-    for _, fish in ipairs(glob.lake.fish) do
+    for _, fish in ipairs(game.lake.fish) do
         if fish.x == player.x and fish.y == player.y then
             fishamt = fishamt + 1
         end
@@ -161,7 +158,7 @@ function module:render()
         end
 
         -- print the water temperature
-        love.graphics.print(string.format("%d°C", weather.waterTemperature), 0, 0)
+        love.graphics.print(string.format("%d°C", game.logic.weather.waterTemperature), 0, 0)
 
         love.graphics.setCanvas()
         love.graphics.setColor(255, 255, 255)

@@ -18,46 +18,44 @@
 
 ]]--
 
-local states = require("logic.states")
-local gamewidth, gameheight = 800, 600
-
+game = require("game")
 
 function love.load()
 
-    love.window.setMode( gamewidth, gameheight )
-    love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
-    states:add("development", require("states.development"))
-    states:add("messagebox", require("states.messagebox"))
-    states:add("lakegen development", require("states.lakegen-development"))
+    love.window.setMode(game.window.width, game.window.height)
+    love.graphics.setDefaultFilter("nearest", "nearest", 1)
+    game.states:add("development", require("states.development"))
+    game.states:add("messagebox", require("states.messagebox"))
+    game.states:add("lakegen development", require("states.lakegen-development"))
 
 end
 
 function love.update(dt)
 
-    states:update(dt)
+    game.states:update(dt)
 
 end
 
 function love.keypressed(key)
 
-    states:keypressed(key)
+    game.states:keypressed(key)
 
 end
 
 function love.mousemoved( x, y, dx, dy, istouch )
 
-    states:mousemoved( x, y, dx, dy, istouch )
+    game.states:mousemoved( x, y, dx, dy, istouch )
 
 end
 
 function love.mousepressed( x, y, button, istouch )
 
-    states:mousepressed( x, y, button, istouch )
+    game.states:mousepressed( x, y, button, istouch )
 
 end
 
 function love.draw()
 
-    states:draw()
+    game.states:draw()
 
 end

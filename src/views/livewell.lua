@@ -18,9 +18,6 @@
 
 ]]--
 
-local glob = require("logic.globals")
-local tiles = require("views.tiles")
-local livewell = require("logic.livewell")
 local module = { }
 
 function module:draw()
@@ -28,20 +25,20 @@ function module:draw()
     -- width used to right-align printed text
     local w, h = 160, 150
 
-    love.graphics.setFont(glob.fonts.medium)
+    love.graphics.setFont(game.fonts.medium)
 
-    for i, fish in ipairs(livewell.contents) do
+    for i, fish in ipairs(game.logic.livewell.contents) do
 
-        love.graphics.setColor(glob.fonts.color)
+        love.graphics.setColor(game.fonts.color)
         local py = (i - 1) * 24
-        love.graphics.draw(tiles.image, tiles.fish[fish.size], 0, py)
+        love.graphics.draw(game.view.tiles.image, game.view.tiles.fish[fish.size], 0, py)
         love.graphics.printf(string.format("%.2f kg", fish.weight), 0, py, w, "right")
 
         -- hilite a fish in the live well
         if fish.hilite then
             love.graphics.setColor(0, 255, 0, 255 * fish.hilite)
             fish.hilite = (fish.hilite > 0) and (fish.hilite - 0.002) or nil
-            love.graphics.draw(tiles.image, tiles.fish[fish.size], 0, py)
+            love.graphics.draw(game.view.tiles.image, game.view.tiles.fish[fish.size], 0, py)
         end
 
     end
