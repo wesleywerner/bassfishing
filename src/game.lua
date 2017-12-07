@@ -36,7 +36,6 @@ module.defaultMapDensity = 0.25
 module.defaultMapIterations = 6
 
 -- collate modules
-module.state = { }
 module.logic = { }
 module.view = { }
 module.lib = { }
@@ -53,6 +52,7 @@ module.logic.competitors = require("logic.competitors")
 module.logic.fish = require("logic.fish")
 module.logic.weather = require("logic.weather")
 module.logic.livewell = require("logic.livewell")
+module.logic.tournament = require("logic.tournament")
 
 -- view modules
 module.view.messages = require("views.messages")

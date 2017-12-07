@@ -41,7 +41,7 @@ function module:draw()
     -- print day and time
     love.graphics.setColor(game.fonts.color)
     love.graphics.print("Day 1", unpack(self.daypos))
-    love.graphics.printf("4h 30m", unpack(self.timepos))
+    love.graphics.printf(game.logic.tournament.timef, unpack(self.timepos))
 
     -- print temp, cloud cover and wind
     love.graphics.printf(string.format("%d°C", weather.airTemperature),

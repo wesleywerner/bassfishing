@@ -40,6 +40,7 @@ local module = {
 function module:left()
     if not self.stuck then
         game.logic.boat:turn(self, -45)
+        game.logic.tournament:turn()
     end
 end
 
@@ -47,6 +48,7 @@ end
 function module:right()
     if not self.stuck then
         game.logic.boat:turn(self, 45)
+        game.logic.tournament:turn()
     end
 end
 
@@ -69,6 +71,8 @@ function module:forward()
     -- clear the cast aim
     self.castOffset = nil
 
+    game.logic.tournament:turn()
+
 end
 
 -- --- Move the boat backward
@@ -89,6 +93,8 @@ function module:reverse()
 
     -- clear the cast aim
     self.castOffset = nil
+
+    game.logic.tournament:turn()
 
 end
 
@@ -129,6 +135,8 @@ function module:cast()
         fade = 1,
         fish = fish
     }
+
+    game.logic.tournament:turn()
 
 end
 
@@ -190,6 +198,8 @@ function module:update(dt)
                     game.states:push("messagebox", { title="", message="You nearly lost your bait on a snag." } )
                 else
                     game.states:push("messagebox", { title="", message="You lost your bait on a snag. You lose 5 minutes tying a new lure." } )
+                    -- take the time away
+                    game.logic.tournament:takeTime(5)
                 end
             end
 
@@ -228,6 +238,9 @@ function module:update(dt)
             end
 
             game.states:push("messagebox", { title="CRUNCH!!!!", message=template, shake=true } )
+
+            -- take the time away
+            game.logic.tournament:takeTime(timelost)
 
             -- auto reverse out of the pickle
             game.logic.boat:undoMove(self)

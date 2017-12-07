@@ -71,6 +71,10 @@ function module:init()
 
     love.graphics.setFont( game.fonts.small )
 
+    if game.logic.tournament.time == 0 then
+        game.logic.tournament:start()
+    end
+
 end
 
 function module:keypressed(key)
@@ -79,23 +83,15 @@ function module:keypressed(key)
     elseif key == "f10" then
         game.states:push("lakegen development")
     elseif key == "left" or key == "kp4" or key == "a" then
-        game.logic.fish:move()
-        game.logic.competitors:move()
         game.logic.player:left()
         game.view.fishfinder:update()
     elseif key == "right" or key == "kp6" or key == "d" then
-        game.logic.fish:move()
-        game.logic.competitors:move()
         game.logic.player:right()
         game.view.fishfinder:update()
     elseif key == "up" or key == "kp8" or key == "w" then
-        game.logic.fish:move()
-        game.logic.competitors:move()
         game.logic.player:forward()
         game.view.fishfinder:update()
     elseif key == "down" or key == "kp2" or key == "s" then
-        game.logic.fish:move()
-        game.logic.competitors:move()
         game.logic.player:reverse()
         game.view.fishfinder:update()
     elseif key == "tab" then
@@ -117,8 +113,6 @@ function module:mousepressed( x, y, button, istouch )
 
     if x and y then
         -- update turns TODO: move to a turn function?
-        game.logic.fish:move()
-        game.logic.competitors:move()
         game.view.fishfinder:update()
         game.logic.player:cast()
     end

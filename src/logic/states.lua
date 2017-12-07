@@ -55,6 +55,13 @@ function module:get()
 
 end
 
+--- Returns the name of current state
+function module:current()
+
+    return self:get().name
+
+end
+
 function module:push(name, data)
 
     if not self.list[name] then
