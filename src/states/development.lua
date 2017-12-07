@@ -24,33 +24,21 @@ local drawDebug = false
 
 function module:init()
 
-    self.windowWidth = love.graphics.getWidth( )
-    self.windowHeight = love.graphics.getHeight( )
-
-    -- TODO: move to a state.
-    if not game.lake then
-
-        game.lake = game.logic.genie:generate(game.defaultMapWidth,
-        game.defaultMapHeight, game.defaultMapSeed,
-        game.defaultMapDensity, game.defaultMapIterations)
-
-        -- prepare the player boat
-        game.logic.boat:prepare(game.logic.player)
-        game.logic.boat:launchBoat(game.logic.player)
-        -- add player boat to the boats list so it can be included in obstacle tests
-        table.insert(game.lake.boats, game.logic.player)
-
-        game.lib.camera:worldSize(
-            game.lake.width * game.view.tiles.size * scale,
-            game.lake.height * game.view.tiles.size * scale)
-
-        game.lib.camera:frame(10, 10,
-            love.graphics.getWidth( ) - 200,
-            love.graphics.getHeight( ) - 42)
-
-    end
-
+    -- prepare the lake
     game.logic.genie:populateLakeWithFishAndBoats(game.lake)
+    game.logic.boat:prepare(game.logic.player)
+    game.logic.boat:launchBoat(game.logic.player)
+
+    -- add player boat to the boats list so it can be included in obstacle tests
+    table.insert(game.lake.boats, game.logic.player)
+
+    game.lib.camera:worldSize(
+        game.lake.width * game.view.tiles.size * scale,
+        game.lake.height * game.view.tiles.size * scale)
+
+    game.lib.camera:frame(10, 10,
+        love.graphics.getWidth( ) - 200,
+        love.graphics.getHeight( ) - 42)
 
     -- load the game border
     if not self.borderImage then

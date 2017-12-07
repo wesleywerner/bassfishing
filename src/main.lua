@@ -24,6 +24,7 @@ function love.load()
 
     love.window.setMode(game.window.width, game.window.height)
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
+    game.states:add("lake selection", require("states.lake-selection"))
     game.states:add("development", require("states.development"))
     game.states:add("messagebox", require("states.messagebox"))
     game.states:add("lakegen development", require("states.lakegen-development"))

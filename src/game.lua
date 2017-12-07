@@ -35,6 +35,27 @@ module.defaultMapSeed = 0
 module.defaultMapDensity = 0.25
 module.defaultMapIterations = 6
 
+-- solarized colors
+module.color = { }
+module.color.white     = { 255, 255, 255 }
+module.color.base03    = {   0,  43,  54 }
+module.color.base02    = {   7,  54,  66 }
+module.color.base01    = {  88, 110, 117 }
+module.color.base00    = { 101, 123, 131 }
+module.color.base0     = { 131, 148, 150 }
+module.color.base1     = { 147, 161, 161 }
+module.color.base2     = { 238, 232, 213 }
+module.color.base3     = { 253, 246, 227 }
+module.color.yellow    = { 181, 137,   0 }
+module.color.orange    = { 203,  75,  22 }
+module.color.red       = { 220,  50,  47 }
+module.color.magenta   = { 211,  54, 130 }
+module.color.violet    = { 108, 113, 196 }
+module.color.blue      = {  38, 139, 210 }
+module.color.cyan      = {  42, 161, 152 }
+module.color.green     = { 133, 153,   0 }
+
+
 -- collate modules
 module.logic = { }
 module.view = { }
@@ -65,11 +86,13 @@ module.view.fish = require("views.fish")
 module.view.weather = require("views.weather-display")
 module.view.livewell = require("views.livewell")
 module.view.clock = require("views.clock")
+module.view.minimap = require("views.minimap")
 
 -- libraries
 module.lib.camera = require("libs.camera")
 module.lib.lume = require("libs.lume")
 module.lib.luastar = require("libs.lua-star")
+module.lib.list = require("libs.list")
 
 -- fonts
 module.fonts = { }
