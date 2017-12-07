@@ -99,7 +99,7 @@ function module:render()
         end
 
         love.graphics.push()
-        --love.graphics.setFont( love.graphics.newFont( 20 ) )
+        love.graphics.setFont(game.fonts.small)
 
         -- render to canvas
         local backgroundcolor = { 140, 185, 164 }
