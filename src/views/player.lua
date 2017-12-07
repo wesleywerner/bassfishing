@@ -54,6 +54,7 @@ function module:drawBoat()
 end
 
 function module:drawRodDetails()
+    love.graphics.setFont(game.fonts.small)
     love.graphics.setColor(game.fonts.color)
     love.graphics.print("Flip rod with chartreuse rapala")
 end
