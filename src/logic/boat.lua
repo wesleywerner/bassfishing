@@ -91,6 +91,9 @@ function module:launchBoat(boat)
     boat.screenX = nil
     boat.screenY = nil
 
+    -- clear the boat stuck state
+    boat.stuck = false
+
 end
 
 --- Updates the boat on-screen position
