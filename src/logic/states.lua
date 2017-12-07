@@ -90,8 +90,6 @@ function module:pop()
         love.event.quit()
     end
 
-    self:initCurrent()
-
 end
 
 function module:initCurrent()
