@@ -68,10 +68,22 @@ end
 --- Begin the next day of the tournament
 function module:nextDay()
 
+    -- move to the next day
     self.day = self.day + 1
+
+    -- reset the clock
     self.time = 60 * 60 * 6     -- 6 hours
     self.timef = os.date("!%H:%M", self.time)
+
+    -- reset the 30 minute remain warning flag
     self.displayedWarning = false
+
+    -- clear the player's cast data
+    game.logic.player.castLine = nil
+
+    -- launch the player boat from a jetty
+    -- TODO: this causes a crash because it clears the boat screenXY and it is used in the view update
+    --game.logic.boat:launchBoat(game.logic.player)
 
 end
 
@@ -93,7 +105,8 @@ function module:takeTime(minutes)
     -- the day is over!
     if self.time == 0 then
 
-        game.states:push("out of time")
+        --game.states:push("out of time")
+        self:nextDay()
 
     elseif self.time <= self.timeWarning and not self.displayedWarning then
 
