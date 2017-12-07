@@ -20,6 +20,11 @@
 
 local module = { }
 
+-- pre-calculate centering lake on screen
+module.lakeScale = 6
+module.lakeCenter = (game.window.width / module.lakeScale / 2) - (game.defaultMapWidth / 2)
+module.lakeBottom = (game.window.height / module.lakeScale / 2) + (game.defaultMapHeight / 2)
+
 -- set up the lake list
 local lakelist = game.lib.list:new()
 lakelist:add("Crystal Lake")
@@ -32,7 +37,7 @@ function lakelist.drawItem(id, item, selected)
     else
         love.graphics.setColor(game.color.base1)
     end
-    love.graphics.print(item, 100, 100 + (id * 24))
+    love.graphics.printf(item, 0, 140 + (id * 40), game.window.width, "center")
 end
 
 local function seedFromString(name)
@@ -59,7 +64,6 @@ end
 
 function module:init()
 
-    love.graphics.setFont(game.fonts.medium)
     newMap(seedFromString(lakelist:selectedItem()))
 
 end
@@ -68,13 +72,6 @@ end
 function module:keypressed(key)
     if key == "escape" or key == "f10" then
         game.states:pop()
-    elseif key == "left" then
-        newMap(seedFromString("wesley werner"))
-    elseif key == "right" then
-        game.lake = game.logic.genie:generate( game.lake.width, game.lake.height,
-        math.max(0, game.lake.seed + 1), game.lake.density,
-        game.lake.iterations)
-        self:reset()
     elseif key == "up" then
         lakelist:selectPrev()
         newMap(seedFromString(lakelist:selectedItem()))
@@ -95,9 +92,11 @@ function module:draw()
     love.graphics.clear(game.color.base02)
 
     -- title
+    love.graphics.setFont(game.fonts.large)
     love.graphics.setColor(game.color.cyan)
     love.graphics.printf("Where do you want to fish today?", 0, 40, game.window.width, "center")
 
+    love.graphics.setFont(game.fonts.medium)
     lakelist:draw()
 
     -- cache the lake preview to canvas
@@ -107,10 +106,12 @@ function module:draw()
 
     -- scale the map to fit
     love.graphics.push()
-    love.graphics.translate(0, 200)
     love.graphics.scale(6, 6)
+    love.graphics.translate(self.lakeCenter, self.lakeBottom)
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.lakepreview, 0, 0)
+    love.graphics.setColor(game.color.violet)
+    love.graphics.rectangle("line", 0, 0, game.lake.width, game.lake.height)
     love.graphics.pop()
 
 end
