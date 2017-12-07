@@ -365,12 +365,25 @@ function module:generate(width, height, seed, density, iterations)
     array2d:noise(data.buildings, seed, 0.01)  -- n% of the surface
     array2d:clipIncludeContour(data.buildings, data.contour)
 
+    -- place launching docks
     self:placeJetties(data, seed)
-    self:createObstacles(data, seed)
-    self:createBoats(data, seed)
-    self:spawnFish(data, seed)
+
+    -- empty placeholders for boats, fish obstacles and structure
+    data.boats = { }
+    data.fish = { }
+    data.obstacles = { }
+    data.structure = array2d:array(width, height, false)
 
     return data
+
+end
+
+--- Add fish, competitor boats, lake structure and obstacles
+function module:populateLakeWithFishAndBoats(data)
+
+    self:createObstacles(data, data.seed)
+    self:createBoats(data, data.seed)
+    self:spawnFish(data, data.seed)
 
 end
 

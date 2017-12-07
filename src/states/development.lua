@@ -50,6 +50,8 @@ function module:init()
 
     end
 
+    game.logic.genie:populateLakeWithFishAndBoats(game.lake)
+
     -- load the game border
     if not self.borderImage then
         self.borderImage = love.graphics.newImage("res/game-border.png")
