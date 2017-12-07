@@ -26,7 +26,6 @@ local module = {
     -- All drawings a relative to the info bar position
     daypos = { 5, 2 },
     iconpos = { 60, 30 },
-    timepos = { 30, 2, 140, "right" },    -- including limit, align
     temppos = { 30, 86, 140, "right" },
     cloudpos = { 30, 116, 140, "right" },
     windpos = { 30, 146, 140, "right" },
@@ -37,11 +36,6 @@ function module:draw()
 
     local weather = game.logic.weather
     love.graphics.push()
-
-    -- print day and time
-    love.graphics.setColor(game.fonts.color)
-    love.graphics.print("Day 1", unpack(self.daypos))
-    love.graphics.printf(game.logic.tournament.timef, unpack(self.timepos))
 
     -- print temp, cloud cover and wind
     love.graphics.printf(string.format("%d°C", weather.airTemperature),

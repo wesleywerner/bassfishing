@@ -165,7 +165,12 @@ function module:draw()
     love.graphics.pop()
 
     love.graphics.push()
-    love.graphics.translate(612, 10)
+    love.graphics.translate(620, 14)
+    game.view.clock:draw()
+    love.graphics.pop()
+
+    love.graphics.push()
+    love.graphics.translate(612, 60)
     game.view.weather:draw()
     love.graphics.pop()
 

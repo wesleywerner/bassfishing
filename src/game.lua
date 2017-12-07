@@ -64,6 +64,7 @@ module.view.competitors = require("views.competitors")
 module.view.fish = require("views.fish")
 module.view.weather = require("views.weather-display")
 module.view.livewell = require("views.livewell")
+module.view.clock = require("views.clock")
 
 -- libraries
 module.lib.camera = require("libs.camera")
@@ -74,6 +75,7 @@ module.lib.luastar = require("libs.lua-star")
 module.fonts = { }
 module.fonts.color = { 146, 182, 222 }
 module.fonts.small = love.graphics.newFont("res/TruenoRg.otf", 16)
+module.fonts.smallfixed = love.graphics.newFont(16)
 module.fonts.medium = love.graphics.newFont("res/TruenoRg.otf", 20)
 module.fonts.large = love.graphics.newFont("res/TruenoBlkOl.otf", 48)
 
