@@ -23,7 +23,7 @@ local module = { }
 -- Render a preview of the lake contour to a canvas
 function module:render(showPlayer)
 
-    local preview = love.graphics.newCanvas(game.lake.width + 1, game.lake.height + 1)
+    local preview = love.graphics.newCanvas(game.lake.width, game.lake.height)
     love.graphics.setCanvas(preview)
 
     for x=1, game.lake.width do
@@ -33,12 +33,12 @@ function module:render(showPlayer)
 
             if land then
                 love.graphics.setColor(game.color.base03)
-                love.graphics.rectangle("fill", x, y, 1, 1)
+                love.graphics.rectangle("fill", x-1, y-1, 1, 1)
             else
                 -- draw lake depth
                 local depth = game.lake.depth[x][y]
                 love.graphics.setColor(game.color.blue)
-                love.graphics.rectangle("fill", x, y, 1, 1)
+                love.graphics.rectangle("fill", x-1, y-1, 1, 1)
             end
 
         end
