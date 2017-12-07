@@ -55,7 +55,7 @@ end
 
 function module:drawRodDetails()
     love.graphics.setFont(game.fonts.small)
-    love.graphics.setColor(game.fonts.color)
+    love.graphics.setColor(game.color.base1)
     love.graphics.print("Flip rod with chartreuse rapala")
 end
 

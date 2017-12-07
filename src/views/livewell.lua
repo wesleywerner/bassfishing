@@ -29,14 +29,15 @@ function module:draw()
 
     for i, fish in ipairs(game.logic.livewell.contents) do
 
-        love.graphics.setColor(game.fonts.color)
+        love.graphics.setColor(game.color.base1)
         local py = (i - 1) * 24
         love.graphics.draw(game.view.tiles.image, game.view.tiles.fish[fish.size], 0, py)
         love.graphics.printf(string.format("%.2f kg", fish.weight), 0, py, w, "right")
 
         -- hilite a fish in the live well
         if fish.hilite then
-            love.graphics.setColor(0, 255, 0, 255 * fish.hilite)
+            local g = game.color.green
+            love.graphics.setColor(g[1], g[2], g[3], 255 * fish.hilite)
             fish.hilite = (fish.hilite > 0) and (fish.hilite - 0.002) or nil
             love.graphics.draw(game.view.tiles.image, game.view.tiles.fish[fish.size], 0, py)
         end
