@@ -18,11 +18,7 @@
 ]]--
 
 local module = {}
-local lume = require("libs.lume")
 local array2d = require("logic.array2d")
-local boat = require("logic.boat")
-local fishAI = require("logic.fish")
-local luastar = require("libs.lua-star")
 
 --- Adds large chunks of noise simulating land mass
 --
@@ -179,7 +175,7 @@ function module:createBoats(data, seed)
 
     -- prepare the boats
     for _, craft in ipairs(data.boats) do
-        boat:prepare(craft)
+        game.logic.boat:prepare(craft)
     end
 
 end
@@ -232,7 +228,7 @@ function module:spawnFish(data, seed)
 
             for n=1, fishes do
 
-                local fish = fishAI:newFish(x, y)
+                local fish = game.logic.fish:newFish(x, y)
                 fish.id = fishid
                 fish.feedingZones = self:spawnFishFeedingZones(data, x, y)
                 table.insert(data.fish, fish)
@@ -269,7 +265,7 @@ function module:spawnFishFeedingZones(data, x, y)
         end,
         function(value, px, py)
             -- include a point if within feeding range
-            local dist = lume.distance(x, y, px, py)
+            local dist = game.lib.lume.distance(x, y, px, py)
             if dist <= maxFeedingZoneDistance then
                 table.insert(nearbyPlants, { x = px, y = py, distance = dist })
             end
@@ -293,7 +289,7 @@ function module:spawnFishFeedingZones(data, x, y)
         -- get a path to this point
         local start = { x = x, y = y }
         local goal = { x = plantPoint.x, y = plantPoint.y }
-        local path = luastar:find( data.width, data.height, start, goal, getMapPositionOpen, false)
+        local path = game.lib.luastar:find( data.width, data.height, start, goal, getMapPositionOpen, false)
 
         -- the path length must be within range.
         -- a plant can be nearby on the map, but could be seperated by a land mass

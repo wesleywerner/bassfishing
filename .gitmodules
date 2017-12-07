@@ -1,0 +1,9 @@
+[submodule "src/libs/harness"]
+	path = src/libs/harness
+	url = https://github.com/wesleywerner/harness.git
+[submodule "src/libs/lua-star"]
+	path = src/libs/lua-star
+	url = https://github.com/wesleywerner/lua-star.git
+[submodule "src/libs/lume"]
+	path = src/libs/lume
+	url = https://github.com/rxi/lume.git

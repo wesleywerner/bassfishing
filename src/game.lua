@@ -89,9 +89,9 @@ module.view.clock = require("views.clock")
 module.view.minimap = require("views.minimap")
 
 -- libraries
-module.lib.camera = require("libs.camera")
-module.lib.lume = require("libs.lume")
-module.lib.luastar = require("libs.lua-star")
+module.lib.camera = require("libs.harness.camera")
+module.lib.lume = require("libs.lume.lume")
+module.lib.luastar = require("libs.lua-star.src.lua-star")
 module.lib.list = require("libs.list")
 
 -- fonts
@@ -102,7 +102,6 @@ module.fonts.medium = love.graphics.newFont("res/MechanicalBd.otf", 24)
 module.fonts.large = love.graphics.newFont("res/MechanicalBdOutObl.otf", 48)
 
 --TODO: Move these to one of our libs
-local lume = require("libs.lume")
 
 --- Returns a point on a circle.
 --
@@ -150,7 +149,7 @@ end
 function module:limitPointToCircle(cx, cy, x, y, r)
 
     -- distance
-    local dist = lume.distance(cx, cy, x, y)
+    local dist = module.lib.lume.distance(cx, cy, x, y)
 
     -- if within the required range
     if dist <= r then
@@ -161,7 +160,7 @@ function module:limitPointToCircle(cx, cy, x, y, r)
     r = math.min(r, dist)
 
     -- angle
-    local a = lume.angle(cx, cy, x, y)
+    local a = module.lib.lume.angle(cx, cy, x, y)
 
     return self:pointOnCircle(cx, cy, r, a)
 
