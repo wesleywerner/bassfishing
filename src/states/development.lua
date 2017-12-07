@@ -170,7 +170,7 @@ function module:draw()
     love.graphics.pop()
 
     love.graphics.push()
-    love.graphics.translate(612, 60)
+    love.graphics.translate(612, 10)
     game.view.weather:draw()
     love.graphics.pop()
 

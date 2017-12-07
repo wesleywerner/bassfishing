@@ -74,10 +74,9 @@ module.lib.luastar = require("libs.lua-star")
 -- fonts
 module.fonts = { }
 module.fonts.color = { 146, 182, 222 }
-module.fonts.small = love.graphics.newFont("res/TruenoRg.otf", 16)
-module.fonts.smallfixed = love.graphics.newFont(16)
-module.fonts.medium = love.graphics.newFont("res/TruenoRg.otf", 20)
-module.fonts.large = love.graphics.newFont("res/TruenoBlkOl.otf", 48)
+module.fonts.small = love.graphics.newFont("res/MechanicalBd.otf", 18)
+module.fonts.medium = love.graphics.newFont("res/MechanicalBd.otf", 24)
+module.fonts.large = love.graphics.newFont("res/MechanicalBdOutObl.otf", 48)
 
 --TODO: Move these to one of our libs
 local lume = require("libs.lume")

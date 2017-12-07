@@ -36,6 +36,7 @@ function module:draw()
 
     local weather = game.logic.weather
     love.graphics.push()
+    love.graphics.setFont(game.fonts.medium)
 
     -- print temp, cloud cover and wind
     love.graphics.printf(string.format("%d°C", weather.airTemperature),
