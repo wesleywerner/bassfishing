@@ -18,12 +18,7 @@
 
 ]]--
 
-local module = {}
-local glob = require("logic.globals")
-local genie = require("logic.lakegenerator")
-local states = require("logic.states")
-local player = require("logic.player")
-local boat = require("logic.boat")
+local module = { }
 
 -- set private values
 module.helptext = [[Bass fishing lake view.
@@ -49,10 +44,10 @@ module.legend = {
 function module:init()
 
     -- create a new map
-    if not glob.lake then
-        glob.lake = genie:generate(glob.defaultMapWidth,
-        glob.defaultMapHeight, glob.defaultMapSeed,
-        glob.defaultMapDensity, glob.defaultMapIterations)
+    if not game.lake then
+        game.lake = game.logic.genie:generate(game.defaultMapWidth,
+        game.defaultMapHeight, game.defaultMapSeed,
+        game.defaultMapDensity, game.defaultMapIterations)
 
         self:reset()
     end
@@ -64,54 +59,54 @@ end
 function module:reset()
 
     -- prepare the player boat
-    boat:prepare(player)
-    boat:launchBoat(player)
+    game.logic.boat:prepare(game.logic.player)
+    game.logic.boat:launchBoat(game.logic.player)
 
 end
 
 
 function module:keypressed(key)
     if key == "escape" or key == "f10" then
-        states:pop()
+        game.states:pop()
     elseif key == "left" then
-        glob.lake = genie:generate( glob.lake.width, glob.lake.height,
-        math.max(0, glob.lake.seed - 1), glob.lake.density,
-        glob.lake.iterations)
+        game.lake = game.logic.genie:generate( game.lake.width, game.lake.height,
+        math.max(0, game.lake.seed - 1), game.lake.density,
+        game.lake.iterations)
         self:reset()
     elseif key == "right" then
-        glob.lake = genie:generate( glob.lake.width, glob.lake.height,
-        math.max(0, glob.lake.seed + 1), glob.lake.density,
-        glob.lake.iterations)
+        game.lake = game.logic.genie:generate( game.lake.width, game.lake.height,
+        math.max(0, game.lake.seed + 1), game.lake.density,
+        game.lake.iterations)
         self:reset()
     elseif key == "up" then
-        glob.lake = genie:generate( glob.lake.width, glob.lake.height,
-        glob.lake.seed, glob.lake.density, math.max(0,
-        glob.lake.iterations + 1))
+        game.lake = game.logic.genie:generate( game.lake.width, game.lake.height,
+        game.lake.seed, game.lake.density, math.max(0,
+        game.lake.iterations + 1))
         self:reset()
     elseif key == "down" then
-        glob.lake = genie:generate( glob.lake.width, glob.lake.height,
-        glob.lake.seed, glob.lake.density, math.max(0,
-        glob.lake.iterations - 1))
+        game.lake = game.logic.genie:generate( game.lake.width, game.lake.height,
+        game.lake.seed, game.lake.density, math.max(0,
+        game.lake.iterations - 1))
         self:reset()
     elseif key == "insert" then
-        glob.lake = genie:generate( glob.lake.width, glob.lake.height,
-        glob.lake.seed, math.max(0, glob.lake.density + .025),
-        glob.lake.iterations)
+        game.lake = game.logic.genie:generate( game.lake.width, game.lake.height,
+        game.lake.seed, math.max(0, game.lake.density + .025),
+        game.lake.iterations)
         self:reset()
     elseif key == "delete" then
-        glob.lake = genie:generate( glob.lake.width, glob.lake.height,
-        glob.lake.seed, math.max(0, glob.lake.density - .025),
-        glob.lake.iterations)
+        game.lake = game.logic.genie:generate( game.lake.width, game.lake.height,
+        game.lake.seed, math.max(0, game.lake.density - .025),
+        game.lake.iterations)
         self:reset()
     elseif key == "kp-" then
-        glob.lake = genie:generate( glob.lake.width, math.max(30,
-        glob.lake.height - 1), glob.lake.seed, glob.lake.density,
-        glob.lake.iterations)
+        game.lake = game.logic.genie:generate( game.lake.width, math.max(30,
+        game.lake.height - 1), game.lake.seed, game.lake.density,
+        game.lake.iterations)
         self:reset()
     elseif key == "kp+" then
-        glob.lake = genie:generate( glob.lake.width, math.min(80,
-        glob.lake.height + 1), glob.lake.seed, glob.lake.density,
-        glob.lake.iterations)
+        game.lake = game.logic.genie:generate( game.lake.width, math.min(80,
+        game.lake.height + 1), game.lake.seed, game.lake.density,
+        game.lake.iterations)
         self:reset()
     end
 end
@@ -125,7 +120,7 @@ function module:draw()
   -- print help
   love.graphics.setColor(255, 255, 255)
   love.graphics.printf(self.helptext, 10, 10, 600)
-  love.graphics.print(string.format("seed: %d\ndensity: %f\niter: %s", glob.lake.seed, glob.lake.density, glob.lake.iterations), 650, 10)
+  love.graphics.print(string.format("seed: %d\ndensity: %f\niter: %s", game.lake.seed, game.lake.density, game.lake.iterations), 650, 10)
 
   -- draw legend
   local legendx = 500
@@ -142,40 +137,40 @@ function module:draw()
   love.graphics.translate(0, 200)
   love.graphics.scale(8, 8)
 
-  for x=1, glob.lake.width do
-    for y=1, glob.lake.height do
+  for x=1, game.lake.width do
+    for y=1, game.lake.height do
 
-      local ground = glob.lake.contour[x][y] > 0
+      local ground = game.lake.contour[x][y] > 0
 
       if ground then
         love.graphics.setColor(self.legend["Land"])
         love.graphics.rectangle("fill", x, y, 1, 1)
       else
         -- draw lake depth
-        local depth = glob.lake.depth[x][y]
+        local depth = game.lake.depth[x][y]
         love.graphics.setColor(0, 0, 64 + (128*depth) )
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      local plant = glob.lake.plants[x][y] > 0
+      local plant = game.lake.plants[x][y] > 0
       if plant then
         love.graphics.setColor(self.legend["Aquatic Plant"])
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      local tree = glob.lake.trees[x][y] > 0
+      local tree = game.lake.trees[x][y] > 0
       if tree then
         love.graphics.setColor(self.legend["Tree"])
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      local house = glob.lake.buildings[x][y] > 0
+      local house = game.lake.buildings[x][y] > 0
       if house then
         love.graphics.setColor(self.legend["Building"])
         love.graphics.rectangle("fill", x, y, 1, 1)
       end
 
-      local structure = glob.lake.structure[x][y]
+      local structure = game.lake.structure[x][y]
       if structure then
         love.graphics.setColor(self.legend["Structure"])
         love.graphics.rectangle("fill", x, y, 1, 1)
@@ -186,25 +181,25 @@ function module:draw()
 
   -- Draw jetties
   love.graphics.setColor(self.legend["Jetty"])
-  for _, jetty in ipairs(glob.lake.jetties) do
+  for _, jetty in ipairs(game.lake.jetties) do
     love.graphics.rectangle("fill", jetty.x, jetty.y, 1, 1)
   end
 
   -- Draw obstacles
   love.graphics.setColor(self.legend["Obstacle"])
-  for _, jetty in ipairs(glob.lake.obstacles) do
+  for _, jetty in ipairs(game.lake.obstacles) do
     love.graphics.rectangle("fill", jetty.x, jetty.y, 1, 1)
   end
 
   -- Draw fish
   love.graphics.setColor(self.legend["Fish"])
-  for _, fish in ipairs(glob.lake.fish) do
+  for _, fish in ipairs(game.lake.fish) do
     love.graphics.rectangle("fill", fish.x, fish.y, 1, 1)
   end
 
   -- player boat
   love.graphics.setColor(self.legend["Player"])
-  love.graphics.rectangle("fill", player.x, player.y, 1, 1)
+  love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 1, 1)
 
 end
 
