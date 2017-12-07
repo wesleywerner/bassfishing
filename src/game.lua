@@ -90,6 +90,7 @@ module.view.minimap = require("views.minimap")
 
 -- libraries
 module.lib.camera = require("libs.harness.camera")
+module.lib.trig = require("libs.harness.trig")
 module.lib.lume = require("libs.lume.lume")
 module.lib.luastar = require("libs.lua-star.src.lua-star")
 module.lib.list = require("libs.list")
@@ -100,71 +101,5 @@ module.fonts.color = { 146, 182, 222 }
 module.fonts.small = love.graphics.newFont("res/MechanicalBd.otf", 18)
 module.fonts.medium = love.graphics.newFont("res/MechanicalBd.otf", 24)
 module.fonts.large = love.graphics.newFont("res/MechanicalBdOutObl.otf", 48)
-
---TODO: Move these to one of our libs
-
---- Returns a point on a circle.
---
--- @tparam number cx
--- The origin of the circle
---
--- @tparam number cy
--- The origin of the circle
---
--- @tparam number r
--- The circle radius
---
--- @tparam number a
--- The angle of the point to the origin.
---
--- @treturn number
--- x, y
-function module:pointOnCircle(cx, cy, r, a)
-
-    x = cx + r * math.cos(a)
-    y = cy + r * math.sin(a)
-    return x, y
-
-end
-
---- Clamp a point to a circular range.
---
--- @tparam number cx
--- The origin of the circle
---
--- @tparam number cy
--- The origin of the circle
---
--- @tparam number x
--- The goal point to reach
---
--- @tparam number y
--- The goal point to reach
---
--- @tparam number r
--- The circle radius
---
--- @treturn number
--- x, y
-function module:limitPointToCircle(cx, cy, x, y, r)
-
-    -- distance
-    local dist = module.lib.lume.distance(cx, cy, x, y)
-
-    -- if within the required range
-    if dist <= r then
-        return x, y
-    end
-
-    -- otherwise clamp the point to the radius limit
-    r = math.min(r, dist)
-
-    -- angle
-    local a = module.lib.lume.angle(cx, cy, x, y)
-
-    return self:pointOnCircle(cx, cy, r, a)
-
-end
-
 
 return module

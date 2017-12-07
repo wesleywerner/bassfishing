@@ -104,7 +104,7 @@ function module:aimCast( x, y )
 
     -- origin is the player boat position
     local range = self.castRange * game.view.tiles.size
-    x, y = game:limitPointToCircle(self.screenX, self.screenY, x, y, range)
+    x, y = game.lib.trig:limitPointToCircle(self.screenX, self.screenY, x, y, range)
 
     self.castOffset = {
         screenX = x,
