@@ -30,10 +30,10 @@ module.day = 0
 -- and (!) as UTC, otherwise the hour component will be offset by our timezone.
 --
 -- return table.foreach(os.date('!*t', 3665), print) -- 1hr, 1min, 5sec
---    hour	1
---    min	1
---    sec	5
---    year	1970
+--    hour  1
+--    min   1
+--    sec   5
+--    year  1970
 --
 -- Get the formatted time:
 --  os.date("!%H:%M:%S", number-of-seconds)
@@ -69,8 +69,8 @@ end
 function module:nextDay()
 
     self.day = self.day + 1
-    self.time = 60 * 30 + 5 --60 * 60 * 6     -- 6 hours
-    self.timef = os.date("!%H:%M:%S", self.time)
+    self.time = 60 * 60 * 6     -- 6 hours
+    self.timef = os.date("!%H:%M", self.time)
     self.displayedWarning = false
 
 end
@@ -85,10 +85,10 @@ function module:turn()
 end
 
 -- Reduce the tournament clock
-function module:takeTime(amount)
+function module:takeTime(minutes)
 
-    self.time = math.max(0, self.time - amount)
-    self.timef = os.date("!%H:%M:%S", self.time)
+    self.time = math.max(0, self.time - (minutes * 60))
+    self.timef = os.date("!%H:%M", self.time)
 
     -- the day is over!
     if self.time == 0 then
