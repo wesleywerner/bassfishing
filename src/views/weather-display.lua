@@ -37,6 +37,7 @@ function module:draw()
     local weather = game.logic.weather
     love.graphics.push()
     love.graphics.setFont(game.fonts.medium)
+    love.graphics.setColor(game.color.base1)
 
     -- print temp, cloud cover and wind
     love.graphics.printf(string.format("%d°C", weather.airTemperature),
@@ -53,7 +54,7 @@ function module:draw()
     -- cloudy
     -- windy
     -- overcast
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(game.color.base1)
     local icon = self.icons.clear
 
     if weather.approachingfront then
