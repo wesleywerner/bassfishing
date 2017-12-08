@@ -175,11 +175,6 @@ end
 
 function module:update(dt)
 
-    -- check if the day is over
-    if game.logic.tournament.time == 0 then
-        game.logic.tournament:nextDay()
-    end
-
     -- update player boat screen position and angle
     game.logic.boat:update(self, dt)
 

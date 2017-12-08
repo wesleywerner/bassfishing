@@ -112,7 +112,14 @@ end
 function module:update(dt)
 
     game.logic.competitors:update(dt)
+
+    -- check if the day is over
+    if game.logic.tournament.time == 0 then
+        game.logic.tournament:nextDay()
+    end
+
     game.logic.player:update(dt)
+
     if drawDebug then game.logic.fish:update(dt) end
 
     game.lib.camera:center(game.logic.player.screenX * scale, game.logic.player.screenY * scale)
