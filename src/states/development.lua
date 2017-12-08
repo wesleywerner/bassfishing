@@ -151,7 +151,7 @@ function module:draw()
     game.view.competitors:draw()
 
     -- draw player boat
-    game.view.player:drawBoat()
+    game.view.player:draw()
 
     game.lib.camera:relax()
 

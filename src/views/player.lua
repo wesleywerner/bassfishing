@@ -20,7 +20,7 @@
 
 local module = { }
 
-function module:drawBoat()
+function module:draw()
 
     local player = game.logic.player
     love.graphics.setColor(0, 255, 255)
@@ -50,6 +50,13 @@ function module:drawBoat()
         love.graphics.setLineWidth(1)
         love.graphics.line(player.screenX, player.screenY, unpack(player.castLine.points))
     end
+
+    -- draw arrow pointing to the weigh-in dock
+    local p = game.logic.player
+    local angle = game.lib.trig:angle(p.screenX, p.screenY, p.jetty.x * game.view.tiles.size, p.jetty.y * game.view.tiles.size)
+    local px, py = game.lib.trig:pointOnCircle(p.screenX, p.screenY, 48, angle)
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(game.view.tiles.image, game.view.tiles.dockpointer, px, py, angle)
 
 end
 

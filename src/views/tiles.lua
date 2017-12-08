@@ -101,4 +101,6 @@ tiles.fish.small = love.graphics.newQuad(432, 96, 16, 16, tiles.w, tiles.h)
 tiles.fish.medium = love.graphics.newQuad(448, 96, 22, 22, tiles.w, tiles.h)
 tiles.fish.large = love.graphics.newQuad(470, 96, 32, 32, tiles.w, tiles.h)
 
+tiles.dockpointer = love.graphics.newQuad(80, 144, 16, 16, tiles.w, tiles.h)
+
 return tiles
