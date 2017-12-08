@@ -82,8 +82,7 @@ function module:nextDay()
     game.logic.player.castLine = nil
 
     -- launch the player boat from a jetty
-    -- TODO: this causes a crash because it clears the boat screenXY and it is used in the view update
-    --game.logic.boat:launchBoat(game.logic.player)
+    game.logic.boat:launchBoat(game.logic.player)
 
 end
 
@@ -102,13 +101,7 @@ function module:takeTime(minutes)
     self.time = math.max(0, self.time - (minutes * 60))
     self.timef = os.date("!%H:%M", self.time)
 
-    -- the day is over!
-    if self.time == 0 then
-
-        --game.states:push("out of time")
-        self:nextDay()
-
-    elseif self.time <= self.timeWarning and not self.displayedWarning then
+    if self.time <= self.timeWarning and not self.displayedWarning then
 
         -- prevent showing the warning on top of another message.
         -- if this is the case, we will show the warning on next turn
