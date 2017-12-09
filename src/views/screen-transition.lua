@@ -19,13 +19,49 @@
 
 ]]--
 
+--[[
+
+    Provides a screen transition helper.
+
+    Call new(duration, easing) to set up a transition:
+
+        self.transition = game.view.screentransition:new(3, "outBounce")
+
+    Then update it:
+
+        self.transition:update(dt)
+
+    The "scale" value indicates the transition progress from 0..1:
+
+        love.graphics.translate(0, self.height - (self.height * self.transition.scale))
+
+    And the "isOpen" value is true once the opening transition reaches a value of 1:
+
+        if self.transition.isOpen then
+            ...
+        end
+
+    Call close(duration, easing) to reverse the transition:
+
+        self.transition:close(1, "inBack")
+
+    Note: close only triggers when the open transition is complete.
+
+    The "isClosed" value is true once the closing transition reaches a value of 1:
+
+        if self.transition.isClosed then
+            game.states:pop()
+        end
+
+]]--
+
 local module = { }
 
 local transition_mt = { }
 
 function transition_mt:close(duration, easing)
 
-    if not self.closing and self.complete then
+    if self.isOpen then
 
         self.closing = true
 
@@ -40,6 +76,9 @@ function transition_mt:update(dt)
 
     self.complete = self.tween:update(dt)
 
+    self.isOpen = self.complete and not self.closing
+    self.isClosed = self.complete and self.closing
+
 end
 
 function module:new(duration, easing)
@@ -48,7 +87,10 @@ function module:new(duration, easing)
     setmetatable(instance, { __index = transition_mt })
 
     instance.scale = 0
-    instance.tween = game.lib.tween.new(duration or 3, instance, { scale = 1 }, easing or "outBounce")
+
+    instance.tween = game.lib.tween.new(duration or 3, instance,
+        { scale = 1 }, easing or "outBounce")
+
     -- indicates the closing animation
     instance.closing = false
 
