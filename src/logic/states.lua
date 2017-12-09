@@ -69,10 +69,10 @@ function module:push(name, data)
     end
 
     -- ignore pushing the same state
-    if #self.stack > 0 and self.stack[#self.stack].name == name then
-        game.dprint("not pushing the same state")
-        return
-    end
+    --if #self.stack > 0 and self.stack[#self.stack].name == name then
+    --    game.dprint("not pushing the same state")
+    --    return
+    --end
 
     table.insert(self.stack, { name=name, object=self.list[name], data=data })
     self:initCurrent()
