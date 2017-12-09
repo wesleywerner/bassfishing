@@ -38,9 +38,9 @@ function module:init(data)
 end
 
 function module:keypressed(key)
-    if key == "escape" then
-        self.transition:close(1, "inBack")
-    end
+
+    self.transition:close(1, "inBack")
+
 end
 
 function module:mousemoved( x, y, dx, dy, istouch )
@@ -76,8 +76,6 @@ function module:draw()
     -- apply transform
     love.graphics.translate(0, - self.height + (self.height * self.transition.scale))
 
-    -------------------------------
-
     local tour = game.logic.tournament
     local frameLeft = 0
     local frameTop = 0
@@ -98,7 +96,8 @@ function module:draw()
     -- print title
     love.graphics.setColor(game.color.base01)
     love.graphics.setFont(game.fonts.large)
-    love.graphics.printf("weigh in", frameLeft, frameTop + 30, frameWidth, "center")
+    love.graphics.printf(string.format("weigh in day %d", game.logic.tournament.day),
+        frameLeft, frameTop + 30, frameWidth, "center")
 
     -- list standings
     love.graphics.setFont(game.fonts.small)
@@ -119,13 +118,19 @@ function module:draw()
     end
 
     -- lunker of the day
+    love.graphics.setColor(game.color.violet)
     love.graphics.printf(
-        string.format("The lunker of the day goes to:\n%s with a catch of %.2f kg",
+        string.format("The lunker of the day goes to:\n%s with a catch of %.2f kg!",
         tour.lunkerOfTheDay.name, tour.lunkerOfTheDay.weight),
-        0, self.height - 60, self.width, "center")
+        0, self.height - 140, self.width, "center")
 
+    -- print last day message
+    if game.logic.tournament.day == 3 then
 
-    -------------------------------
+        love.graphics.setColor(game.color.red)
+        love.graphics.printf("Tournament standings are up next...", 0, self.height - 60, self.width, "center")
+
+    end
 
     -- restore state
     love.graphics.pop()
