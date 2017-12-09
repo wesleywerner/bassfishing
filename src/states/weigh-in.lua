@@ -55,7 +55,8 @@ function module:update(dt)
 
     self.transition:update(dt)
 
-    if self.transition.complete and self.transition.closing then
+    if self.transition.isClosed then
+        game.logic.tournament:nextDay()
         game.states:pop()
     end
 
@@ -83,8 +84,12 @@ function module:draw()
     -- draw a frame
     love.graphics.setColor(game.color.base2)
     love.graphics.rectangle("fill", frameLeft, frameTop, frameWidth, frameHeight )
-    love.graphics.setColor(game.color.base3)
-    love.graphics.setLineWidth(4)
+
+    -- border
+    love.graphics.setColor(game.color.base03)
+
+    -- TODO: this adds a nice fat border but seems to affect the minimap on lake selection
+    --love.graphics.setLineWidth(40)
     love.graphics.rectangle("line", frameLeft, frameTop, frameWidth, frameHeight )
 
     -- print title
@@ -92,6 +97,39 @@ function module:draw()
     love.graphics.setFont(game.fonts.large)
     love.graphics.printf("weigh in", frameLeft, frameTop + 30, frameWidth, "center")
 
+    -- list fish
+    -- width used to right-align printed text
+    local w, h = 160, 150
+
+    love.graphics.setFont(game.fonts.medium)
+
+    for i, fish in ipairs(game.logic.livewell.contents) do
+
+        love.graphics.setColor(game.color.base1)
+        local py = (i - 1) * 24
+        love.graphics.draw(game.view.tiles.image, game.view.tiles.fish[fish.size], 0, py)
+        love.graphics.printf(string.format("%.2f kg", fish.weight), 0, py, w, "right")
+
+    end
+
+
+    -- list competitors
+    love.graphics.setFont(game.fonts.small)
+    for i, cmp in ipairs(game.logic.tournament.competitors) do
+
+        if i < 11 then
+
+            local py = 100 + (i*30)
+
+            -- name
+            love.graphics.print(string.format("%d. %s (%s)", i, cmp.person, cmp.boat), 100, py)
+
+            -- weight
+            love.graphics.printf(string.format("%.2f kg", 42), 0, py, self.width - 20, "right")
+
+        end
+
+    end
 
     -------------------------------
 
