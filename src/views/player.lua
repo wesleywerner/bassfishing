@@ -56,7 +56,7 @@ function module:draw()
         local p = game.logic.player
 
         -- distance to launch jetty
-        local dist = game.lib.trig:distance(p.x, p.y, p.jetty.x, p.jetty.y)
+        local dist = game.logic.player.distanceFromJetty
 
         if dist > 3 then
 

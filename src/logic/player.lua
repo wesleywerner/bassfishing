@@ -70,6 +70,7 @@ function module:forward()
     end
 
     game.logic.boat:forward(self)
+    self:getDistanceFromJetty()
 
     -- clear the cast aim
     self.castOffset = nil
@@ -93,11 +94,18 @@ function module:reverse()
     end
 
     game.logic.boat:reverse(self)
+    self:getDistanceFromJetty()
 
     -- clear the cast aim
     self.castOffset = nil
 
     game.logic.tournament:turn()
+
+end
+
+function module:getDistanceFromJetty()
+
+    self.distanceFromJetty = game.lib.trig:distance(self.x, self.y, self.jetty.x, self.jetty.y)
 
 end
 
@@ -257,6 +265,7 @@ function module:reset()
 
     self.castLine = nil
     self.castOffset = nil
+    self.distanceFromJetty = 1
 
 end
 
