@@ -57,6 +57,8 @@ module.displayedWarning = false
 -- List of competitors
 module.competitors = nil
 
+module.lunkerOfTheDay = nil
+
 
 --- Start the tournament.
 -- Sets up the time, weather, lake.
@@ -65,8 +67,7 @@ function module:start()
     self.day = 0
     self:nextDay()
     self.competitors = game.logic.competitors:getNames()
-    game.dprint("tournament started", self.timef)
-    game.dprint("competitors", #self.competitors)
+    game.dprint("The tournament has begun!", self.timef)
 
 end
 
@@ -133,6 +134,37 @@ end
 --- Weighs the player and competitor fish
 function module:endOfDay()
 
+    -- track the largest fish
+    local heaviest = 0
+
+    -- add fish to each
+    for _, competitor in ipairs(self.competitors) do
+
+        -- up to 5 fish
+        local fishamt = math.min(game.logic.livewell.capacity, #game.lake.fish)
+
+        for n=1, fishamt do
+
+            local fish = table.remove(game.lake.fish)
+
+            competitor.weight = (competitor.weight or 0) + fish.weight
+
+            if fish.weight > heaviest then
+                heaviest = fish.weight
+                self.lunkerOfTheDay = {
+                    name = competitor.person,
+                    weight = fish.weight
+                }
+            end
+
+        end
+
+    end
+
+    -- sort the list
+    --table.sort(self.competitors, ...)
+
+    game.dprint("lunker of the day", self.lunkerOfTheDay.name, self.lunkerOfTheDay.weight)
 
 end
 
