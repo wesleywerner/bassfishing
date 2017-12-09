@@ -31,18 +31,13 @@ function module:init(data)
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
-    self.scale = 0
-
-    self.tween = game.lib.tween.new(3, self, { scale = 1 }, "outBounce")
-
-    -- indicates the closing animation
-    self.closing = false
+    self.transition = game.view.screentransition:new(3, "outBounce")
 
 end
 
 function module:keypressed(key)
     if key == "escape" then
-        self:close()
+        self.transition:close(1, "inBack")
     end
 end
 
@@ -51,14 +46,16 @@ function module:mousemoved( x, y, dx, dy, istouch )
 end
 
 function module:mousepressed( x, y, button, istouch )
-    self:close()
+
+    self.transition:close(1, "inBack")
+
 end
 
 function module:update(dt)
 
-    self.complete = self.tween:update(dt)
+    self.transition:update(dt)
 
-    if self.complete and self.closing then
+    if self.transition.complete and self.transition.closing then
         game.states:pop()
     end
 
@@ -74,7 +71,7 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    love.graphics.translate(0, self.height - (self.height * self.scale))
+    love.graphics.translate(0, self.height - (self.height * self.transition.scale))
 
     -------------------------------
 
@@ -100,19 +97,6 @@ function module:draw()
 
     -- restore state
     love.graphics.pop()
-
-end
-
-function module:close()
-
-    if not self.closing and self.complete then
-
-        self.closing = true
-
-        -- reverse the animation
-        self.tween = game.lib.tween.new(1, self, { scale = 0 }, "inBack")
-
-    end
 
 end
 

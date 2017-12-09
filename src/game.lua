@@ -87,6 +87,7 @@ module.view.weather = require("views.weather-display")
 module.view.livewell = require("views.livewell")
 module.view.clock = require("views.clock")
 module.view.minimap = require("views.minimap")
+module.view.screentransition = require("views.screen-transition")
 
 -- libraries
 module.lib.camera = require("libs.harness.camera")
