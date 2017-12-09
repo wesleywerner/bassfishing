@@ -54,6 +54,9 @@ module.timeWarning = 60 * 30    -- 30 mins
 -- Track if the warning has shown for this day
 module.displayedWarning = false
 
+-- List of competitors
+module.competitors = nil
+
 
 --- Start the tournament.
 -- Sets up the time, weather, lake.
@@ -61,7 +64,9 @@ function module:start()
 
     self.day = 0
     self:nextDay()
+    self.competitors = game.logic.competitors:getNames()
     game.dprint("tournament started", self.timef)
+    game.dprint("competitors", #self.competitors)
 
 end
 
@@ -124,5 +129,12 @@ function module:takeTime(minutes)
     end
 
 end
+
+--- Weighs the player and competitor fish
+function module:endOfDay()
+
+
+end
+
 
 return module
