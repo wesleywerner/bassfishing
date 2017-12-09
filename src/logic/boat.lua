@@ -60,6 +60,10 @@ function module:launchBoat(boat)
     math.randomseed(os.time())
     boat.jetty = game.lake.jetties[ math.random(1, #game.lake.jetties) ]
 
+    -- precalculate the screen position of the jetty
+    boat.jetty.screenX = (boat.jetty.x - 1) * game.view.tiles.size + game.view.tiles.center
+    boat.jetty.screenY = (boat.jetty.y - 1) * game.view.tiles.size + game.view.tiles.center
+
     -- test for surrounding open water
     local tests = {
         {   -- left
