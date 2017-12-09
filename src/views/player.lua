@@ -52,11 +52,26 @@ function module:draw()
     end
 
     -- draw arrow pointing to the weigh-in dock
-    local p = game.logic.player
-    local angle = game.lib.trig:angle(p.screenX, p.screenY, p.jetty.x * game.view.tiles.size, p.jetty.y * game.view.tiles.size)
-    local px, py = game.lib.trig:pointOnCircle(p.screenX, p.screenY, 48, angle)
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(game.view.tiles.image, game.view.tiles.dockpointer, px, py, angle)
+    if game.logic.tournament.displayedWarning then
+        local p = game.logic.player
+
+        -- distance to launch jetty
+        local dist = game.lib.trig:distance(p.x, p.y, p.jetty.x, p.jetty.y)
+
+        if dist > 3 then
+
+            -- position to draw the arrow
+            local angle = game.lib.trig:angle(p.screenX, p.screenY,
+                p.jetty.screenX, p.jetty.screenY)
+            local px, py = game.lib.trig:pointOnCircle(p.screenX, p.screenY, 48, angle)
+
+            -- fade the arrow nearer the jetty
+            dist = math.min(10, dist) / 10
+            love.graphics.setColor(255, 255, 255, 255 * dist)
+            love.graphics.draw(game.view.tiles.image, game.view.tiles.dockpointer, px, py, angle)
+
+        end
+    end
 
 end
 
