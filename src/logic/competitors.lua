@@ -63,4 +63,92 @@ function module:move()
 
 end
 
+--- Get competitor names
+function module:getNames()
+
+    -- name templates
+    local firstnames = {
+
+        -- male names
+        "Lance",
+        "Toney",
+        "Miquel",
+        "Wallace",
+        "Joe",
+        "Haywood",
+        "Hans",
+        "Jerald",
+        "Porter",
+        "Hiram",
+
+        -- female names
+        "Shakita",
+        "Karon",
+        "Earnestine",
+        "Sherika",
+        "Kary",
+        "Jeanett",
+        "Diamond",
+        "Classie",
+        "Iesha",
+        "Laura",
+    }
+
+    local surnames = {
+        "Horn",
+        "Mooney",
+        "Mathis",
+        "Nelson",
+        "Wynn",
+        "Hensley",
+        "Levine",
+        "Boone",
+        "Estrada",
+        "Mcmillan",
+    }
+
+    local boatnames = {
+        "Esther's Dock",
+        "The Agreement Healer",
+        "The Animal's Thrower",
+        "The Assault Courtesan",
+        "The Champion's Purgatory",
+        "The Cunning",
+        "The Faith Bear",
+        "The Groom's Bear",
+        "The Humility Annihilator",
+        "The Lamprey's Vigilance",
+        "The Leader's Fairness",
+        "The Melancholy Queen",
+        "The Northwestern Serf",
+        "The Paladin Ray",
+        "The Profane Politician",
+        "The Queen Larry",
+        "The Scarab's Shield",
+        "The Southeastern Herman",
+        "The Warrior",
+        "The Wealth Hunter",
+    }
+
+    -- assume each boat has two anglers
+    local amt = #game.lake.boats * 2
+    local list = { }
+
+    for n=1, amt do
+
+        local first = firstnames[math.random(1, #firstnames)]
+        local last = surnames[math.random(1, #surnames)]
+        local boat = table.remove(boatnames, math.random(1, #boatnames))
+        local generatedName = string.format("%s %s", first, last)
+        table.insert(list, {
+            person = generatedName,
+            boat = boat
+        })
+
+    end
+
+    return list
+
+end
+
 return module
