@@ -85,4 +85,10 @@ function module:add(fish)
 
 end
 
+function module:empty()
+
+    self.contents = { }
+
+end
+
 return module

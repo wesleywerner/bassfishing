@@ -34,6 +34,9 @@ local module = {
 
     -- the cast line drawn on screen
     castLine = nil,
+
+    -- player name
+    name = "Player"
 }
 
 --- Turn the boat left
@@ -247,6 +250,13 @@ function module:update(dt)
             self.stuck = false
         end
     end
+
+end
+
+function module:reset()
+
+    self.castLine = nil
+    self.castOffset = nil
 
 end
 

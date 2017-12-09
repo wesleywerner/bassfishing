@@ -66,7 +66,13 @@ function module:start()
 
     self.day = 0
     self:nextDay()
+
+    -- generate the list of angler standings
     self.standings = game.logic.competitors:getNames()
+
+    -- include the player
+    table.insert(self.standings, { name = game.logic.player.name, player = true })
+
     game.dprint("The tournament has begun!", self.timef)
 
 end
@@ -85,7 +91,10 @@ function module:nextDay()
     self.displayedWarning = false
 
     -- clear the player's cast data
-    game.logic.player.castLine = nil
+    game.logic.player:reset()
+
+    -- clear the daily lunker
+    self.lunkerOfTheDay = nil
 
     -- launch the player boat from a jetty
     game.logic.boat:launchBoat(game.logic.player)
@@ -131,13 +140,21 @@ function module:takeTime(minutes)
 
 end
 
+function module:recordLunker(angler, fish)
+
+    if not self.lunkerOfTheDay or fish.weight > self.lunkerOfTheDay.weight then
+        self.lunkerOfTheDay = {
+            name = angler.name,
+            weight = fish.weight
+        }
+    end
+
+end
+
 --- Weighs the player and competitor fish
 function module:endOfDay()
 
     game.dprint("weighing in...")
-
-    -- track the largest fish
-    local heaviest = 0
 
     -- share out remaining fish
     local fishper = math.floor(#game.lake.fish / #self.standings)
@@ -145,24 +162,36 @@ function module:endOfDay()
     game.dprint("fish per person:", fishper)
 
     -- add fish to each
-    for _, competitor in ipairs(self.standings) do
+    for _, angler in ipairs(self.standings) do
 
-        for n=1, fishper do
+        if angler.player then
 
-            local fish = table.remove(game.lake.fish)
+            -- add up the player's livewell
+            for _, fish in ipairs(game.logic.livewell.contents) do
 
-            competitor.dailyWeight = (competitor.weight or 0) + fish.weight
-            competitor.totalWeight = (competitor.totalWeight or 0) + competitor.dailyWeight
+                angler.dailyWeight = (angler.dailyWeight or 0) + fish.weight
+                angler.totalWeight = (angler.totalWeight or 0) + angler.dailyWeight
+                self:recordLunker(angler, fish)
 
-            if fish.weight > heaviest then
-                heaviest = fish.weight
-                self.lunkerOfTheDay = {
-                    name = competitor.name,
-                    weight = fish.weight
-                }
+            end
+
+            game.logic.livewell:empty()
+
+        else
+
+            for n=1, fishper do
+
+                local fish = table.remove(game.lake.fish)
+                angler.dailyWeight = (angler.dailyWeight or 0) + fish.weight
+                angler.totalWeight = (angler.totalWeight or 0) + angler.dailyWeight
+                self:recordLunker(angler, fish)
+
             end
 
         end
+
+        game.dprint(string.format("angler: %s, daily: %.2f, total: %.2f",
+            angler.name, angler.dailyWeight, angler.totalWeight or 0))
 
     end
 
