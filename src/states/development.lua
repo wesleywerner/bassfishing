@@ -48,22 +48,9 @@ function module:init()
     -- set up our fish finder
     game.view.fishfinder:update()
 
-    -- change the weather (TODO: should move to a next day state)
-    game.logic.weather:change()
-    game.dprint("\nThe weather changed")
-    game.dprint(string.format("approachingfront\t: %s", tostring(game.logic.weather.approachingfront) ))
-    game.dprint(string.format("postfrontal\t\t: %s", tostring(game.logic.weather.postfrontal) ))
-    game.dprint(string.format("airTemperature\t\t: %d", game.logic.weather.airTemperature ))
-    game.dprint(string.format("waterTemperature\t: %d", game.logic.weather.waterTemperature ))
-    game.dprint(string.format("cloudcover\t\t: %f", game.logic.weather.cloudcover ))
-    game.dprint(string.format("windSpeed\t\t: %d", game.logic.weather.windSpeed ))
-    game.dprint(string.format("rain\t\t\t: %s", tostring(game.logic.weather.rain) ))
-
     love.graphics.setFont( game.fonts.small )
 
-    if game.logic.tournament.time == 0 then
-        game.logic.tournament:start()
-    end
+    game.logic.tournament:start()
 
 end
 

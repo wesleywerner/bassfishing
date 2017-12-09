@@ -84,6 +84,9 @@ function module:nextDay()
     -- launch the player boat from a jetty
     game.logic.boat:launchBoat(game.logic.player)
 
+    -- change the weather
+    game.logic.weather:change()
+
 end
 
 --- Move the competitors, fish and clock.
