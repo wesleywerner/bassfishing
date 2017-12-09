@@ -73,6 +73,12 @@ function module:start()
     -- include the player
     table.insert(self.standings, { name = game.logic.player.name, player = true })
 
+    -- ensure all angler standings have values
+    for _, angler in ipairs(self.standings) do
+        angler.dailyWeight = 0
+        angler.totalWeight = 0
+    end
+
     game.dprint("The tournament has begun!", self.timef)
 
 end
@@ -169,8 +175,8 @@ function module:endOfDay()
             -- add up the player's livewell
             for _, fish in ipairs(game.logic.livewell.contents) do
 
-                angler.dailyWeight = (angler.dailyWeight or 0) + fish.weight
-                angler.totalWeight = (angler.totalWeight or 0) + angler.dailyWeight
+                angler.dailyWeight = angler.dailyWeight + fish.weight
+                angler.totalWeight = angler.totalWeight + angler.dailyWeight
                 self:recordLunker(angler, fish)
 
             end
@@ -182,8 +188,8 @@ function module:endOfDay()
             for n=1, fishper do
 
                 local fish = table.remove(game.lake.fish)
-                angler.dailyWeight = (angler.dailyWeight or 0) + fish.weight
-                angler.totalWeight = (angler.totalWeight or 0) + angler.dailyWeight
+                angler.dailyWeight = angler.dailyWeight + fish.weight
+                angler.totalWeight = angler.totalWeight + angler.dailyWeight
                 self:recordLunker(angler, fish)
 
             end
