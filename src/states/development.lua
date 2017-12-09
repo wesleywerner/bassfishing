@@ -104,8 +104,14 @@ function module:update(dt)
 
     -- check if the day is over
     if game.logic.tournament.time == 0 then
-        game.logic.tournament:nextDay()
+        -- include the last day state
+        if game.logic.tournament.day == 3 then
+            game.states:push("tournament results")
+        end
+        game.states:push("weigh in")
     end
+
+    -- TODO: if player.distanceFromJetty < n AND the tournament time remain was shown then proceed to weigh in state
 
     game.logic.player:update(dt)
 

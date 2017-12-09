@@ -1,6 +1,6 @@
 --[[
    bass fishing
-   weigh-in.lua
+   tournament-results.lua
 
    Copyright 2017 wesley werner <wesley.werner@gmail.com>
 
@@ -33,8 +33,6 @@ function module:init(data)
 
     self.transition = game.view.screentransition:new(3, "outBounce")
 
-    game.logic.tournament:endOfDay()
-
 end
 
 function module:keypressed(key)
@@ -58,25 +56,33 @@ function module:update(dt)
     self.transition:update(dt)
 
     if self.transition.isClosed then
-        game.logic.tournament:nextDay()
         game.states:pop()
+        -- a second time out of the fishing screen
+        game.states:pop()
+    end
+
+    -- clear the background screenshot once we are open
+    if self.transition.isOpen and self.screenshot then
+        self.screenshot = nil
     end
 
 end
 
 function module:draw()
 
+
     -- save state
     love.graphics.push()
 
-    -- underlay screenshot
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(self.screenshot)
+    -- underlay screenshot (but only for the opening animation)
+    if self.screenshot then
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.draw(self.screenshot)
+    end
 
     -- apply transform
     love.graphics.translate(0, - self.height + (self.height * self.transition.scale))
 
-    local tour = game.logic.tournament
     local frameLeft = 0
     local frameTop = 0
     local frameWidth = self.width
@@ -96,12 +102,14 @@ function module:draw()
     -- print title
     love.graphics.setColor(game.color.base01)
     love.graphics.setFont(game.fonts.large)
-    love.graphics.printf(string.format("weigh in day %d", game.logic.tournament.day),
-        frameLeft, frameTop + 30, frameWidth, "center")
+    love.graphics.printf("Tournament Results", frameLeft, frameTop + 30, frameWidth, "center")
 
-    -- list standings
+    -- list standings by total weight
+    table.sort(game.logic.tournament.standings,
+        function(a, b) return a.totalWeight > b.totalWeight end)
+
     love.graphics.setFont(game.fonts.small)
-    for i, cmp in ipairs(tour.standings) do
+    for i, cmp in ipairs(game.logic.tournament.standings) do
 
         if i < 11 then
 
@@ -111,28 +119,12 @@ function module:draw()
             love.graphics.print(string.format("%d. %s (%s)", i, cmp.name, cmp.boat), 100, py)
 
             -- weight
-            love.graphics.printf(string.format("%.2f kg", cmp.dailyWeight), 0, py, self.width - 20, "right")
+            love.graphics.printf(string.format("%.2f kg", cmp.totalWeight), 0, py, self.width - 20, "right")
 
         end
 
     end
 
-    -- lunker of the day
-    love.graphics.setColor(game.color.violet)
-    love.graphics.printf(
-        string.format("The lunker of the day goes to:\n%s with a catch of %.2f kg!",
-        tour.lunkerOfTheDay.name, tour.lunkerOfTheDay.weight),
-        0, self.height - 140, self.width, "center")
-
-    -- print last day message
-    if game.logic.tournament.day == 3 then
-
-        love.graphics.setColor(game.color.red)
-        love.graphics.printf("Tournament standings are up next...", 0, self.height - 60, self.width, "center")
-
-    end
-
-    -- TODO: if player.distanceFromJetty < n then print that you missed the weigh in
 
     -- restore state
     love.graphics.pop()
