@@ -94,6 +94,7 @@ module.lib.trig = require("libs.harness.trig")
 module.lib.lume = require("libs.lume.lume")
 module.lib.luastar = require("libs.lua-star.src.lua-star")
 module.lib.list = require("libs.list")
+module.lib.tween = require("libs.tween.tween")
 
 -- fonts
 module.fonts = { }
