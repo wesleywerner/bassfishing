@@ -73,6 +73,9 @@ function module:keypressed(key)
         game.view.fishfinder:update()
     elseif key == "tab" then
         drawDebug = not drawDebug
+    elseif key == "f9" then
+        game.dprint("weighing in...")
+        game.states:push("weigh in")
     end
 end
 
