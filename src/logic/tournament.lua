@@ -54,8 +54,8 @@ module.timeWarning = 60 * 30    -- 30 mins
 -- Track if the warning has shown for this day
 module.displayedWarning = false
 
--- List of competitors
-module.competitors = nil
+-- The tournament score card
+module.standings = nil
 
 module.lunkerOfTheDay = nil
 
@@ -66,7 +66,7 @@ function module:start()
 
     self.day = 0
     self:nextDay()
-    self.competitors = game.logic.competitors:getNames()
+    self.standings = game.logic.competitors:getNames()
     game.dprint("The tournament has begun!", self.timef)
 
 end
@@ -134,25 +134,30 @@ end
 --- Weighs the player and competitor fish
 function module:endOfDay()
 
+    game.dprint("weighing in...")
+
     -- track the largest fish
     local heaviest = 0
 
+    -- share out remaining fish
+    local fishper = math.floor(#game.lake.fish / #self.standings)
+
+    game.dprint("fish per person:", fishper)
+
     -- add fish to each
-    for _, competitor in ipairs(self.competitors) do
+    for _, competitor in ipairs(self.standings) do
 
-        -- up to 5 fish
-        local fishamt = math.min(game.logic.livewell.capacity, #game.lake.fish)
-
-        for n=1, fishamt do
+        for n=1, fishper do
 
             local fish = table.remove(game.lake.fish)
 
-            competitor.weight = (competitor.weight or 0) + fish.weight
+            competitor.dailyWeight = (competitor.weight or 0) + fish.weight
+            competitor.totalWeight = (competitor.totalWeight or 0) + competitor.dailyWeight
 
             if fish.weight > heaviest then
                 heaviest = fish.weight
                 self.lunkerOfTheDay = {
-                    name = competitor.person,
+                    name = competitor.name,
                     weight = fish.weight
                 }
             end
@@ -162,9 +167,10 @@ function module:endOfDay()
     end
 
     -- sort the list
-    --table.sort(self.competitors, ...)
+    table.sort(self.standings, function(a, b) return a.dailyWeight > b.dailyWeight end)
 
-    game.dprint("lunker of the day", self.lunkerOfTheDay.name, self.lunkerOfTheDay.weight)
+    -- restore fish
+    game.logic.genie:spawnFish(game.lake, game.lake.seed)
 
 end
 

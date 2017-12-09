@@ -128,6 +128,26 @@ function module:getNames()
         "The Southeastern Herman",
         "The Warrior",
         "The Wealth Hunter",
+        "The Aeon",
+        "The Bane",
+        "The Bronze Branch",
+        "The Brutal Purgatory",
+        "The Cartographer",
+        "The Disrupting Ronald",
+        "The Father Insect",
+        "The Gigolo Gilbert",
+        "The Glorious Bloodthirst",
+        "The Love",
+        "The Mage's Alarm",
+        "The Magician Inventor",
+        "The Magician's Claymore",
+        "The Monkey",
+        "The Murderous Earl",
+        "The Murderous Norma",
+        "The Rebellion Heroine",
+        "The Sorceress' Mutiny",
+        "The Space Pretender",
+        "The Wonder Market",
     }
 
     -- assume each boat has two anglers
@@ -141,7 +161,7 @@ function module:getNames()
         local boat = table.remove(boatnames, math.random(1, #boatnames))
         local generatedName = string.format("%s %s", first, last)
         table.insert(list, {
-            person = generatedName,
+            name = generatedName,
             boat = boat
         })
 

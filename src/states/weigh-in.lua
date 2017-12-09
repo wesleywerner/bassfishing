@@ -33,6 +33,8 @@ function module:init(data)
 
     self.transition = game.view.screentransition:new(3, "outBounce")
 
+    game.logic.tournament:endOfDay()
+
 end
 
 function module:keypressed(key)
@@ -72,10 +74,11 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    love.graphics.translate(0, self.height - (self.height * self.transition.scale))
+    love.graphics.translate(0, - self.height + (self.height * self.transition.scale))
 
     -------------------------------
 
+    local tour = game.logic.tournament
     local frameLeft = 0
     local frameTop = 0
     local frameWidth = self.width
@@ -97,39 +100,30 @@ function module:draw()
     love.graphics.setFont(game.fonts.large)
     love.graphics.printf("weigh in", frameLeft, frameTop + 30, frameWidth, "center")
 
-    -- list fish
-    -- width used to right-align printed text
-    local w, h = 160, 150
-
-    love.graphics.setFont(game.fonts.medium)
-
-    for i, fish in ipairs(game.logic.livewell.contents) do
-
-        love.graphics.setColor(game.color.base1)
-        local py = (i - 1) * 24
-        love.graphics.draw(game.view.tiles.image, game.view.tiles.fish[fish.size], 0, py)
-        love.graphics.printf(string.format("%.2f kg", fish.weight), 0, py, w, "right")
-
-    end
-
-
-    -- list competitors
+    -- list standings
     love.graphics.setFont(game.fonts.small)
-    for i, cmp in ipairs(game.logic.tournament.competitors) do
+    for i, cmp in ipairs(tour.standings) do
 
         if i < 11 then
 
             local py = 100 + (i*30)
 
             -- name
-            love.graphics.print(string.format("%d. %s (%s)", i, cmp.person, cmp.boat), 100, py)
+            love.graphics.print(string.format("%d. %s (%s)", i, cmp.name, cmp.boat), 100, py)
 
             -- weight
-            love.graphics.printf(string.format("%.2f kg", 42), 0, py, self.width - 20, "right")
+            love.graphics.printf(string.format("%.2f kg", cmp.dailyWeight), 0, py, self.width - 20, "right")
 
         end
 
     end
+
+    -- lunker of the day
+    love.graphics.printf(
+        string.format("The lunker of the day goes to:\n%s with a catch of %.2f kg",
+        tour.lunkerOfTheDay.name, tour.lunkerOfTheDay.weight),
+        0, self.height - 60, self.width, "center")
+
 
     -------------------------------
 
