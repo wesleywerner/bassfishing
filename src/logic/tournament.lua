@@ -65,7 +65,6 @@ module.lunkerOfTheDay = nil
 function module:start()
 
     self.day = 0
-    self:nextDay()
 
     -- generate the list of angler standings
     self.standings = game.logic.competitors:getNames()
@@ -73,11 +72,8 @@ function module:start()
     -- include the player
     table.insert(self.standings, { name = game.logic.player.name, player = true })
 
-    -- ensure all angler standings have values
-    for _, angler in ipairs(self.standings) do
-        angler.dailyWeight = 0
-        angler.totalWeight = 0
-    end
+    -- advance the day
+    self:nextDay()
 
     game.dprint("The tournament has begun!", self.timef)
 
@@ -85,6 +81,17 @@ end
 
 --- Begin the next day of the tournament
 function module:nextDay()
+
+    -- ensure the angler standings have values
+    for _, angler in ipairs(self.standings) do
+        -- reset the daily catch
+        angler.dailyWeight = 0
+        angler.totalWeight = angler.totalWeight or 0
+        if game.debug and angler.player then
+            angler.dailyWeight = 20
+            angler.totalWeight = 60
+        end
+    end
 
     -- move to the next day
     self.day = self.day + 1
@@ -172,16 +179,18 @@ function module:endOfDay()
 
         if angler.player then
 
-            -- add up the player's livewell
-            for _, fish in ipairs(game.logic.livewell.contents) do
+            if game.logic.player.nearJetty then
 
-                angler.dailyWeight = angler.dailyWeight + fish.weight
-                angler.totalWeight = angler.totalWeight + angler.dailyWeight
-                self:recordLunker(angler, fish)
+                -- add up the player's livewell
+                for _, fish in ipairs(game.logic.livewell.contents) do
+
+                    angler.dailyWeight = angler.dailyWeight + fish.weight
+                    angler.totalWeight = angler.totalWeight + angler.dailyWeight
+                    self:recordLunker(angler, fish)
+
+                end
 
             end
-
-            game.logic.livewell:empty()
 
         else
 
@@ -204,7 +213,10 @@ function module:endOfDay()
     -- sort the list
     table.sort(self.standings, function(a, b) return a.dailyWeight > b.dailyWeight end)
 
-    -- restore fish
+    -- empty the live well
+    game.logic.livewell:empty()
+
+    -- add fish to the lake again
     game.logic.genie:spawnFish(game.lake, game.lake.seed)
 
 end
