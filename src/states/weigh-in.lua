@@ -99,19 +99,34 @@ function module:draw()
     love.graphics.printf(string.format("weigh in day %d", game.logic.tournament.day),
         frameLeft, frameTop + 30, frameWidth, "center")
 
-    -- list standings
+    love.graphics.setFont(game.fonts.medium)
+
+    -- the player missed the weigh-in
+    if not game.logic.player.nearJetty then
+        love.graphics.setColor(game.color.red)
+        love.graphics.printf("You missed the weigh-in!", 0, 90, self.width, "center")
+    end
+
     love.graphics.setFont(game.fonts.small)
-    for i, cmp in ipairs(tour.standings) do
+
+    -- list standings
+    for i, angler in ipairs(tour.standings) do
 
         if i < 11 then
 
             local py = 100 + (i*30)
 
+            if angler.player then
+                love.graphics.setColor(game.color.green)
+            else
+                love.graphics.setColor(game.color.base01)
+            end
+
             -- name
-            love.graphics.print(string.format("%d. %s (%s)", i, cmp.name, cmp.boat), 100, py)
+            love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(string.format("%.2f kg", cmp.dailyWeight), 0, py, self.width - 20, "right")
+            love.graphics.printf(string.format("%.2f kg", angler.dailyWeight), 0, py, self.width - 20, "right")
 
         end
 
@@ -122,17 +137,15 @@ function module:draw()
     love.graphics.printf(
         string.format("The lunker of the day goes to:\n%s with a catch of %.2f kg!",
         tour.lunkerOfTheDay.name, tour.lunkerOfTheDay.weight),
-        0, self.height - 140, self.width, "center")
+        0, self.height - 160, self.width, "center")
 
     -- print last day message
     if game.logic.tournament.day == 3 then
 
         love.graphics.setColor(game.color.red)
-        love.graphics.printf("Tournament standings are up next...", 0, self.height - 60, self.width, "center")
+        love.graphics.printf("Tournament standings are up next...", 0, self.height - 40, self.width, "center")
 
     end
-
-    -- TODO: if player.distanceFromJetty < n then print that you missed the weigh in
 
     -- restore state
     love.graphics.pop()
