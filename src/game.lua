@@ -74,6 +74,7 @@ module.logic.fish = require("logic.fish")
 module.logic.weather = require("logic.weather")
 module.logic.livewell = require("logic.livewell")
 module.logic.tournament = require("logic.tournament")
+module.logic.tackle = require("logic.tackle")
 
 -- view modules
 module.view.messages = require("views.messages")

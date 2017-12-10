@@ -30,6 +30,7 @@ function love.load()
     game.states:add("lakegen development", require("states.lakegen-development"))
     game.states:add("weigh in", require("states.weigh-in"))
     game.states:add("tournament results", require("states.tournament-results"))
+    game.states:add("tackle", require("states.tackle"))
 
 end
 
