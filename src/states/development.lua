@@ -107,7 +107,12 @@ function module:update(dt)
         game.logic.tournament:endOfDay()
     end
 
-    -- TODO: if player.distanceFromJetty < n AND the tournament time remain was shown then proceed to weigh in state
+    -- if near the jetty and less than 30 minutes remain, end the day
+    if game.logic.tournament.displayedWarning
+        and game.logic.player.nearJetty
+        and game.logic.player.speed == 0 then
+        game.logic.tournament:endOfDay()
+    end
 
     game.logic.player:update(dt)
 

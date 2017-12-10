@@ -36,7 +36,7 @@ local module = {
     castLine = nil,
 
     -- the distance to be near the weigh-in jetty (in map coordinates)
-    minDistanceToJetty = 3,
+    minDistanceToJetty = 1,
 
     -- player name
     name = "Player"
@@ -110,7 +110,7 @@ function module:getDistanceFromJetty()
 
     self.distanceFromJetty = game.lib.trig:distance(self.x, self.y, self.jetty.x, self.jetty.y)
 
-    self.nearJetty = self.distanceFromJetty < self.minDistanceToJetty
+    self.nearJetty = self.distanceFromJetty <= self.minDistanceToJetty
 
 end
 
