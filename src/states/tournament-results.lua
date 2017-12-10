@@ -81,7 +81,7 @@ function module:draw()
     end
 
     -- apply transform
-    love.graphics.translate(0, - self.height + (self.height * self.transition.scale))
+    love.graphics.translate(0, self.height - (self.height * self.transition.scale))
 
     local frameLeft = 0
     local frameTop = 0
