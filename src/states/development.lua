@@ -74,7 +74,7 @@ function module:keypressed(key)
     elseif key == "tab" then
         drawDebug = not drawDebug
     elseif key == "f9" then
-        game.states:push("weigh in")
+        game.logic.tournament:endOfDay()
     end
 end
 
@@ -104,11 +104,7 @@ function module:update(dt)
 
     -- check if the day is over
     if game.logic.tournament.time == 0 then
-        -- include the last day state
-        if game.logic.tournament.day == 3 then
-            game.states:push("tournament results")
-        end
-        game.states:push("weigh in")
+        game.logic.tournament:endOfDay()
     end
 
     -- TODO: if player.distanceFromJetty < n AND the tournament time remain was shown then proceed to weigh in state

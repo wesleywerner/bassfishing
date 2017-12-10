@@ -33,8 +33,6 @@ function module:init(data)
 
     self.transition = game.view.screentransition:new(3, "outBounce")
 
-    game.logic.tournament:endOfDay()
-
 end
 
 function module:keypressed(key)

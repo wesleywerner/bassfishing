@@ -219,6 +219,12 @@ function module:endOfDay()
     -- add fish to the lake again
     game.logic.genie:spawnFish(game.lake, game.lake.seed)
 
+    -- include the last day state
+    if game.logic.tournament.day == 3 then
+        game.states:push("tournament results")
+    end
+    game.states:push("weigh in")
+
 end
 
 
