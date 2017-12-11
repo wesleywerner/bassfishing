@@ -130,11 +130,11 @@ function module:createBoats(data, seed)
     data.boats = {}
 
     local colors = {
-        {224, 0, 0},
-        {0, 224, 0},
-        {224, 224, 224},
-        {224, 0, 224},
-        {224, 224, 0},
+        game.color.yellow,
+        game.color.orange,
+        game.color.magenta,
+        game.color.blue,
+        game.color.violet,
     }
 
     local boatAmount = math.random(10, 20)
@@ -168,7 +168,8 @@ function module:createBoats(data, seed)
                 y = y,
                 color = boatcolor,
                 boat = true,
-                AI = true
+                AI = true,
+                tileid = math.max(1, i % #game.view.tiles.boats)
             })
         end
     end
