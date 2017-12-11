@@ -80,8 +80,10 @@ function module:keypressed(key)
         drawDebug = not drawDebug
     elseif key == "f9" then
         game.logic.tournament:endOfDay()
-    elseif key == "f8" then
+    elseif key == "r" then
         game.states:push("tackle rods")
+    elseif key == "l" then
+        game.states:push("tackle lures")
     end
 end
 
