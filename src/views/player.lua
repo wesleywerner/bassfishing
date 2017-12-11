@@ -23,10 +23,10 @@ local module = { }
 function module:draw()
 
     local player = game.logic.player
-    love.graphics.setColor(0, 255, 255)
+    love.graphics.setColor(game.color.base2)
 
     -- the boat
-    love.graphics.draw(game.view.tiles.image, game.view.tiles.boats[3],
+    love.graphics.draw(game.view.tiles.image, game.view.tiles.boats[1],
         player.screenX, player.screenY, math.rad(player.angle), 1, 1,
         8, 8 )
 
