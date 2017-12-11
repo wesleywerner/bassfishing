@@ -76,9 +76,20 @@ function module:draw()
 end
 
 function module:drawRodDetails()
+
     love.graphics.setFont(game.fonts.small)
     love.graphics.setColor(game.color.base1)
-    love.graphics.print("Flip rod with chartreuse rapala")
+
+    if game.logic.player.rod then
+
+        love.graphics.print(string.format("%s, chartreuse rapala", game.logic.player.rod))
+
+    else
+
+        love.graphics.print("No rod selected")
+
+    end
+
 end
 
 return module

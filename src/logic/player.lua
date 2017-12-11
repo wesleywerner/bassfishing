@@ -118,6 +118,9 @@ function module:aimCast( x, y )
 
     if not self.screenX then return end
 
+    -- no rod to cast with
+    if not game.logic.player.rod then return end
+
     -- origin is the player boat position
     local range = self.castRange * game.view.tiles.size
     x, y = game.lib.trig:limitPointToCircle(self.screenX, self.screenY, x, y, range)

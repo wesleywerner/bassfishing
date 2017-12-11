@@ -97,10 +97,24 @@ function module:mousepressed( x, y, button, istouch )
     -- focus hotspots
     for _, hotspot in ipairs(self.hotspots) do
         hotspot:mousemoved(x, y, dx, dy, istouch)
+
         if hotspot.touched then
+
             -- select rod
             game.dprint("selected", hotspot.rod)
+
+            -- get the rod data
+            local rod = game.logic.tackle.rods[hotspot.rod]
+
+            -- set the player cast range and rod name
+            game.logic.player.castRange = rod.range
+            game.logic.player.rod = hotspot.rod
+
+            -- close the rod selection
+            self.transition:close(0.5, "outBack")
+
         end
+
     end
 
 end
