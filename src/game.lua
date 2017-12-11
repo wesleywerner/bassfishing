@@ -93,6 +93,7 @@ module.view.screentransition = require("views.screen-transition")
 -- libraries
 module.lib.camera = require("libs.harness.camera")
 module.lib.trig = require("libs.harness.trig")
+module.lib.hotspot = require("libs.harness.hotspot")
 module.lib.lume = require("libs.lume.lume")
 module.lib.luastar = require("libs.lua-star.src.lua-star")
 module.lib.list = require("libs.list")
