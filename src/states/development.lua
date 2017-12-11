@@ -32,13 +32,18 @@ function module:init()
     -- add player boat to the boats list so it can be included in obstacle tests
     table.insert(game.lake.boats, game.logic.player)
 
+    -- load the camera
     game.lib.camera:worldSize(
         game.lake.width * game.view.tiles.size * scale,
         game.lake.height * game.view.tiles.size * scale)
 
+    -- set camera lens size
     game.lib.camera:frame(10, 10,
         love.graphics.getWidth( ) - 200,
         love.graphics.getHeight( ) - 42)
+
+    -- center the camera
+    game.lib.camera:instant(-game.lake.width * game.view.tiles.size / 2, -game.lake.height * game.view.tiles.size / 2)
 
     -- load the game border
     if not self.borderImage then
