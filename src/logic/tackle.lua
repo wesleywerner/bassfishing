@@ -24,27 +24,33 @@ local module = {
     -- lighter lines cast further.
 
     rods = {
-        ["Pistol grip, 10 lb"] = {
+        {
+            name = "Pistol grip, 10 lb",
             range = 5,
         },
 
-        ["Two hand cast, 12 lb"] = {
+        {
+            name = "Two hand cast, 12 lb",
             range = 5,
         },
 
-        ["Pitching stick, 14 lb"] = {
+        {
+            name = "Pitching stick, 14 lb",
             range = 4,
         },
 
-        ["Flipping stick, 20 lb"] = {
+        {
+            name = "Flipping stick, 20 lb",
             range = 3,
         },
 
-        ["Spin rod, 6 lb"] = {
+        {
+            name = "Spin rod, 6 lb",
             range = 6,
         },
 
-        ["Spin rod, 8 lb"] = {
+        {
+            name = "Spin rod, 8 lb",
             range = 5,
         },
     },

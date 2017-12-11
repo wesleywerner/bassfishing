@@ -29,9 +29,6 @@ local module = {
     -- casting offset
     castOffset = nil,
 
-    -- maximum cast range (in map coordinates)
-    castRange = 4,
-
     -- the cast line drawn on screen
     castLine = nil,
 
@@ -122,7 +119,7 @@ function module:aimCast( x, y )
     if not game.logic.player.rod then return end
 
     -- origin is the player boat position
-    local range = self.castRange * game.view.tiles.size
+    local range = self.rod.range * game.view.tiles.size
     x, y = game.lib.trig:limitPointToCircle(self.screenX, self.screenY, x, y, range)
 
     self.castOffset = {

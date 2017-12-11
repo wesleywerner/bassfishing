@@ -40,7 +40,7 @@ function module:draw()
 
         -- cast range
         love.graphics.setColor(0, 255, 255, 16)
-        love.graphics.circle("fill", player.screenX, player.screenY, player.castRange * game.view.tiles.size)
+        love.graphics.circle("fill", player.screenX, player.screenY, player.rod.range * game.view.tiles.size)
 
     end
 
@@ -82,7 +82,7 @@ function module:drawRodDetails()
 
     if game.logic.player.rod then
 
-        love.graphics.print(string.format("%s, chartreuse rapala", game.logic.player.rod))
+        love.graphics.print(string.format("%s, chartreuse rapala", game.logic.player.rod.name))
 
     else
 

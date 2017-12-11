@@ -47,7 +47,7 @@ function module:init(data)
         self.hotspots = { }
 
         local n = 1
-        for rod, data in pairs(game.logic.tackle.rods) do
+        for i, rod in ipairs(game.logic.tackle.rods) do
 
             table.insert(self.hotspots,
                 game.lib.hotspot:new{
@@ -101,13 +101,9 @@ function module:mousepressed( x, y, button, istouch )
         if hotspot.touched then
 
             -- select rod
-            game.dprint("selected", hotspot.rod)
-
-            -- get the rod data
-            local rod = game.logic.tackle.rods[hotspot.rod]
+            game.dprint("selected", hotspot.rod.name)
 
             -- set the player cast range and rod name
-            game.logic.player.castRange = rod.range
             game.logic.player.rod = hotspot.rod
 
             -- close the rod selection
@@ -157,7 +153,7 @@ function module:draw()
             love.graphics.setColor(game.color.base01)
         end
 
-        love.graphics.print(hotspot.rod, hotspot.left, hotspot.top)
+        love.graphics.print(hotspot.rod.name, hotspot.left, hotspot.top)
 
     end
 
