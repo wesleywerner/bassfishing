@@ -27,13 +27,13 @@ function module:prepare(boat)
     boat.movementFrame = 0
 
     -- current boat angle
-    boat.angle = 0
+    boat.angle = math.random() <= 0.5 and 0 or 180
 
     -- lerp the angle from this
-    boat.angleFrom = 0
+    boat.angleFrom = boat.angle
 
     -- lerp the angle to this
-    boat.angleTo = 0
+    boat.angleTo = boat.angle
 
     -- lerp progress
     boat.angleFrame = 0
