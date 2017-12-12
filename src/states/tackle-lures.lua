@@ -102,15 +102,15 @@ function module:init(data)
     self.categoryLeft = 20
 
     -- list of lures x
-    self.lureLeft = 200
+    self.lureLeft = 220
 
     -- color picker position
-    self.colorLeft = 400
+    self.colorLeft = self.width - 260
     self.colorTop =  0
     self.colorSize = 50
 
     -- lure image
-    self.lureImageLeft = 400
+    self.lureImageLeft = self.width - 260
     self.lureImageTop = 110
 
     -- spacing between printed rows
@@ -370,7 +370,7 @@ function module:draw()
     love.graphics.translate(0, self.topPadding)
 
     -- list lure categories
-    love.graphics.setFont(game.fonts.small)
+    love.graphics.setFont(game.fonts.medium)
 
     for _, hotspot in ipairs(self.categoryHotspots) do
 
