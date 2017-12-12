@@ -142,9 +142,8 @@ function module:cast()
     -- still reeling in the line
     if self.castLine then return end
 
-    -- TODO: provide lure data to the strike
-    local lure = { color = "green" }
-    local fish = game.logic.fish:attemptStrike(self.castOffset.x, self.castOffset.y, lure)
+    -- see if the fish wants to strike
+    local fish = game.logic.fish:attemptStrike(self.castOffset.x, self.castOffset.y, self.rod.lure)
 
     -- set the cast line
     self.castLine = {
@@ -277,16 +276,17 @@ function module:reset()
 
 end
 
-function module:setLure(name, color)
+function module:setLure(category, name, color)
 
     if self.rod then
 
         self.rod.lure = {
             name = name,
-            color = color
+            color = color,
+            category = category
         }
 
-        game.dprint(string.format("set player lure as %q %q", color, name))
+        game.dprint(string.format("set player lure as %s %s (%s)", color, name, category))
 
     else
         game.dprint("Warning: cannot set a lure when no rod is chosen.")

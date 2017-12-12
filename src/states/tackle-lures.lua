@@ -276,7 +276,7 @@ function module:mousepressed( x, y, button, istouch )
         hotspot:mousemoved(x, y, dx, dy, istouch)
         if hotspot.touched then
             self.selectedColor = hotspot.color
-            self:setLure(self.selectedLure, hotspot.color)
+            self:setLure(self.selectedCategory, self.selectedLure, hotspot.color)
         end
     end
 
