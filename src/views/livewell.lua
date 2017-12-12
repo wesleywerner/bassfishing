@@ -27,6 +27,10 @@ function module:draw()
 
     love.graphics.setFont(game.fonts.medium)
 
+    -- offset the text
+    love.graphics.push()
+    love.graphics.translate(0, 10)
+
     for i, fish in ipairs(game.logic.livewell.contents) do
 
         love.graphics.setColor(game.color.base1)
@@ -43,6 +47,8 @@ function module:draw()
         end
 
     end
+
+    love.graphics.pop()
 
 end
 
