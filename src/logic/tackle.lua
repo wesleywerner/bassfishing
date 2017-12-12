@@ -63,12 +63,11 @@ local module = {
             "Straight rapala",
             "Fat rapala",
             "Jointed rapala",
-            "Shadling",
         },
 
         ["Spinnerbaits"] = {
-            "Single blade",
-            "Double blade",
+            "Single blade spinbait",
+            "Double blade spinbait",
             "Beetle",
             "Lil fishie",
         },
@@ -76,6 +75,7 @@ local module = {
         ["Surface baits"] = {
             "Jitterbug",
             "Popper",
+            "Hula popper",
             "Torpedo",
             "Weed walker",
             "Froggie",
@@ -94,15 +94,16 @@ local module = {
     },
 
     colors = {
-        ["black"] = { 0, 0, 0 },
-        ["blue"] = { 0, 72, 186 },
+        ["white"] = { 255, 255, 255 },
+        ["black"] = { 128, 128, 128 },
+        ["blue"] = { 0, 72, 255 },
         ["brown"] = { 150, 75, 0 },
-        ["green"] = { 141, 182, 0 },
+        ["green"] = { 141, 255, 0 },
         ["gold"] = { 255, 215, 0 },
         ["yellow"] = { 223, 255, 0 },
         ["red"] = { 255, 0, 56 },
-        ["pink"] = { 255, 0, 127 },
-        ["purple"] = { 148, 87, 235 },
+        ["pink"] = { 255, 0, 192 },
+        ["purple"] = { 168, 107, 255 },
     }
 }
 
