@@ -39,6 +39,41 @@ function module:init(data)
         self.tackleTop = self.backgroundY + 20
     end
 
+    -- load lure sprites
+    if not self.lures then
+        self.lures = { }
+        self.lures.image = love.graphics.newImage("res/lures spritesheet.png")
+        self.lures.width = self.lures.image:getWidth()
+        self.lures.height = self.lures.image:getHeight()
+        local w, h = self.lures.width, self.lures.height
+
+        -- the sprite size
+        local sw, sh = 200, 160
+
+        self.lures.weed_walker = love.graphics.newQuad(0, 2, sw, sh, w, h)
+        self.lures.torpedo = love.graphics.newQuad(0, 162, sw, sh, w, h)
+        self.lures.rapala_straight = love.graphics.newQuad(0, 323, sw, sh, w, h)
+        self.lures.spinbait_sgl = love.graphics.newQuad(0, 484, sw, sh, w, h)
+        self.lures.rapala_shad = love.graphics.newQuad(0, 645, sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+        self.lures. = love.graphics.newQuad(0, , sw, sh, w, h)
+    end
+
     -- state screen animation
     self.screenTransition = game.view.screentransition:new(1, "outCubic")
 

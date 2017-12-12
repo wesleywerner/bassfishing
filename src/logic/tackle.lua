@@ -75,9 +75,8 @@ local module = {
 
         ["Surface baits"] = {
             "Jitterbug",
-            "Hula popper",
+            "Popper",
             "Torpedo",
-            "Sputter buzz",
             "Weed walker",
             "Froggie",
             "Meadow mouse",
