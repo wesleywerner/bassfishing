@@ -82,7 +82,15 @@ function module:drawRodDetails()
 
     if game.logic.player.rod then
 
-        love.graphics.print(string.format("%s, chartreuse rapala", game.logic.player.rod.name))
+        if game.logic.player.rod.lure then
+
+            love.graphics.print(string.format("%s, %s %s", game.logic.player.rod.name, game.logic.player.rod.lure.color, game.logic.player.rod.lure.name))
+
+        else
+
+            love.graphics.print(string.format("%s", game.logic.player.rod.name))
+
+        end
 
     else
 

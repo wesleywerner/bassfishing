@@ -58,38 +58,38 @@ local module = {
     -- lures are categorized
 
     lures = {
-        ["Crankbaits"] = {
-            "Shad rapala",
-            "Straight rapala",
-            "Fat rapala",
-            "Jointed rapala",
+        ["crankbaits"] = {
+            "shad rapala",
+            "straight rapala",
+            "fat rapala",
+            "jointed rapala",
         },
 
-        ["Spinnerbaits"] = {
-            "Single blade spinbait",
-            "Double blade spinbait",
-            "Beetle",
-            "Lil fishie",
+        ["spinnerbaits"] = {
+            "single blade spinbait",
+            "double blade spinbait",
+            "beetle",
+            "lil fishie",
         },
 
-        ["Surface baits"] = {
-            "Jitterbug",
-            "Popper",
-            "Hula popper",
-            "Torpedo",
-            "Weed walker",
-            "Froggie",
-            "Meadow mouse",
+        ["surface baits"] = {
+            "jitterbug",
+            "popper",
+            "hula popper",
+            "torpedo",
+            "weed walker",
+            "froggie",
+            "meadow mouse",
         },
 
-        ["Worms"] = {
-            "Culprit worm",
-            "Augertail worm",
-            "Paddle tail",
-            "Gator tail",
-            "Lizard",
-            "Grub",
-            "Crawfish",
+        ["worms"] = {
+            "culprit worm",
+            "augertail worm",
+            "paddle tail",
+            "gator tail",
+            "lizard",
+            "grub",
+            "crawfish",
         },
     },
 

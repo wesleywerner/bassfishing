@@ -50,35 +50,35 @@ function module:init(data)
         -- the sprite size
         local sw, sh = 200, 160
 
-        self.lures["Weed walker"] = love.graphics.newQuad(0, 1, sw, sh, w, h)
-        self.lures["Torpedo"] = love.graphics.newQuad(0, 162, sw, sh, w, h)
-        self.lures["Straight rapala"] = love.graphics.newQuad(0, 323, sw, sh, w, h)
-        self.lures["Single blade spinbait"] = love.graphics.newQuad(0, 484, sw, sh, w, h)
-        self.lures["Shad rapala"] = love.graphics.newQuad(0, 645, sw, sh, w, h)
-        self.lures["Popper"] = love.graphics.newQuad(0, 806, sw, sh, w, h)
-        self.lures["Paddle tail"] = love.graphics.newQuad(0, 967, sw, sh, w, h)
-        self.lures["Meadow mouse"] = love.graphics.newQuad(0, 1128, sw, sh, w, h)
-        self.lures["Lizard"] = love.graphics.newQuad(0, 1289, sw, sh, w, h)
-        self.lures["Lil fishie"] = love.graphics.newQuad(0, 1450, sw, sh, w, h)
-        self.lures["Jointed rapala"] = love.graphics.newQuad(0, 1611, sw, sh, w, h)
-        self.lures["Jitterbug"] = love.graphics.newQuad(0, 1772, sw, sh, w, h)
-        self.lures["Hula popper"] = love.graphics.newQuad(0, 1933, sw, sh, w, h)
-        self.lures["Grub"] = love.graphics.newQuad(0, 2094, sw, sh, w, h)
-        self.lures["Gator tail"] = love.graphics.newQuad(0, 2255, sw, sh, w, h)
-        self.lures["Froggie"] = love.graphics.newQuad(0, 2416, sw, sh, w, h)
-        self.lures["Fat rapala"] = love.graphics.newQuad(0, 2577, sw, sh, w, h)
-        self.lures["Culprit worm"] = love.graphics.newQuad(0, 2738, sw, sh, w, h)
-        self.lures["Crawfish"] = love.graphics.newQuad(0, 2899, sw, sh, w, h)
-        self.lures["Beetle"] = love.graphics.newQuad(0, 3060, sw, sh, w, h)
-        self.lures["Augertail worm"] = love.graphics.newQuad(0, 3221, sw, sh, w, h)
-        self.lures["Double blade spinbait"] = love.graphics.newQuad(0, 3382, sw, sh, w, h)
+        self.lures["weed walker"] = love.graphics.newQuad(0, 1, sw, sh, w, h)
+        self.lures["torpedo"] = love.graphics.newQuad(0, 162, sw, sh, w, h)
+        self.lures["straight rapala"] = love.graphics.newQuad(0, 323, sw, sh, w, h)
+        self.lures["single blade spinbait"] = love.graphics.newQuad(0, 484, sw, sh, w, h)
+        self.lures["shad rapala"] = love.graphics.newQuad(0, 645, sw, sh, w, h)
+        self.lures["popper"] = love.graphics.newQuad(0, 806, sw, sh, w, h)
+        self.lures["paddle tail"] = love.graphics.newQuad(0, 967, sw, sh, w, h)
+        self.lures["meadow mouse"] = love.graphics.newQuad(0, 1128, sw, sh, w, h)
+        self.lures["lizard"] = love.graphics.newQuad(0, 1289, sw, sh, w, h)
+        self.lures["lil fishie"] = love.graphics.newQuad(0, 1450, sw, sh, w, h)
+        self.lures["jointed rapala"] = love.graphics.newQuad(0, 1611, sw, sh, w, h)
+        self.lures["jitterbug"] = love.graphics.newQuad(0, 1772, sw, sh, w, h)
+        self.lures["hula popper"] = love.graphics.newQuad(0, 1933, sw, sh, w, h)
+        self.lures["grub"] = love.graphics.newQuad(0, 2094, sw, sh, w, h)
+        self.lures["gator tail"] = love.graphics.newQuad(0, 2255, sw, sh, w, h)
+        self.lures["froggie"] = love.graphics.newQuad(0, 2416, sw, sh, w, h)
+        self.lures["fat rapala"] = love.graphics.newQuad(0, 2577, sw, sh, w, h)
+        self.lures["culprit worm"] = love.graphics.newQuad(0, 2738, sw, sh, w, h)
+        self.lures["crawfish"] = love.graphics.newQuad(0, 2899, sw, sh, w, h)
+        self.lures["beetle"] = love.graphics.newQuad(0, 3060, sw, sh, w, h)
+        self.lures["augertail worm"] = love.graphics.newQuad(0, 3221, sw, sh, w, h)
+        self.lures["double blade spinbait"] = love.graphics.newQuad(0, 3382, sw, sh, w, h)
 
         -- perform a self-test that all lures have images
         if game.debug then
             for category, lurelist in pairs(game.logic.tackle.lures) do
                 for _, lure in ipairs(lurelist) do
                     if not self.lures[lure] then
-                        game.dprint(string.format("WARNING: lure %q does not have an image"), lure)
+                        game.dprint(string.format("WARNING: lure %q does not have an image", lure))
                     end
                 end
             end
@@ -266,6 +266,15 @@ function module:mousepressed( x, y, button, istouch )
 
     end
 
+    -- select a color
+    for _, hotspot in ipairs(self.colorSpots) do
+        hotspot:mousemoved(x, y, dx, dy, istouch)
+        if hotspot.touched then
+            self.selectedColor = hotspot.color
+            self:setLure(self.selectedLure, hotspot.color)
+        end
+    end
+
 end
 
 function module:buildLureMenu(category)
@@ -411,7 +420,6 @@ function module:draw()
     -- restore lure state
     love.graphics.pop()
 
-
     -- save color state
     love.graphics.push()
 
@@ -451,5 +459,16 @@ function module:draw()
     love.graphics.pop()
 
 end
+
+function module:setLure(lure, color)
+
+    -- set the player lure
+    game.logic.player:setLure(lure, color)
+
+    -- begin the screen close animation
+    self.screenTransition:close(0.5, "outBack")
+
+end
+
 
 return module
