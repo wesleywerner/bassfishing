@@ -100,11 +100,8 @@ function module:mousepressed( x, y, button, istouch )
 
         if hotspot.touched then
 
-            -- select rod
-            game.dprint("selected", hotspot.rod.name)
-
             -- set the player cast range and rod name
-            game.logic.player.rod = hotspot.rod
+            game.logic.player:setRod(hotspot.rod)
 
             -- close the rod selection
             self.transition:close(0.5, "outBack")

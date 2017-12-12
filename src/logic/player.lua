@@ -118,6 +118,9 @@ function module:aimCast( x, y )
     -- no rod to cast with
     if not game.logic.player.rod then return end
 
+    -- no lure to cast with
+    if not game.logic.player.rod.lure then return end
+
     -- origin is the player boat position
     local range = self.rod.range * game.view.tiles.size
     x, y = game.lib.trig:limitPointToCircle(self.screenX, self.screenY, x, y, range)
@@ -288,6 +291,19 @@ function module:setLure(name, color)
     else
         game.dprint("Warning: cannot set a lure when no rod is chosen.")
     end
+
+end
+
+function module:setRod(rod)
+
+    self.rod = rod
+
+    -- clear the cast aim, in case this rod does not have a lure set
+    -- we don't want to draw the cast range.
+    self.castOffset = nil
+
+    -- select rod
+    game.dprint("selected", rod.name)
 
 end
 
