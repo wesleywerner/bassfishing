@@ -116,8 +116,17 @@ function module:update(dt)
 
     self.transition:update(dt)
 
+    -- exit this state when the transition is closed
     if self.transition.isClosed then
+
+        -- remove this state
         game.states:pop()
+
+        -- if the rod has no lure, show lure selection as a courtesy
+        if game.logic.player.rod and not game.logic.player.rod.lure then
+            game.states:push("tackle lures")
+        end
+
     end
 
 end

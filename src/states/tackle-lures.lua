@@ -350,7 +350,6 @@ function module:update(dt)
 
     -- pick the lure image
     if self.colorTransition.isClosed and self.selectedLure then
-        print("Selecting lure image")
         self:chooseLureImage(self.selectedLure)
     end
 
