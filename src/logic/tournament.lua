@@ -87,10 +87,6 @@ function module:nextDay()
         -- reset the daily catch
         angler.dailyWeight = 0
         angler.totalWeight = angler.totalWeight or 0
-        if game.debug and angler.player then
-            angler.dailyWeight = 20
-            angler.totalWeight = 60
-        end
     end
 
     -- move to the next day
