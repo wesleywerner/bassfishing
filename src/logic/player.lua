@@ -274,4 +274,21 @@ function module:reset()
 
 end
 
+function module:setLure(name, color)
+
+    if self.rod then
+
+        self.rod.lure = {
+            name = name,
+            color = color
+        }
+
+        game.dprint(string.format("set player lure as %q %q", color, name))
+
+    else
+        game.dprint("Warning: cannot set a lure when no rod is chosen.")
+    end
+
+end
+
 return module
