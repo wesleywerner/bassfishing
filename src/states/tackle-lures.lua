@@ -179,6 +179,11 @@ function module:init(data)
     self.selectedColor = nil
     self.lureImage = nil
 
+    -- if the player has no rod selected, show the rod selection
+    if not game.logic.player.rod then
+        game.states:push("tackle rods")
+    end
+
 end
 
 function module:keypressed(key)
