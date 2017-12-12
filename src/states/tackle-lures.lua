@@ -393,7 +393,7 @@ function module:draw()
     end
 
     -- print lures
-    for _, lurespot in ipairs(self.lureHotspots) do
+    for n, lurespot in ipairs(self.lureHotspots) do
 
         if lurespot.touched or lurespot.lure == self.selectedLure then
             love.graphics.setColor(game.color.magenta)
@@ -401,7 +401,10 @@ function module:draw()
             love.graphics.setColor(game.color.base01)
         end
 
-        love.graphics.print(lurespot.lure, lurespot.left, lurespot.top)
+        -- gives a spring effect while the lure names are moving.
+        -- the transition scale reaches 1 when it is complete
+        local py = (n * 40) * (1 - self.lureTransition.scale)
+        love.graphics.print(lurespot.lure, lurespot.left, lurespot.top + py)
 
     end
 
