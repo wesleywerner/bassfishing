@@ -203,7 +203,7 @@ function module:update(dt)
     -- reel in cast line
     if self.castLine then
 
-        self.castLine.fade = self.castLine.fade - dt * 2
+        self.castLine.fade = self.castLine.fade - dt * 4
         if self.castLine.fade < 0 then
 
             -- there is a fish on the line!
