@@ -91,9 +91,13 @@ module.view.minimap = require("views.minimap")
 module.view.screentransition = require("views.screen-transition")
 
 -- libraries
+-- extend the path where modules are searched to include the "libs" directory.
+package.path = package.path .. ';libs/?.lua'
+
 module.lib.camera = require("libs.harness.camera")
 module.lib.trig = require("libs.harness.trig")
 module.lib.hotspot = require("libs.harness.hotspot")
+module.lib.aperture = require("libs.harness.aperture")
 module.lib.lume = require("libs.lume.lume")
 module.lib.luastar = require("libs.lua-star.src.lua-star")
 module.lib.list = require("libs.list")
