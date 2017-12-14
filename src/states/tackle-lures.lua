@@ -446,7 +446,8 @@ function module:draw()
         else
             love.graphics.setColor(game.color.base3)
         end
-        love.graphics.rectangle("line", hotspot.left, hotspot.top, self.colorSize, self.colorSize)
+        love.graphics.rectangle("line", hotspot.left, hotspot.top,
+            self.colorSize - 1, self.colorSize - 1)
     end
     self.palette:release()
 
