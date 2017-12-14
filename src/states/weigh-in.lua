@@ -33,6 +33,10 @@ function module:init(data)
 
     self.transition = game.view.screentransition:new(3, "outBounce")
 
+    if not game.logic.player.nearJetty then
+        game.dprint("The player missed the weigh-in!")
+    end
+
 end
 
 function module:keypressed(key)
@@ -101,7 +105,6 @@ function module:draw()
 
     -- the player missed the weigh-in
     if not game.logic.player.nearJetty then
-        game.dprint("The player missed the weigh-in!")
         love.graphics.setColor(game.color.red)
         love.graphics.printf("You missed the weigh-in!", 0, 90, self.width, "center")
     end
