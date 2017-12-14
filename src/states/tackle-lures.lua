@@ -93,7 +93,10 @@ function module:init(data)
     self.screenTransition = game.view.screentransition:new(1, "outCubic")
 
     -- palette block size
-    self.colorSize = 50
+    self.paletteSize = 40
+
+    -- palette columns
+    self.paletteColumns = 5
 
     -- spacing between printed rows
     self.linespacing = 30
@@ -266,10 +269,10 @@ function module:init(data)
 
             self.palette:insert(
                 game.lib.hotspot:new{
-                    top = (self.colorSize * row),
-                    left = (self.colorSize * column),
-                    width = self.colorSize,
-                    height = self.colorSize,
+                    top = (self.paletteSize * row),
+                    left = (self.paletteSize * column),
+                    width = self.paletteSize,
+                    height = self.paletteSize,
                     color = color,
                     action = function(hotspot)
                         self:setLure()
@@ -279,7 +282,7 @@ function module:init(data)
 
             column = column + 1
 
-            if column > 4 then
+            if column == self.paletteColumns then
                 column = 0
                 row = row + 1
             end
@@ -453,7 +456,7 @@ function module:draw()
     self.palette:apply()
     for _, hotspot in ipairs(self.palette.hotspots) do
         love.graphics.setColor(game.logic.tackle.colors[hotspot.color])
-        love.graphics.rectangle("fill", hotspot.left, hotspot.top, self.colorSize, self.colorSize)
+        love.graphics.rectangle("fill", hotspot.left, hotspot.top, self.paletteSize, self.paletteSize)
         -- selected color focus
         if hotspot.touched or hotspot.color == self.selectedColor then
             love.graphics.setColor(game.color.base01)
@@ -461,7 +464,7 @@ function module:draw()
             love.graphics.setColor(game.color.base3)
         end
         love.graphics.rectangle("line", hotspot.left, hotspot.top,
-            self.colorSize - 1, self.colorSize - 1)
+            self.paletteSize - 1, self.paletteSize - 1)
     end
     self.palette:release()
 
