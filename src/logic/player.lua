@@ -33,7 +33,7 @@ local module = {
     castLine = nil,
 
     -- the distance to be near the weigh-in jetty (in map coordinates)
-    minDistanceToJetty = 1,
+    minDistanceToJetty = 2,
 
     -- player name
     name = "Player",
