@@ -33,6 +33,8 @@ function love.load()
     game.states:add("tackle rods", require("states.tackle-rods"))
     game.states:add("tackle lures", require("states.tackle-lures"))
 
+    game.logic.records:readRecords()
+
 end
 
 function love.update(dt)
