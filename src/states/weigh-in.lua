@@ -101,6 +101,7 @@ function module:draw()
 
     -- the player missed the weigh-in
     if not game.logic.player.nearJetty then
+        game.dprint("The player missed the weigh-in!")
         love.graphics.setColor(game.color.red)
         love.graphics.printf("You missed the weigh-in!", 0, 90, self.width, "center")
     end

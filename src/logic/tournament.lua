@@ -150,7 +150,7 @@ function module:takeTime(minutes)
 
 end
 
-function module:recordLunker(angler, fish)
+function module:recordDailyLunker(angler, fish)
 
     if not self.lunkerOfTheDay or fish.weight > self.lunkerOfTheDay.weight then
         self.lunkerOfTheDay = {
@@ -164,26 +164,40 @@ end
 --- Weighs the player and competitor fish
 function module:endOfDay()
 
-    game.dprint("weighing in...")
+    game.dprint("weighing player and competitor catches")
+
+    -- list of top lunkers caught by the player (not daily lunkers)
+    local playerLunkers = { }
+
+    -- player alias
+    local player = game.logic.player
 
     -- share out remaining fish
     local fishper = math.floor(#game.lake.fish / #self.standings)
-
-    game.dprint("fish per person:", fishper)
 
     -- add fish to each
     for _, angler in ipairs(self.standings) do
 
         if angler.player then
 
-            if game.logic.player.nearJetty then
+            -- the player is near the weigh-in area
+            if player.nearJetty then
 
                 -- add up the player's livewell
                 for _, fish in ipairs(game.logic.livewell.contents) do
 
                     angler.dailyWeight = angler.dailyWeight + fish.weight
                     angler.totalWeight = angler.totalWeight + angler.dailyWeight
-                    self:recordLunker(angler, fish)
+                    self:recordDailyLunker(angler, fish)
+
+                    -- the player also gets to record in the total lunker record list
+                    local newRecord = game.logic.records:recordLunker(
+                        player.name, player.lake, fish.weight)
+
+                    -- keep the new top record
+                    if newRecord then
+                        table.insert(playerLunkers, newRecord)
+                    end
 
                 end
 
@@ -196,7 +210,7 @@ function module:endOfDay()
                 local fish = table.remove(game.lake.fish)
                 angler.dailyWeight = angler.dailyWeight + fish.weight
                 angler.totalWeight = angler.totalWeight + angler.dailyWeight
-                self:recordLunker(angler, fish)
+                self:recordDailyLunker(angler, fish)
 
             end
 
@@ -216,10 +230,21 @@ function module:endOfDay()
     -- add fish to the lake again
     game.logic.genie:spawnFish(game.lake, game.lake.seed)
 
-    -- include the last day state
+    -- TODO: include the top lunkers state
+    -- (this state is displayed last, it is a state stack, remember?)
+    if #playerLunkers > 0 then
+        game.dprint(string.format("You made %d top lunkers!", #playerLunkers))
+        game.logic.records:printLunkerList()
+        --game.states:push("top lunkers", playerLunkers)
+    end
+
+    -- go to the tournament results state
+    -- (this state is displayed after weigh in)
     if game.logic.tournament.day == 3 then
         game.states:push("tournament results")
     end
+
+    -- go to the weigh in state
     game.states:push("weigh in")
 
 end
