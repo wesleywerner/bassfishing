@@ -41,6 +41,18 @@ function module:init(data)
 
     self.transition = game.view.screentransition:new(1, "outCubic")
 
+    -- font to draw the rod list
+    self.listFont = game.fonts.small
+
+    -- selection padding
+    local padding = 20
+
+    -- spacing between printed rows
+    self.linespacing = 30
+
+    -- height of font, used to center text
+    local fontHeight = math.floor(love.graphics.newText(self.listFont, "ABC"):getHeight() / 2)
+
     -- define clickable hotspots
     if not self.hotspots then
 
@@ -51,11 +63,12 @@ function module:init(data)
 
             table.insert(self.hotspots,
                 game.lib.hotspot:new{
-                    top=self.tackleTop + (40 * n),
-                    left=50,
-                    width=self.width,
-                    height=40,
-                    rod=rod,
+                    top = self.tackleTop + (self.linespacing * n),
+                    left = padding,
+                    width = self.width - padding * 2,
+                    height = self.linespacing,
+                    rod = rod,
+                    textY = (self.linespacing / 2) - fontHeight
                     }
             )
 
@@ -64,6 +77,9 @@ function module:init(data)
         end
 
     end
+
+    -- the current player rod
+    self.playerRod = game.logic.player.rod and game.logic.player.rod.name or nil
 
 end
 
@@ -133,7 +149,6 @@ end
 
 function module:draw()
 
-
     -- save state
     love.graphics.push()
 
@@ -149,17 +164,22 @@ function module:draw()
     love.graphics.draw(self.background, 0, self.backgroundY)
 
     -- list rods
-    love.graphics.setFont(game.fonts.small)
+    love.graphics.setFont(self.listFont)
 
     for _, hotspot in ipairs(self.hotspots) do
 
-        if hotspot.touched then
+        if hotspot.rod.name == self.playerRod then
+            -- selected focus
+            love.graphics.setColor(game.color.base3)
+            love.graphics.rectangle("fill", hotspot.left, hotspot.top, hotspot.width, hotspot.height)
+            love.graphics.setColor(game.color.magenta)
+        elseif hotspot.touched then
             love.graphics.setColor(game.color.magenta)
         else
             love.graphics.setColor(game.color.base01)
         end
 
-        love.graphics.print(hotspot.rod.name, hotspot.left, hotspot.top)
+        love.graphics.print(hotspot.rod.name, hotspot.left, hotspot.top + hotspot.textY)
 
     end
 
