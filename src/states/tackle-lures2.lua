@@ -101,9 +101,17 @@ function module:init(data)
     -- padding from the top
     self.topPadding = self.exitAbove + 20
     self.bottomPadding = 20
-    self.leftPadding = 20
-    self.listWidth = 200    -- 3 lists with 20 px padding
+    self.leftPadding = 40
+
+    -- list widths adjust to contents
+    self.categoryListWidth = 0
+    self.lureListWidth = 0
+
+    -- list height fits the panel
     self.listHeight = self.height - self.topPadding - self.bottomPadding
+
+    -- the font used for lists
+    self.listFont = game.fonts.small
 
     ---- default color
     if not self.selectedColor then
@@ -118,6 +126,12 @@ function module:init(data)
         for category, lures in pairs(game.logic.tackle.lures) do
 
             table.insert(self.categoryNames, category)
+
+            -- measure the text and adjust the list width
+            local textwidth = love.graphics.newText(self.listFont, category):getWidth()
+            if self.categoryListWidth < textwidth then
+                self.categoryListWidth = textwidth
+            end
 
         end
 
@@ -134,6 +148,14 @@ function module:init(data)
             -- sort the list
             table.sort(self.lureNames[category])
 
+            -- measure the text and adjust the list width
+            for _, text in ipairs(lures) do
+                local textwidth = love.graphics.newText(self.listFont, text):getWidth()
+                if self.lureListWidth < textwidth then
+                    self.lureListWidth = textwidth
+                end
+            end
+
         end
 
     end
@@ -145,7 +167,7 @@ function module:init(data)
         self.categoryList = game.lib.aperture:new{
             top = self.topPadding,
             left = self.leftPadding,
-            width = self.listWidth,
+            width = self.categoryListWidth,
             height = self.listHeight,
             pages = 1,
         }
@@ -162,7 +184,7 @@ function module:init(data)
                 game.lib.hotspot:new{
                     top = (self.linespacing * (page - 1)),
                     left = 0,
-                    width = self.listWidth,
+                    width = self.categoryListWidth,
                     height = self.linespacing,
                     category = category,
                     page = page,
@@ -183,8 +205,8 @@ function module:init(data)
         -- aperture
         self.lureList = game.lib.aperture:new{
             top = self.topPadding,
-            left = self.leftPadding * 2 + self.listWidth,
-            width = self.listWidth,
+            left = self.leftPadding * 2 + self.categoryListWidth,
+            width = self.lureListWidth,
             height = self.listHeight,
             pages = #self.categoryList.hotspots,
         }
@@ -203,7 +225,7 @@ function module:init(data)
                     game.lib.hotspot:new{
                         top = ((page - 1) * self.listHeight) + (self.linespacing * (n - 1)),
                         left = 0,
-                        width = self.listWidth,
+                        width = self.lureListWidth,
                         height = self.linespacing,
                         lure = lure,
                         action = function(hotspot)
@@ -224,8 +246,10 @@ function module:init(data)
         -- aperture
         self.palette = game.lib.aperture:new{
             top = self.topPadding,
-            left = self.leftPadding * 3 + self.listWidth * 2,
-            width = self.listWidth,
+            -- right align palette on screen
+            left = self.width - self.lures.width - self.leftPadding,
+            -- width of the lure image
+            width = self.lures.width,
             height = self.listHeight,
             pages = 1,
         }
@@ -381,7 +405,7 @@ function module:draw()
     love.graphics.draw(self.background, 0, self.backgroundY)
 
     -- categories
-    love.graphics.setFont(game.fonts.small)
+    love.graphics.setFont(self.listFont)
     self.categoryList:apply()
     for _, hotspot in ipairs(self.categoryList.hotspots) do
         if hotspot.touched or hotspot.category == self.selectedCategory then
@@ -394,7 +418,7 @@ function module:draw()
     self.categoryList:release()
 
     -- lures
-    love.graphics.setFont(game.fonts.small)
+    love.graphics.setFont(self.listFont)
     self.lureList:apply()
     for _, hotspot in ipairs(self.lureList.hotspots) do
         if hotspot.touched or hotspot.lure == self.selectedLure then
