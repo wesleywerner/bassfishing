@@ -174,12 +174,24 @@ function module:draw()
             love.graphics.rectangle("fill", hotspot.left, hotspot.top, hotspot.width, hotspot.height)
             love.graphics.setColor(game.color.magenta)
         elseif hotspot.touched then
+            -- hover focus
+            love.graphics.setColor(game.color.base3)
+            love.graphics.rectangle("line", hotspot.left, hotspot.top, hotspot.width, hotspot.height)
             love.graphics.setColor(game.color.magenta)
         else
+            -- normal
             love.graphics.setColor(game.color.base01)
         end
 
+        -- print rod name
         love.graphics.print(hotspot.rod.name, hotspot.left, hotspot.top + hotspot.textY)
+
+        -- print rod lure
+        if hotspot.rod.lure then
+            love.graphics.setColor(game.color.base1)
+            love.graphics.printf(string.format("%s %s", hotspot.rod.lure.color, hotspot.rod.lure.name),
+                hotspot.left, hotspot.top + hotspot.textY, hotspot.width, "right")
+        end
 
     end
 
