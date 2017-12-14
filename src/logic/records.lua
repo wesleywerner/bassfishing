@@ -53,15 +53,20 @@ function module:readRecords()
             self:recordLunker(someNames[n].name, "Wes's Pond", 3 - (n * .1))
         end
 
-        -- print the generated list
-        if game.debug then
-            for i, v in ipairs(self.data.lunkers) do
-                game.dprint(string.format("%.2d) %.2f %s (%s)", i, v.weight, v.name, v.lake))
-            end
-        end
+        self:printLunkerList()
 
     end
 
+end
+
+function module:printLunkerList()
+
+    -- print the generated list
+    if game.debug then
+        for i, v in ipairs(self.data.lunkers) do
+            game.dprint(string.format("%.2d) %.2f %s (%s)", i, v.weight, v.name, v.lake))
+        end
+    end
 
 end
 
@@ -96,16 +101,23 @@ function module:recordLunker(playername, lakename, fishweight)
         end
     end
 
-    -- add the record
-    table.insert(self.data.lunkers, {
+    game.dprint(string.format("fish of %.2f kg made it to the top lunker list", fishweight))
+
+    -- new record entry
+    local newRecord = {
         name = playername,
         lake = lakename,
         weight = fishweight,
         date = os.time()
-    })
+    }
+
+    -- add the record
+    table.insert(self.data.lunkers, newRecord)
 
     -- sort the lunker list
     table.sort(self.data.lunkers, function(a, b) return a.weight > b.weight end)
+
+    return newRecord
 
 end
 
