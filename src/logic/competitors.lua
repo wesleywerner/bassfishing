@@ -64,7 +64,7 @@ function module:move()
 end
 
 --- Get competitor names
-function module:getNames()
+function module:getNames(amount)
 
     -- name templates
     local firstnames = {
@@ -150,11 +150,11 @@ function module:getNames()
         "The Wonder Market",
     }
 
-    -- assume each boat has two anglers
-    local amt = #game.lake.boats * 2
+    amount = amount or 20
+
     local list = { }
 
-    for n=1, amt do
+    for n=1, amount do
 
         local first = firstnames[math.random(1, #firstnames)]
         local last = surnames[math.random(1, #surnames)]

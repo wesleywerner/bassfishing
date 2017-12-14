@@ -67,7 +67,8 @@ function module:start()
     self.day = 0
 
     -- generate the list of angler standings
-    self.standings = game.logic.competitors:getNames()
+    -- assume each boat has two anglers
+    self.standings = game.logic.competitors:getNames(#game.lake.boats * 2)
 
     -- include the player
     table.insert(self.standings, { name = game.logic.player.name, player = true })
