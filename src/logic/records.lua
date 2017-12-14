@@ -27,7 +27,7 @@ module.lunkerTop = 10
 -- table where data is housed
 module.data = nil
 
-function module:readRecords()
+function module:load()
 
     self.data = game.logic.pickle:read("records")
 
@@ -53,9 +53,19 @@ function module:readRecords()
             self:recordLunker(someNames[n].name, "Wes's Pond", 3 - (n * .1))
         end
 
-        self:printLunkerList()
-
     end
+
+    self:printLunkerList()
+
+end
+
+function module:save()
+
+    if not self.data then
+        error("Can't save when record data is nil")
+    end
+
+    game.logic.pickle:write("records", self.data)
 
 end
 

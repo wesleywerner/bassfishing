@@ -233,6 +233,10 @@ function module:endOfDay()
     -- TODO: include the top lunkers state
     -- (this state is displayed last, it is a state stack, remember?)
     if #playerLunkers > 0 then
+
+        -- save the top lunker list
+        game.logic.records:save()
+
         game.dprint(string.format("You made %d top lunkers!", #playerLunkers))
         game.logic.records:printLunkerList()
         --game.states:push("top lunkers", playerLunkers)
