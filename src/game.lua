@@ -76,6 +76,7 @@ module.logic.livewell = require("logic.livewell")
 module.logic.tournament = require("logic.tournament")
 module.logic.tackle = require("logic.tackle")
 module.logic.records = require("logic.records")
+module.logic.pickle = require("logic.pickle")
 
 -- view modules
 module.view.messages = require("views.messages")
