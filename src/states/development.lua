@@ -62,8 +62,6 @@ end
 function module:keypressed(key)
     if key == "escape" then
         game.states:pop()
-    elseif key == "f10" then
-        game.states:push("lakegen development")
     elseif key == "left" or key == "kp4" or key == "a" then
         game.logic.player:left()
         game.view.fishfinder:update()
@@ -76,15 +74,25 @@ function module:keypressed(key)
     elseif key == "down" or key == "kp2" or key == "s" then
         game.logic.player:reverse()
         game.view.fishfinder:update()
-    elseif key == "tab" then
-        drawDebug = not drawDebug
-    elseif key == "f9" then
-        game.logic.tournament:endOfDay()
     elseif key == "r" then
         game.states:push("tackle rods")
     elseif key == "l" then
         game.states:push("tackle lures")
     end
+
+    -- debug shortcuts
+    if game.debug then
+        if key == "tab" then
+            drawDebug = not drawDebug
+        elseif key == "f10" then
+            game.states:push("lakegen development")
+        elseif key == "f9" then
+            game.logic.tournament:endOfDay()
+        elseif key == "t" then
+            game.logic.tournament:takeTime(15)
+        end
+    end
+
 end
 
 function module:mousemoved( x, y, dx, dy, istouch )
