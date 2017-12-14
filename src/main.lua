@@ -31,7 +31,7 @@ function love.load()
     game.states:add("weigh in", require("states.weigh-in"))
     game.states:add("tournament results", require("states.tournament-results"))
     game.states:add("tackle rods", require("states.tackle-rods"))
-    game.states:add("tackle lures", require("states.tackle-lures2"))
+    game.states:add("tackle lures", require("states.tackle-lures"))
 
 end
 
