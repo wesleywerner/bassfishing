@@ -428,6 +428,8 @@ function module:draw()
             love.graphics.setColor(game.color.magenta)
         elseif hotspot.touched then
             -- hover focus
+            love.graphics.setColor(game.color.base3)
+            love.graphics.rectangle("line", hotspot.left, hotspot.top, hotspot.width, hotspot.height)
             love.graphics.setColor(game.color.magenta)
         else
             -- normal
@@ -448,6 +450,8 @@ function module:draw()
             love.graphics.setColor(game.color.magenta)
         elseif hotspot.touched then
             -- hover focus
+            love.graphics.setColor(game.color.base3)
+            love.graphics.rectangle("line", hotspot.left, hotspot.top, hotspot.width, hotspot.height)
             love.graphics.setColor(game.color.magenta)
         else
             -- normal
