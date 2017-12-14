@@ -413,9 +413,16 @@ function module:draw()
     love.graphics.setFont(self.listFont)
     self.categoryList:apply()
     for _, hotspot in ipairs(self.categoryList.hotspots) do
-        if hotspot.touched or hotspot.category == self.selectedCategory then
+        if hotspot.category == self.selectedCategory then
+            -- selected focus
+            love.graphics.setColor(game.color.base3)
+            love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
+            love.graphics.setColor(game.color.magenta)
+        elseif hotspot.touched then
+            -- hover focus
             love.graphics.setColor(game.color.magenta)
         else
+            -- normal
             love.graphics.setColor(game.color.base01)
         end
         love.graphics.print(hotspot.category, hotspot.left, hotspot.top)
@@ -426,9 +433,16 @@ function module:draw()
     love.graphics.setFont(self.listFont)
     self.lureList:apply()
     for _, hotspot in ipairs(self.lureList.hotspots) do
-        if hotspot.touched or hotspot.lure == self.selectedLure then
+        if hotspot.lure == self.selectedLure then
+            -- selected focus
+            love.graphics.setColor(game.color.base3)
+            love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
+            love.graphics.setColor(game.color.magenta)
+        elseif hotspot.touched then
+            -- hover focus
             love.graphics.setColor(game.color.magenta)
         else
+            -- normal
             love.graphics.setColor(game.color.base01)
         end
         love.graphics.print(hotspot.lure, hotspot.left, hotspot.top)
