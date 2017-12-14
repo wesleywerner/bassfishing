@@ -36,7 +36,10 @@ local module = {
     minDistanceToJetty = 1,
 
     -- player name
-    name = "Player"
+    name = "Player",
+
+    -- name of the lake the player is fishing
+    lake = "Wes's Pond"
 }
 
 --- Turn the boat left
