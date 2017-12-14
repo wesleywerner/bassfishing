@@ -113,7 +113,12 @@ function module:init(data)
     -- the font used for lists
     self.listFont = game.fonts.small
 
-    ---- default color
+    -- pick the current lure color
+    if game.logic.player.rod and game.logic.player.rod.lure then
+        self.selectedColor = game.logic.player.rod.lure.color
+    end
+
+    -- default color
     if not self.selectedColor then
         self.selectedColor = "white"
     end
@@ -404,7 +409,7 @@ function module:draw()
     love.graphics.setColor(game.color.white)
     love.graphics.draw(self.background, 0, self.backgroundY)
 
-    -- categories
+    -- draw the list of lure categories
     love.graphics.setFont(self.listFont)
     self.categoryList:apply()
     for _, hotspot in ipairs(self.categoryList.hotspots) do
@@ -417,7 +422,7 @@ function module:draw()
     end
     self.categoryList:release()
 
-    -- lures
+    -- draw the list of lures
     love.graphics.setFont(self.listFont)
     self.lureList:apply()
     for _, hotspot in ipairs(self.lureList.hotspots) do
