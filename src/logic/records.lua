@@ -50,7 +50,7 @@ function module:load()
 
         -- add top lunkers
         for n = 1, self.lunkerTop do
-            self:recordLunker(someNames[n].name, "Wes's Pond", 3 - (n * .1))
+            self:recordLunker(someNames[n].name, "Wes's Pond", 4 - (n * .1))
         end
 
     end
