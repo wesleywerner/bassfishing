@@ -168,6 +168,9 @@ function module:init(data)
 
     end
 
+    -- height of font, used to center text
+    local fontHeight = math.floor(love.graphics.newText(self.listFont, "ABC"):getHeight() / 2)
+
     -- create lure category list
     if not self.categoryList then
 
@@ -194,6 +197,7 @@ function module:init(data)
                     left = 0,
                     width = self.categoryListWidth,
                     height = self.linespacing,
+                    textY = (self.linespacing / 2) - fontHeight,
                     category = category,
                     page = page,
                     action = function(hotspot)
@@ -235,6 +239,7 @@ function module:init(data)
                         left = 0,
                         width = self.lureListWidth,
                         height = self.linespacing,
+                        textY = (self.linespacing / 2) - fontHeight,
                         lure = lure,
                         action = function(hotspot)
                             self:selectLure(hotspot.lure)
@@ -428,7 +433,7 @@ function module:draw()
             -- normal
             love.graphics.setColor(game.color.base01)
         end
-        love.graphics.print(hotspot.category, hotspot.left, hotspot.top)
+        love.graphics.print(hotspot.category, hotspot.left, hotspot.top + hotspot.textY)
     end
     self.categoryList:release()
 
@@ -448,7 +453,7 @@ function module:draw()
             -- normal
             love.graphics.setColor(game.color.base01)
         end
-        love.graphics.print(hotspot.lure, hotspot.left, hotspot.top)
+        love.graphics.print(hotspot.lure, hotspot.left, hotspot.top + hotspot.textY)
     end
     self.lureList:release()
 
