@@ -259,7 +259,14 @@ function module:spawnFishFeedingZones(data, x, y)
     -- map a list of feeding points to each aquatic plant
     local nearbyPlants = { }
 
-    -- TODO: include logs and rocks in the list of possible feeding zones.
+    -- include logs and rocks in the list of possible feeding zones
+    for _, obs in ipairs(data.obstacles) do
+        -- include a point if within feeding range
+        local dist = game.lib.lume.distance(x, y, obs.x, obs.y)
+        if dist <= maxFeedingZoneDistance then
+            table.insert(nearbyPlants, { x = obs.x, y = obs.y, distance = dist })
+        end
+    end
 
     array2d:iter(data.plants,
         function(value, px, py)
