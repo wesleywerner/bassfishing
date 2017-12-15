@@ -263,13 +263,11 @@ function module:attemptStrike(x, y, lure)
 
     local weather = game.logic.weather
 
-    -- TODO: reduce change of biting slightly, it seems we catch too often. especially large fish.
-
     -- the % chance a fish will bite
     local chanceToBite = {
-        ["large"] = 0.125,
-        ["medium"] = 0.2,
-        ["small"] = 0.3
+        ["large"] = 0.05,
+        ["medium"] = 0.1,
+        ["small"] = 0.15
     }
 
     -- find fish near the cast that are busy feeding
