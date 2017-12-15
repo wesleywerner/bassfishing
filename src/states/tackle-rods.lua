@@ -140,7 +140,7 @@ function module:update(dt)
 
         -- if the rod has no lure, show lure selection as a courtesy
         if game.logic.player.rod and not game.logic.player.rod.lure then
-            game.states:push("tackle lures")
+            game.states:push("tackle lures", self.screenshot)
         end
 
     end

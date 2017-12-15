@@ -29,7 +29,7 @@ function module:init(data)
     self.height = love.graphics.getHeight()
 
     -- save screen and use it as a menu background
-    self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
+    self.screenshot = data or love.graphics.newImage( love.graphics.newScreenshot() )
 
     -- load background image
     if not self.background then
