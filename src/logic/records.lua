@@ -124,10 +124,14 @@ function module:recordLunker(playername, lakename, fishweight)
     -- add the record
     table.insert(self.data.lunkers, newRecord)
 
-    -- sort the lunker list
+    -- sort the lunker list (biggest first)
     table.sort(self.data.lunkers, function(a, b) return a.weight > b.weight end)
 
-    -- TODO: trim the list
+    -- trim the list
+    while #self.data.lunkers > self.lunkerTop do
+        local discarded = table.remove(self.data.lunkers)
+        game.dprint(string.format("Removing %s (%.2f) from the top lunker list", discarded.name, discarded.weight))
+    end
 
     return newRecord
 
