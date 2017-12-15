@@ -59,7 +59,8 @@ local module = { }
 
 -- list of screen effects
 local effects = {
-    ["center zoom"] = 1
+    ["center zoom"] = 1,
+    ["slide up"] = 2
 }
 
 local transition_mt = { }
@@ -89,7 +90,9 @@ end
 --- Apply a specific screen animation.
 function transition_mt:apply(effect)
 
-    if self.effects[effect] == 1 then
+    local effno = self.effects[effect]
+
+    if effno == 1 then
 
         -- center the map on screen adjusting for the screen transition
         love.graphics.translate(self.centerX - (self.centerX * self.scale),
@@ -97,6 +100,10 @@ function transition_mt:apply(effect)
 
         -- scale the state into view
         love.graphics.scale(self.scale, self.scale)
+
+    elseif effno == 2 then
+
+        love.graphics.translate(0, self.height - (self.height * self.scale))
 
     end
 
