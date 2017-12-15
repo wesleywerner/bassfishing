@@ -57,6 +57,11 @@
 
 local module = { }
 
+-- list of screen effects
+local effects = {
+    ["center zoom"] = 1
+}
+
 local transition_mt = { }
 
 function transition_mt:close(duration, easing)
@@ -81,18 +86,46 @@ function transition_mt:update(dt)
 
 end
 
+--- Apply a specific screen animation.
+function transition_mt:apply(effect)
+
+    if self.effects[effect] == 1 then
+
+        -- center the map on screen adjusting for the screen transition
+        love.graphics.translate(self.centerX - (self.centerX * self.scale),
+            self.centerY - (self.centerY * self.scale))
+
+        -- scale the state into view
+        love.graphics.scale(self.scale, self.scale)
+
+    end
+
+end
+
 function module:new(duration, easing)
 
+    -- create a new instance and inherit functions
     local instance = { }
     setmetatable(instance, { __index = transition_mt })
 
+    -- start at zero
     instance.scale = 0
 
+    -- animate towards 1
     instance.tween = game.lib.tween.new(duration or 3, instance,
         { scale = 1 }, easing or "outBounce")
 
     -- indicates the closing animation
     instance.closing = false
+
+    -- store screen size and center position
+    instance.width = love.graphics.getWidth()
+    instance.height = love.graphics.getHeight()
+    instance.centerX = instance.width / 2
+    instance.centerY = instance.height / 2
+
+    -- copy effects enums
+    instance.effects = effects
 
     return instance
 

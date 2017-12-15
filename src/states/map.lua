@@ -22,15 +22,10 @@ local module = { }
 
 function module:init()
 
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
-    self.centerX = self.width / 2
-    self.centerY = self.height / 2
-
     -- pre-calculate centering lake on screen
-    self.lakeScale = 9
-    self.lakeCenter = (game.window.width / module.lakeScale / 2) - (game.defaultMapWidth / 2)
-    self.lakeBottom = (game.window.height / module.lakeScale / 2) - (game.defaultMapHeight / 2)
+    self.mapscale = 9
+    self.lakeCenter = (game.window.width / module.mapscale / 2) - (game.defaultMapWidth / 2)
+    self.lakeBottom = (game.window.height / module.mapscale / 2) - (game.defaultMapHeight / 2)
 
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
@@ -71,22 +66,15 @@ end
 
 function module:draw()
 
-    -- save state
-    love.graphics.push()
-
     -- underlay screenshot
     love.graphics.setColor(80, 80, 80)
     love.graphics.draw(self.screenshot)
 
-    -- center the map on screen adjusting for the screen transition
-    love.graphics.translate(self.centerX - (self.centerX * self.transition.scale), self.centerY - (self.centerY * self.transition.scale))
+    self.transition:apply("center zoom")
 
-    -- scale the state into view
-    love.graphics.scale(self.transition.scale, self.transition.scale)
-
-    -- scale the map to fit
+    -- scale the mini map to fit the screen
     love.graphics.push()
-    love.graphics.scale(self.lakeScale, self.lakeScale)
+    love.graphics.scale(self.mapscale, self.mapscale)
     love.graphics.translate(self.lakeCenter, self.lakeBottom)
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.mapimage, 0, 0)
@@ -100,8 +88,6 @@ function module:draw()
         love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 1, 1)
         love.graphics.pop()
     end
-
-    love.graphics.pop()
 
     -- restore state
     love.graphics.pop()
