@@ -145,6 +145,8 @@ function module:cast()
     -- still reeling in the line
     if self.castLine then return end
 
+    -- TODO: you hooked your partner's hat!
+
     -- see if the fish wants to strike
     local fish = game.logic.fish:attemptStrike(self.castOffset.x, self.castOffset.y, self.rod.lure)
 
@@ -205,7 +207,7 @@ function module:update(dt)
     -- reel in cast line
     if self.castLine then
 
-        self.castLine.fade = self.castLine.fade - dt * 4
+        self.castLine.fade = self.castLine.fade - dt * 3
         if self.castLine.fade < 0 then
 
             -- there is a fish on the line!
