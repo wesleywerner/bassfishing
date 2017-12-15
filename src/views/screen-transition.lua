@@ -88,7 +88,7 @@ function transition_mt:update(dt)
 end
 
 --- Apply a specific screen animation.
-function transition_mt:apply(effect)
+function transition_mt:apply(effect, param)
 
     local effno = self.effects[effect]
 
@@ -103,7 +103,8 @@ function transition_mt:apply(effect)
 
     elseif effno == 2 then
 
-        love.graphics.translate(0, self.height - (self.height * self.scale))
+        -- param is the height to animate from
+        love.graphics.translate(0, (param or self.height) - ((param or self.height) * self.scale))
 
     end
 

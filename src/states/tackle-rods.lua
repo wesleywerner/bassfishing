@@ -157,7 +157,7 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    self.transition:apply("slide up")
+    self.transition:apply("slide up", self.backgroundY)
 
     -- tackle background
     love.graphics.setColor(game.color.white)
