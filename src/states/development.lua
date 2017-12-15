@@ -25,6 +25,7 @@ local drawDebug = false
 function module:init()
 
     -- prepare the lake
+    -- TODO: let some fish be in feeding mode from the start
     game.logic.genie:populateLakeWithFishAndBoats(game.lake)
     game.logic.boat:prepare(game.logic.player)
     game.logic.boat:launchBoat(game.logic.player)
@@ -50,11 +51,31 @@ function module:init()
         self.borderImage = love.graphics.newImage("res/game-border.png")
     end
 
-    -- set up our fish finder
+    -- define the rod and lure buttons
+    if not self.hotspots then
+
+        self.hotspots = { }
+        table.insert(self.hotspots, game.lib.hotspot:new{
+            top = 378,
+            left = 629,
+            width = 60,
+            height = 40,
+            action = function() game.states:push("tackle rods") end
+        })
+        table.insert(self.hotspots, game.lib.hotspot:new{
+            top = 378,
+            left = 710,
+            width = 60,
+            height = 40,
+            action = function() game.states:push("tackle lures") end
+        })
+
+    end
+
+    -- fill the fish finder with data
     game.view.fishfinder:update()
 
-    love.graphics.setFont( game.fonts.small )
-
+    -- begin the tournament
     game.logic.tournament:start()
 
 end
@@ -96,19 +117,35 @@ function module:keypressed(key)
 end
 
 function module:mousemoved( x, y, dx, dy, istouch )
+
+    -- update hotspots
+    for _, hotspot in ipairs(self.hotspots) do
+        hotspot:mousemoved( x, y, dx, dy, istouch )
+    end
+
+    -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
+
+    -- aim the cast
     if x and y then
         game.logic.player:aimCast( x / scale, y / scale )
     end
+
 end
 
 function module:mousepressed( x, y, button, istouch )
 
-    -- test if the point is inside the camera frame
+    -- update hotspots
+    for _, hotspot in ipairs(self.hotspots) do
+        if hotspot.touched then
+            hotspot:action()
+        end
+    end
+
+    -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
 
     if x and y then
-        -- update turns TODO: move to a turn function?
         game.view.fishfinder:update()
         game.logic.player:cast()
     end
@@ -150,6 +187,17 @@ function module:draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.borderImage)
 
+    -- hilite over hotspots
+    for _, hotspot in ipairs(self.hotspots) do
+        if hotspot.touched then
+            -- hilite rectangle
+            love.graphics.setColor(game.color.hilite)
+            love.graphics.rectangle("fill",
+                hotspot.left, hotspot.top, hotspot.width, hotspot.height)
+        end
+    end
+
+    -- pose the camera, all drawings are relative to the frame.
     game.lib.camera:pose()
 
     -- draw the map
