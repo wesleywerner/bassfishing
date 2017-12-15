@@ -36,7 +36,7 @@ function module:init(data)
         self.background = love.graphics.newImage("res/tackle-rods.png")
         self.backgroundY = self.height - self.background:getHeight()
         self.exitAbove = self.backgroundY
-        self.tackleTop = self.backgroundY + 20
+        self.tackleTop = self.backgroundY + 60
     end
 
     self.transition = game.view.screentransition:new(0.5, "inCubic")
