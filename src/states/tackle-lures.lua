@@ -90,7 +90,7 @@ function module:init(data)
     end
 
     -- state screen animation
-    self.screenTransition = game.view.screentransition:new(0.5, "inCubic")
+    self.transition = game.view.screentransition:new(0.5, "inCubic")
 
     -- palette block size
     self.paletteSize = 40
@@ -336,7 +336,7 @@ function module:keypressed(key)
 
     if key == "escape" then
 
-        self.screenTransition:close(0.5, "outBack")
+        self.transition:close(0.5, "outBack")
 
     end
 
@@ -363,7 +363,7 @@ function module:mousepressed( x, y, button, istouch )
 
     if y < self.exitAbove then
 
-        self.screenTransition:close(0.5, "outBack")
+        self.transition:close(0.5, "outBack")
 
     end
 
@@ -392,10 +392,10 @@ function module:update(dt)
     self.lureList:update(dt)
 
     -- update main transition
-    self.screenTransition:update(dt)
+    self.transition:update(dt)
 
     -- exit this state if mainn transition is closed
-    if self.screenTransition.isClosed then
+    if self.transition.isClosed then
         game.states:pop()
     end
 
@@ -411,7 +411,7 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    self.screenTransition:apply("slide up")
+    self.transition:apply("slide up")
 
     -- tackle background
     love.graphics.setColor(game.color.white)
@@ -498,7 +498,7 @@ function module:setLure()
     game.logic.player:setLure(self.selectedCategory, self.selectedLure, self.selectedColor)
 
     -- begin the screen close animation
-    module.screenTransition:close(0.5, "outBack")
+    module.transition:close(0.5, "outBack")
 
 end
 
