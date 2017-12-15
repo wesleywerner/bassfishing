@@ -93,8 +93,12 @@ function module:draw()
 
     -- flash the player position
     if math.floor(self.flasher) % 2 == 0 then
+        -- compensate drawing one-based coordinates on a zero-based canvas
+        love.graphics.push()
+        love.graphics.translate(-1, -1)
         love.graphics.setColor(game.color.base1)
         love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 1, 1)
+        love.graphics.pop()
     end
 
     love.graphics.pop()
