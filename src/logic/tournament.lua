@@ -230,7 +230,7 @@ function module:endOfDay()
     -- add fish to the lake again
     game.logic.genie:spawnFish(game.lake, game.lake.seed)
 
-    -- TODO: include the top lunkers state
+    -- push the the top lunkers state
     -- (this state is displayed last, it is a state stack, remember?)
     if #playerLunkers > 0 then
 
@@ -242,13 +242,13 @@ function module:endOfDay()
         game.states:push("top lunkers", playerLunkers)
     end
 
-    -- go to the tournament results state
+    -- push the tournament results state
     -- (this state is displayed after weigh in)
     if game.logic.tournament.day == 3 then
         game.states:push("tournament results")
     end
 
-    -- go to the weigh in state
+    -- push the weigh in state
     game.states:push("weigh in")
 
 end
