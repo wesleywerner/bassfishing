@@ -90,7 +90,7 @@ function module:init(data)
     end
 
     -- state screen animation
-    self.screenTransition = game.view.screentransition:new(1, "outCubic")
+    self.screenTransition = game.view.screentransition:new(0.5, "inCubic")
 
     -- palette block size
     self.paletteSize = 40

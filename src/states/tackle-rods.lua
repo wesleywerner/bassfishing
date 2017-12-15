@@ -39,7 +39,7 @@ function module:init(data)
         self.tackleTop = self.backgroundY + 20
     end
 
-    self.transition = game.view.screentransition:new(1, "outCubic")
+    self.transition = game.view.screentransition:new(0.5, "inCubic")
 
     -- font to draw the rod list
     self.listFont = game.fonts.small
