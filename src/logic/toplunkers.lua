@@ -29,7 +29,7 @@ module.data = nil
 
 function module:load()
 
-    self.data = game.logic.pickle:read("records")
+    self.data = game.logic.pickle:read("toplunkers")
 
     -- upgrade data as needed
     if not self.data.version then
@@ -65,7 +65,7 @@ function module:save()
         error("Can't save when record data is nil")
     end
 
-    game.logic.pickle:write("records", self.data)
+    game.logic.pickle:write("toplunkers", self.data)
 
 end
 

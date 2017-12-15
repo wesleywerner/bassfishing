@@ -76,7 +76,7 @@ module.logic.weather = require("logic.weather")
 module.logic.livewell = require("logic.livewell")
 module.logic.tournament = require("logic.tournament")
 module.logic.tackle = require("logic.tackle")
-module.logic.records = require("logic.records")
+module.logic.toplunkers = require("logic.toplunkers")
 module.logic.pickle = require("logic.pickle")
 
 -- view modules

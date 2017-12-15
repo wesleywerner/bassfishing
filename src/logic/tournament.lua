@@ -191,7 +191,7 @@ function module:endOfDay()
                     self:recordDailyLunker(angler, fish)
 
                     -- the player also gets to record in the total lunker record list
-                    local newRecord = game.logic.records:recordLunker(
+                    local newRecord = game.logic.toplunkers:recordLunker(
                         player.name, player.lake, fish.weight)
 
                     -- keep the new top record
@@ -235,10 +235,10 @@ function module:endOfDay()
     if #playerLunkers > 0 then
 
         -- save the top lunker list
-        game.logic.records:save()
+        game.logic.toplunkers:save()
 
         game.dprint(string.format("You made %d top lunkers!", #playerLunkers))
-        game.logic.records:printLunkerList()
+        game.logic.toplunkers:printLunkerList()
         --game.states:push("top lunkers", playerLunkers)
     end
 

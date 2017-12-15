@@ -33,7 +33,7 @@ function love.load()
     game.states:add("tackle rods", require("states.tackle-rods"))
     game.states:add("tackle lures", require("states.tackle-lures"))
 
-    game.logic.records:load()
+    game.logic.toplunkers:load()
 
     -- TODO: create a map state for use during a tournament
 
