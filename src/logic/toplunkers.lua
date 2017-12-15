@@ -36,10 +36,6 @@ function module:load()
         self.data.version = 1
     end
 
-    if not self.data.players then
-        self.data.players = { }
-    end
-
     if not self.data.lunkers then
 
         game.dprint("generating new list of top lunkers")
@@ -76,19 +72,6 @@ function module:printLunkerList()
         for i, v in ipairs(self.data.lunkers) do
             game.dprint(string.format("%.2d) %.2f %s (%s)", i, v.weight, v.name, v.lake))
         end
-    end
-
-end
-
-function module:recordPlayer(playername)
-
-    -- sanity check
-    if not self.data then
-        error("records not initialized. try calling :readRecords() first.")
-    end
-
-    if not self.data.players[playername] then
-        self.data.players[playername] = { }
     end
 
 end
