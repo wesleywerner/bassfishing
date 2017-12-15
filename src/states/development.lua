@@ -98,6 +98,8 @@ function module:keypressed(key)
         game.states:push("tackle rods")
     elseif key == "l" then
         game.states:push("tackle lures")
+    elseif key == "m" then
+        game.states:push("map")
     end
 
     -- debug shortcuts

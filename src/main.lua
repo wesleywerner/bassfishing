@@ -32,10 +32,9 @@ function love.load()
     game.states:add("tournament results", require("states.tournament-results"))
     game.states:add("tackle rods", require("states.tackle-rods"))
     game.states:add("tackle lures", require("states.tackle-lures"))
+    game.states:add("map", require("states.map"))
 
     game.logic.toplunkers:load()
-
-    -- TODO: create a map state for use during a tournament
 
 end
 
