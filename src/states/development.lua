@@ -25,7 +25,6 @@ local drawDebug = false
 function module:init()
 
     -- prepare the lake
-    -- TODO: let some fish be in feeding mode from the start
     game.logic.genie:populateLakeWithFishAndBoats(game.lake)
     game.logic.boat:prepare(game.logic.player)
     game.logic.boat:launchBoat(game.logic.player)

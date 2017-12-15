@@ -235,6 +235,12 @@ function module:spawnFish(data, seed)
                 table.insert(data.fish, fish)
                 fishid = fishid + 1
 
+                -- let some fish start feeding immediately
+                if math.random() < 0.5 then
+                    fish.feeding = true
+                    game.logic.fish:findPathToFeed(fish)
+                end
+
             end
 
         end
