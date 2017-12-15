@@ -31,7 +31,7 @@ function module:init(data)
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
-    self.transition = game.view.screentransition:new(3, "outBounce")
+    self.transition = game.view.screentransition:new(3, "outBack")
 
 end
 

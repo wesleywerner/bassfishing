@@ -31,7 +31,7 @@ function module:init(data)
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
-    self.transition = game.view.screentransition:new(3, "outBounce")
+    self.transition = game.view.screentransition:new(3, "outBack")
 
     if not game.logic.player.nearJetty then
         game.dprint("The player missed the weigh-in!")
@@ -68,9 +68,6 @@ end
 
 function module:draw()
 
-    -- save state
-    love.graphics.push()
-
     -- underlay screenshot
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.screenshot)
@@ -79,27 +76,23 @@ function module:draw()
     self.transition:apply("drop down")
 
     local tour = game.logic.tournament
-    local frameLeft = 0
-    local frameTop = 0
-    local frameWidth = self.width
-    local frameHeight = self.height
 
     -- draw a frame
     love.graphics.setColor(game.color.base2)
-    love.graphics.rectangle("fill", frameLeft, frameTop, frameWidth, frameHeight )
+    love.graphics.rectangle("fill", 0, 0, self.width, self.height)
 
     -- border
     love.graphics.setColor(game.color.base03)
 
     -- TODO: this adds a nice fat border but seems to affect the minimap on lake selection
     --love.graphics.setLineWidth(40)
-    love.graphics.rectangle("line", frameLeft, frameTop, frameWidth, frameHeight )
+    love.graphics.rectangle("line", 0, 0, self.width, self.height)
 
     -- print title
     love.graphics.setColor(game.color.base01)
     love.graphics.setFont(game.fonts.large)
     love.graphics.printf(string.format("weigh in day %d", game.logic.tournament.day),
-        frameLeft, frameTop + 30, frameWidth, "center")
+        0, 30, self.width, "center")
 
     love.graphics.setFont(game.fonts.medium)
 
@@ -148,9 +141,6 @@ function module:draw()
         love.graphics.printf("Tournament standings are up next...", 0, self.height - 40, self.width, "center")
 
     end
-
-    -- restore state
-    love.graphics.pop()
 
 end
 
