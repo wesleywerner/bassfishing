@@ -145,7 +145,12 @@ function module:cast()
     -- still reeling in the line
     if self.castLine then return end
 
-    -- TODO: you hooked your partner's hat!
+    -- you hooked your partner's hat!
+    local distance = math.floor(game.lib.trig:distance(self.screenX, self.screenY, self.castOffset.screenX, self.castOffset.screenY))
+    if distance < 5 then
+        game.dprint("you hooked your partner's hat!")
+        game.states:push("messagebox", { title="OOPS", message="You hooked your partner's hat!", shake=false } )
+    end
 
     -- see if the fish wants to strike
     local fish = game.logic.fish:attemptStrike(self.castOffset.x, self.castOffset.y, self.rod.lure)
