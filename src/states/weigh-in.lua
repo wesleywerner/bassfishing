@@ -76,7 +76,7 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    love.graphics.translate(0, - self.height + (self.height * self.transition.scale))
+    self.transition:apply("drop down")
 
     local tour = game.logic.tournament
     local frameLeft = 0

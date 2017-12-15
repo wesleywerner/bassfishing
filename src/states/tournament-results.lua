@@ -81,7 +81,7 @@ function module:draw()
     end
 
     -- apply transform
-    love.graphics.translate(0, self.height - (self.height * self.transition.scale))
+    self.transition:apply("drop up")
 
     local frameLeft = 0
     local frameTop = 0
