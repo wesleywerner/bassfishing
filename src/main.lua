@@ -33,6 +33,7 @@ function love.load()
     game.states:add("tackle rods", require("states.tackle-rods"))
     game.states:add("tackle lures", require("states.tackle-lures"))
     game.states:add("map", require("states.map"))
+    game.states:add("top lunkers", require("states.top-lunkers"))
 
     game.logic.toplunkers:load()
 

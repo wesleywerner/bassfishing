@@ -239,7 +239,7 @@ function module:endOfDay()
 
         game.dprint(string.format("You made %d top lunkers!", #playerLunkers))
         game.logic.toplunkers:printLunkerList()
-        --game.states:push("top lunkers", playerLunkers)
+        game.states:push("top lunkers", playerLunkers)
     end
 
     -- go to the tournament results state
