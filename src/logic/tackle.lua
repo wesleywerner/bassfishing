@@ -23,22 +23,20 @@ local module = {
 
     -- lighter lines cast further.
 
-    -- TODO: reduce casting ranges, they are too far.
-
     rods = {
         {
             name = "Pistol grip, 10 lb",
-            range = 5,
+            range = 3.5,
         },
 
         {
             name = "Two hand cast, 12 lb",
-            range = 5,
+            range = 4.5,
         },
 
         {
             name = "Pitching stick, 14 lb",
-            range = 4,
+            range = 3,
         },
 
         {
@@ -48,12 +46,12 @@ local module = {
 
         {
             name = "Spin rod, 6 lb",
-            range = 6,
+            range = 3.5,
         },
 
         {
             name = "Spin rod, 8 lb",
-            range = 5,
+            range = 3.5
         },
     },
 
