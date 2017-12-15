@@ -101,7 +101,7 @@ function module:draw()
 
     -- cache the lake preview to canvas
     if not self.lakepreview then
-        self.lakepreview = game.view.minimap.render()
+        self.lakepreview = game.view.maprender.renderMini()
     end
 
     -- scale the map to fit

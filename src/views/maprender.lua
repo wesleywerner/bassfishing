@@ -161,5 +161,52 @@ function module:render()
 
 end
 
+-- Render a preview of the lake contour to a canvas
+function module:renderMini(showPlayer)
+
+    local preview = love.graphics.newCanvas(game.lake.width, game.lake.height)
+    love.graphics.setCanvas(preview)
+
+    -- compensate drawing one-based coordinates on a zero-based canvas
+    love.graphics.push()
+    love.graphics.translate(-1, -1)
+
+    for x=1, game.lake.width do
+        for y=1, game.lake.height do
+
+            local land = game.lake.contour[x][y] > 0
+
+            if land then
+                love.graphics.setColor(game.color.base03)
+                love.graphics.rectangle("fill", x, y, 1, 1)
+            else
+                -- draw lake depth
+                local depth = game.lake.depth[x][y]
+                love.graphics.setColor(game.color.blue)
+                love.graphics.rectangle("fill", x, y, 1, 1)
+            end
+
+        end
+    end
+
+    -- Jetties
+    love.graphics.setColor(game.color.yellow)
+    for _, jetty in ipairs(game.lake.jetties) do
+        love.graphics.rectangle("fill", jetty.x, jetty.y, 1, 1)
+    end
+
+    -- Player boat
+    if showPlayer and game.logic.player.x then
+        love.graphics.setColor(game.color.base3)
+        love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 1, 1)
+    end
+
+    love.graphics.pop()
+    love.graphics.setCanvas()
+
+    return preview
+
+end
+
 
 return module

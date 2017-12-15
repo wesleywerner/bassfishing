@@ -36,7 +36,7 @@ function module:init()
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
     -- render the map
-    self.mapimage = game.view.minimap:render(true)
+    self.mapimage = game.view.maprender:renderMini(true)
 
     self.transition = game.view.screentransition:new(0.5, "inCubic")
 
