@@ -259,6 +259,8 @@ function module:spawnFishFeedingZones(data, x, y)
     -- map a list of feeding points to each aquatic plant
     local nearbyPlants = { }
 
+    -- TODO: include logs and rocks in the list of possible feeding zones.
+
     array2d:iter(data.plants,
         function(value, px, py)
             -- this point has plants

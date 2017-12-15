@@ -35,6 +35,8 @@ function love.load()
 
     game.logic.records:load()
 
+    -- TODO: create a map state for use during a tournament
+
 end
 
 function love.update(dt)

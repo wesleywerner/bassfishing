@@ -164,7 +164,7 @@ end
 --- Weighs the player and competitor fish
 function module:endOfDay()
 
-    game.dprint("weighing player and competitor catches")
+    game.dprint("\nWeighing player and competitor catches")
 
     -- list of top lunkers caught by the player (not daily lunkers)
     local playerLunkers = { }

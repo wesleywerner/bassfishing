@@ -263,6 +263,8 @@ function module:attemptStrike(x, y, lure)
 
     local weather = game.logic.weather
 
+    -- TODO: reduce change of biting slightly, it seems we catch too often. especially large fish.
+
     -- the % chance a fish will bite
     local chanceToBite = {
         ["large"] = 0.125,
@@ -312,7 +314,7 @@ function module:attemptStrike(x, y, lure)
                 local strikeRoll = math.random()
                 local strike = strikeRoll < fishChance
 
-                game.dprint(string.format("%s fish: rolled: %.2f, chance: %.2f", fish.size, strikeRoll, fishChance))
+                game.dprint(string.format("%s fish with chance of %.2f, you rolled %.2f", fish.size, fishChance, strikeRoll))
 
                 if strike then
 

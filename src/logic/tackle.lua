@@ -23,6 +23,8 @@ local module = {
 
     -- lighter lines cast further.
 
+    -- TODO: reduce casting ranges, they are too far.
+
     rods = {
         {
             name = "Pistol grip, 10 lb",

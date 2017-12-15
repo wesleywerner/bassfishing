@@ -101,7 +101,7 @@ function module:recordLunker(playername, lakename, fishweight)
     end
 
     -- if the top lunkers list has the maximum number of entries
-    if #self.data.lunkers == self.lunkerTop then
+    if #self.data.lunkers >= self.lunkerTop then
         -- test if the fish is lighter than the smallest fish on record
         -- (the lunker list is sorted by weight, biggest first)
         local smallest = self.data.lunkers[#self.data.lunkers]
@@ -126,6 +126,8 @@ function module:recordLunker(playername, lakename, fishweight)
 
     -- sort the lunker list
     table.sort(self.data.lunkers, function(a, b) return a.weight > b.weight end)
+
+    -- TODO: trim the list
 
     return newRecord
 
