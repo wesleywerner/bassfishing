@@ -35,6 +35,9 @@ local module = {
     -- the distance to be near the weigh-in jetty (in map coordinates)
     minDistanceToJetty = 2,
 
+    -- current distance to jetty
+    distanceFromJetty = 0,
+
     -- player name
     name = "Player",
 
