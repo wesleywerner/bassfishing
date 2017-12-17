@@ -59,6 +59,16 @@ function list_mt:selectPrev()
 
 end
 
+function list_mt:selectIndex(index)
+
+    index = math.max(1, math.min(index, #self.contents))
+
+    for id, v in ipairs(self.contents) do
+        v.selected = id == index
+    end
+
+end
+
 function list_mt:selectedItem()
 
     for id, v in ipairs(self.contents) do
