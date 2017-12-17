@@ -57,7 +57,9 @@ end
 
 function module:update(dt)
 
-    self.transition:update(dt)
+    -- limit delta as the end of day weigh-in can use up to .25 seconds
+    -- causing a transition jump.
+    self.transition:update(math.min(0.02, dt))
 
     if self.transition.isClosed then
         game.logic.tournament:nextDay()
