@@ -61,21 +61,26 @@ function module:init(data)
 
         self.hotspots = { }
         table.insert(self.hotspots, game.lib.hotspot:new{
-            top = 378,
-            left = 629,
-            width = 60,
+            top = 385,
+            left = 670,
+            width = 57,
             height = 40,
             action = function() game.states:push("tackle rods") end
         })
         table.insert(self.hotspots, game.lib.hotspot:new{
-            top = 378,
-            left = 710,
-            width = 60,
+            top = 385,
+            left = 612,
+            width = 57,
             height = 40,
             action = function() game.states:push("tackle lures") end
         })
-
-        -- TODO: add a map button
+        table.insert(self.hotspots, game.lib.hotspot:new{
+            top = 385,
+            left = 728,
+            width = 57,
+            height = 40,
+            action = function() game.states:push("map") end
+        })
 
     end
 
