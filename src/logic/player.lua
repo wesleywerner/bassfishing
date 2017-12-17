@@ -301,6 +301,9 @@ function module:setLure(category, name, color)
 
         game.dprint(string.format("set player lure as %s %s (%s)", color, name, category))
 
+        -- take the time
+        game.logic.tournament:takeTime(3)
+
     else
         game.dprint("Warning: cannot set a lure when no rod is chosen.")
     end
@@ -316,7 +319,10 @@ function module:setRod(rod)
     self.castOffset = nil
 
     -- select rod
-    game.dprint("selected", rod.name)
+    game.dprint(string.format("selected %s", rod.name))
+
+    -- take the time
+    game.logic.tournament:takeTime(1)
 
 end
 
