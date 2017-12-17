@@ -159,6 +159,11 @@ function module:update(dt)
 
     game.logic.competitors:update(dt)
 
+    -- check if the tournament is finished
+    if game.logic.tournament.day == 4 then
+        game.states:pop()
+    end
+
     -- check if the day is over
     if game.logic.tournament.time == 0 then
         game.logic.tournament:endOfDay()

@@ -57,13 +57,6 @@ function module:update(dt)
 
     if self.transition.isClosed then
         game.states:pop()
-        -- a second time out of the fishing screen
-        game.states:pop()
-    end
-
-    -- clear the background screenshot once we are open
-    if self.transition.isOpen and self.screenshot then
-        self.screenshot = nil
     end
 
 end
@@ -74,11 +67,9 @@ function module:draw()
     -- save state
     love.graphics.push()
 
-    -- underlay screenshot (but only for the opening animation)
-    if self.screenshot then
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.draw(self.screenshot)
-    end
+    -- underlay screenshot
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(self.screenshot)
 
     -- apply transform
     self.transition:apply("drop up")
