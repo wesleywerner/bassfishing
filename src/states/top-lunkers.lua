@@ -52,11 +52,7 @@ end
 
 function module:keypressed(key)
 
-    if key == "escape" then
-
-        self.transition:close(1, "inBack")
-
-    end
+    self.transition:close(1, "inBack")
 
 end
 
@@ -65,6 +61,8 @@ function module:mousemoved( x, y, dx, dy, istouch )
 end
 
 function module:mousepressed( x, y, button, istouch )
+
+    self.transition:close(1, "inBack")
 
 end
 
