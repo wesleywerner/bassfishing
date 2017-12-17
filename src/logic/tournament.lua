@@ -71,7 +71,11 @@ function module:start()
     self.standings = game.logic.competitors:getNames(#game.lake.boats * 2)
 
     -- include the player
-    table.insert(self.standings, { name = game.logic.player.name, player = true })
+    table.insert(self.standings, {
+        name = game.logic.player.name,
+        player = true,
+        lake = game.logic.player.lake
+        })
 
     -- advance the day
     self:nextDay()
