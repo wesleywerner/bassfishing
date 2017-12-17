@@ -138,7 +138,7 @@ function module:keypressed(key)
         self.lakelist:selectNext()
         self:newMap(self:seedFromString(self.lakelist:selectedItem()))
     elseif key == "return" then
-        --game.states:push("development")
+        self:play()
     end
 
 end
@@ -339,7 +339,7 @@ function module:play()
         self:newMap(seed)
     end
 
-    game.states:push("development")
+    game.states:push("tournament")
 
 end
 

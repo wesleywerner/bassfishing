@@ -1,5 +1,5 @@
 --[[
-   development.lua
+   tournament.lua
 
    Copyright 2017 wesley werner <wesley.werner@gmail.com>
 

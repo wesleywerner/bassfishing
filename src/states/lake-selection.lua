@@ -79,7 +79,7 @@ function module:keypressed(key)
         lakelist:selectNext()
         newMap(seedFromString(lakelist:selectedItem()))
     elseif key == "return" then
-        game.states:push("development")
+        game.states:push("tournament")
     end
 end
 
