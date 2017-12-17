@@ -95,27 +95,29 @@ function module:draw()
     love.graphics.setFont(game.fonts.large)
     love.graphics.printf("Tournament Results", frameLeft, frameTop + 30, frameWidth, "center")
 
-    -- list standings by total weight
+    -- sort standings by total weight
     table.sort(game.logic.tournament.standings,
         function(a, b) return a.totalWeight > b.totalWeight end)
 
+    -- list standings by total weight
+    local position = 1
     love.graphics.setFont(game.fonts.small)
-    for i, cmp in ipairs(game.logic.tournament.standings) do
+    for i, angler in ipairs(game.logic.tournament.standings) do
 
-        if i < 11 then
+        if (i <= 10) or (i > 10 and angler.player) then
 
-            local py = 100 + (i*30)
+            position = position + 1
+            local py = 100 + (position * 30)
 
             -- name
-            love.graphics.print(string.format("%d. %s (%s)", i, cmp.name, cmp.boat), 100, py)
+            love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(string.format("%.2f kg", cmp.totalWeight), 0, py, self.width - 20, "right")
+            love.graphics.printf(string.format("%.2f kg", angler.totalWeight), 0, py, self.width - 20, "right")
 
         end
 
     end
-
 
     -- restore state
     love.graphics.pop()

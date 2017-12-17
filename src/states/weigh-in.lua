@@ -105,11 +105,13 @@ function module:draw()
     love.graphics.setFont(game.fonts.small)
 
     -- list standings
+    local position = 1
     for i, angler in ipairs(tour.standings) do
 
-        if i < 11 then
+        if (i <= 10) or (i > 10 and angler.player) then
 
-            local py = 100 + (i*30)
+            position = position + 1
+            local py = 60 + (position * 30)
 
             if angler.player then
                 love.graphics.setColor(game.color.green)
@@ -132,7 +134,7 @@ function module:draw()
     love.graphics.printf(
         string.format("The lunker of the day goes to:\n%s with a catch of %.2f kg!",
         tour.lunkerOfTheDay.name, tour.lunkerOfTheDay.weight),
-        0, self.height - 160, self.width, "center")
+        0, self.height - 140, self.width, "center")
 
     -- print last day message
     if game.logic.tournament.day == 3 then
