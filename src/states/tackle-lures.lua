@@ -203,6 +203,8 @@ function module:init(data)
                     action = function(hotspot)
                         self.selectedCategory = hotspot.category
                         self.lureList:scrollTo(hotspot.page)
+                        -- auto select first lure in this category
+                        self:selectLure(self.lureNames[category][1])
                         end
                     }
             )
@@ -491,8 +493,6 @@ function module:draw()
 end
 
 function module:setLure()
-
-    game.dprint("setting lure", self.selectedColor, self.selectedLure)
 
     -- set the player lure
     game.logic.player:setLure(self.selectedCategory, self.selectedLure, self.selectedColor)
