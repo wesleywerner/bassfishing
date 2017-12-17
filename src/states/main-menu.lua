@@ -57,20 +57,20 @@ function module:init(data)
     })
 
     self.panel = game.lib.aperture:new{
-        top = 130,
+        top = 230,
         left = 40,
         width = self.width - 80,
-        height = 430,
+        height = 330,
         pages = 2,
         landscape = true
     }
 
     -- lake list relative to the panel
     self.lakelist = game.lib.list:new()
-    self.lakelist.left = 0
-    self.lakelist.top = 100
+    self.lakelist.left = 1
+    self.lakelist.top = 60
     self.lakelist.width = 220
-    self.lakelist.height = 350
+    self.lakelist.height = self.panel.height - self.lakelist.top - 1
     self.lakelist.itemHeight = love.graphics.newText(game.fonts.small, "BASS"):getHeight()
     self.lakelist:add("Buttermere")
     self.lakelist:add("Cabora Bassa Lake")
@@ -188,9 +188,9 @@ end
 function module:wheelmoved(x, y)
 
     if y > 0 then
-        self.panel:scrollLeft()
+        self.panel:scrollTo(1)
     else
-        self.panel:scrollRight()
+        self.panel:scrollTo(2)
     end
 
 end
@@ -235,12 +235,15 @@ function module:draw()
 
     -- tournament slug
     love.graphics.setFont(game.fonts.small)
-    love.graphics.setColor(game.color.base01)
+    love.graphics.setColor(game.color.blue)
     love.graphics.printf("3 day tournament:\nyou are eligible to be entered into the big fish record books", 0, 0, self.panel.width, "center")
 
     -- lake list box
     love.graphics.setColor(game.color.base3)
     love.graphics.rectangle("fill", self.lakelist.left, self.lakelist.top,
+        self.lakelist.width, self.lakelist.height)
+    love.graphics.setColor(game.color.base1)
+    love.graphics.rectangle("line", self.lakelist.left, self.lakelist.top,
         self.lakelist.width, self.lakelist.height)
 
     -- lake list items
@@ -253,7 +256,7 @@ function module:draw()
 
     -- scale the map to fit
     love.graphics.push()
-    love.graphics.translate(self.lakelist.width + 10, 250)
+    love.graphics.translate(self.lakelist.width + 10, 150)
     love.graphics.scale(6, 6)
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.lakepreview, 0, 0)
@@ -264,9 +267,14 @@ function module:draw()
     -- player name
     love.graphics.push()
     love.graphics.translate(self.nameinput.left, self.nameinput.top)
-    love.graphics.setFont(game.fonts.small)
+    -- fill
     love.graphics.setColor(game.color.base3)
     love.graphics.rectangle("fill", 0, 0, self.nameinput.width, self.nameinput.height)
+    -- border
+    love.graphics.setColor(game.color.base1)
+    love.graphics.rectangle("line", 0, 0, self.nameinput.width, self.nameinput.height)
+    -- text
+    love.graphics.setFont(game.fonts.small)
     love.graphics.setColor(game.color.base01)
     love.graphics.printf(string.format("Your name: %s", game.logic.player.name),
         10, self.nameinput.textY, self.nameinput.width)
@@ -276,7 +284,7 @@ function module:draw()
     love.graphics.push()
     love.graphics.translate(self.panel.width, 0)
     love.graphics.setFont(game.fonts.small)
-    love.graphics.setColor(game.color.base01)
+    love.graphics.setColor(game.color.blue)
     love.graphics.printf("practice fishing:\nfish a random lake without any time limit or weigh-in.", 0, 0, self.panel.width, "center")
     love.graphics.pop()
 
