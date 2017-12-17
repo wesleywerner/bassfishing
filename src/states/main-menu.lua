@@ -31,7 +31,7 @@ function module:init(data)
     self.hotspots = { }
 
     table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 100,
+        top = 550,
         left = 40,
         width = love.graphics.newText(game.fonts.medium, "Tournament"):getWidth(),
         height = 22,
@@ -40,7 +40,7 @@ function module:init(data)
     })
 
     table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 100,
+        top = 550,
         left = 230,
         width = love.graphics.newText(game.fonts.medium, "Practice"):getWidth(),
         height = 22,
@@ -49,7 +49,7 @@ function module:init(data)
     })
 
     table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 100,
+        top = 550,
         left = 600,
         width = love.graphics.newText(game.fonts.medium, "Launch boat!"):getWidth(),
         height = 22,
@@ -57,7 +57,7 @@ function module:init(data)
     })
 
     self.panel = game.lib.aperture:new{
-        top = 230,
+        top = 130,
         left = 40,
         width = self.width - 80,
         height = 330,
@@ -150,7 +150,7 @@ function module:mousepressed(x, y, button, istouch)
             if hotspot.page then
                 self.panel:scrollTo(hotspot.page)
             else
-                game.states:push("development")
+                self:play()
             end
         end
     end
@@ -317,6 +317,19 @@ function module:newMap(seed)
 
     -- clear the map canvas so it redraws itself
     module.lakepreview = nil
+
+end
+
+function module:play()
+
+    -- generate a random lake
+    if self.panel.page == 2 then
+        local seed = os.time()
+        game.dprint(string.format("generating practice map with seed %d", seed))
+        self:newMap(seed)
+    end
+
+    game.states:push("development")
 
 end
 
