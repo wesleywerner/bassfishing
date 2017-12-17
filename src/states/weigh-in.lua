@@ -85,10 +85,9 @@ function module:draw()
 
     -- border
     love.graphics.setColor(game.color.base03)
-
-    -- TODO: this adds a nice fat border but seems to affect the minimap on lake selection
-    --love.graphics.setLineWidth(40)
+    love.graphics.setLineWidth(40)
     love.graphics.rectangle("line", 0, 0, self.width, self.height)
+    love.graphics.setLineWidth(1)
 
     -- print title
     love.graphics.setColor(game.color.base01)
@@ -125,7 +124,7 @@ function module:draw()
             love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(string.format("%.2f kg", angler.dailyWeight), 0, py, self.width - 20, "right")
+            love.graphics.printf(string.format("%.2f kg", angler.dailyWeight), 0, py, self.width - 60, "right")
 
         end
 
