@@ -137,6 +137,10 @@ function module:keypressed(key)
     elseif key == "down" then
         self.lakelist:selectNext()
         self:newMap(self:seedFromString(self.lakelist:selectedItem()))
+    elseif key == "left" then
+        self.panel:scrollTo(1)
+    elseif key == "right" then
+        self.panel:scrollTo(2)
     elseif key == "return" then
         self:play()
     end
