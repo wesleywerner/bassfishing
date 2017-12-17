@@ -76,7 +76,7 @@ function module:start()
     -- advance the day
     self:nextDay()
 
-    game.dprint("The tournament has begun!", self.timef)
+    game.dprint("The tournament has begun!")
 
 end
 

@@ -124,6 +124,7 @@ function module:change()
 
     self.isHot = self.airTemperature > hotLimit
 
+    game.dprint("\nThe weather is changing...")
     game.dprint(string.format("approachingfront\t: %s", tostring(self.approachingfront) ))
     game.dprint(string.format("coldfront\t\t: %s", tostring(self.coldfront) ))
     game.dprint(string.format("postfrontal\t\t: %s", tostring(self.postfrontal) ))
