@@ -24,7 +24,9 @@ function love.load()
 
     love.window.setMode(game.window.width, game.window.height)
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
-    game.states:add("lake selection", require("states.lake-selection"))
+    --game.states:add("lake selection", require("states.lake-selection"))
+
+    game.states:add("main menu", require("states.main-menu"))
     game.states:add("development", require("states.development"))
     game.states:add("messagebox", require("states.messagebox"))
     game.states:add("lakegen development", require("states.lakegen-development"))
@@ -36,6 +38,8 @@ function love.load()
     game.states:add("top lunkers", require("states.top-lunkers"))
 
     game.logic.toplunkers:load()
+
+    -- TODO: create enter your name state
 
 end
 
@@ -60,6 +64,12 @@ end
 function love.mousepressed( x, y, button, istouch )
 
     game.states:mousepressed( x, y, button, istouch )
+
+end
+
+function love.wheelmoved(x, y)
+
+    game.states:wheelmoved(x, y)
 
 end
 
