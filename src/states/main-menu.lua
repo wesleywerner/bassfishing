@@ -343,6 +343,9 @@ function module:play()
         self:newMap(seed)
         game.states:push("practice")
     else
+        -- set lake name on tournament start
+        game.logic.player.lake = self.lakelist:selectedItem()
+        game.dprint(string.format("\nSelected lake %q", game.logic.player.lake))
         game.states:push("tournament")
     end
 
