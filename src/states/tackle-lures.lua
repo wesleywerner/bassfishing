@@ -423,16 +423,11 @@ function module:draw()
     love.graphics.setFont(self.listFont)
     self.categoryList:apply()
     for _, hotspot in ipairs(self.categoryList.hotspots) do
-        if hotspot.category == self.selectedCategory then
+        if hotspot.category == self.selectedCategory or hotspot.touched then
             -- selected focus
-            love.graphics.setColor(game.color.base3)
+            love.graphics.setColor(game.color.magenta)
             love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
-            love.graphics.setColor(game.color.magenta)
-        elseif hotspot.touched then
-            -- hover focus
             love.graphics.setColor(game.color.base3)
-            love.graphics.rectangle("line", hotspot.left, hotspot.top, hotspot.width, hotspot.height)
-            love.graphics.setColor(game.color.magenta)
         else
             -- normal
             love.graphics.setColor(game.color.base01)
@@ -445,16 +440,11 @@ function module:draw()
     love.graphics.setFont(self.listFont)
     self.lureList:apply()
     for _, hotspot in ipairs(self.lureList.hotspots) do
-        if hotspot.lure == self.selectedLure then
+        if hotspot.lure == self.selectedLure or hotspot.touched then
             -- selected focus
-            love.graphics.setColor(game.color.base3)
+            love.graphics.setColor(game.color.magenta)
             love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
-            love.graphics.setColor(game.color.magenta)
-        elseif hotspot.touched then
-            -- hover focus
             love.graphics.setColor(game.color.base3)
-            love.graphics.rectangle("line", hotspot.left, hotspot.top, hotspot.width, hotspot.height)
-            love.graphics.setColor(game.color.magenta)
         else
             -- normal
             love.graphics.setColor(game.color.base01)
