@@ -341,9 +341,10 @@ function module:play()
         local seed = os.time()
         game.dprint(string.format("generating practice map with seed %d", seed))
         self:newMap(seed)
+        game.states:push("practice")
+    else
+        game.states:push("tournament")
     end
-
-    game.states:push("tournament")
 
 end
 
