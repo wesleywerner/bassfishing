@@ -51,14 +51,6 @@ local function getWaterCorner(a, x, y)
         return tiles.water.bottomleft
     elseif bottom and right then
         return tiles.water.bottomright
-    elseif left then
-        return tiles.water.left
-    elseif right then
-        return tiles.water.right
-    elseif top then
-        return tiles.water.top
-    elseif bottom then
-        return tiles.water.bottom
     end
 
 end
