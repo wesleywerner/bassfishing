@@ -116,6 +116,28 @@ function module:newFish(x, y)
         weight = game.lib.lume.round( game.lib.lume.random(2, 5), 0.01)
     end
 
+    -- color lookup is stored on the module for future re-use
+    if not self.lureColors then
+        self.lureColors = { }
+        for k, v in pairs(game.logic.tackle.colors) do
+            table.insert(self.lureColors, k)
+        end
+    end
+
+    -- lure category lookup is stored on the module for future re-use
+    if not self.lureCategories then
+        self.lureCategories = { }
+        for k, v in pairs(game.logic.tackle.lures) do
+            table.insert(self.lureCategories, k)
+        end
+    end
+
+    -- give fish a lure preference for color and category
+    local lurepreference = {
+        color = self.lureColors[math.random(1, #self.lureColors)],
+        category = self.lureCategories[math.random(1, #self.lureCategories)]
+    }
+
     return {
         x = x,
         y = y,
@@ -131,8 +153,7 @@ function module:newFish(x, y)
         -- hungry fish seek out shallower waters especially where there is aquatic plants
         feeding = false,
 
-        -- lure preference
-        lurepreference = { color = "red" },
+        lurepreference = lurepreference,
 
         -- position on screen in pixels
         screenX = nil,
@@ -304,9 +325,11 @@ function module:attemptStrike(x, y, lure)
                 if fish.lurepreference.color == lure.color then
                     fishChance = fishChance * 1.5
                     game.dprint("I like this lure color. chance + 50%.")
-                --else
-                --    fishChance = fishChance / 2
-                --    game.dprint("I hate this lure color. halved chance.")
+                end
+
+                if fish.lurepreference.category == lure.category then
+                    fishChance = fishChance * 1.5
+                    game.dprint(string.format("I like %s. chance + 50%%.", lure.category))
                 end
 
                 local strikeRoll = math.random()
