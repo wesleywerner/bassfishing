@@ -101,6 +101,16 @@ function module:init(data)
     -- measure font size
     self.smallFontHeight = love.graphics.newText(game.fonts.small, "BASS"):getHeight()
 
+    -- calback to set the player name
+    local nameInputAction = function()
+        game.states:push("text entry", {
+            text = game.logic.player.name,
+            callback = function(text)
+                game.logic.player.name = text
+                end
+            })
+    end
+
     -- player name
     self.nameinput = game.lib.hotspot:new{
         top = self.lakelist.top,
@@ -108,7 +118,7 @@ function module:init(data)
         width = 480,
         height = 34,
         textY = (34 - self.smallFontHeight) / 2,
-        action = function() print("goto state") end
+        action = nameInputAction
     }
     self.panel:insert(self.nameinput)
 

@@ -36,10 +36,9 @@ function love.load()
     game.states:add("tackle lures", require("states.tackle-lures"))
     game.states:add("map", require("states.map"))
     game.states:add("top lunkers", require("states.top-lunkers"))
+    game.states:add("text entry", require("states.text-entry"))
 
     game.logic.toplunkers:load()
-
-    -- TODO: create enter your name state
 
 end
 
@@ -55,15 +54,15 @@ function love.keypressed(key)
 
 end
 
-function love.mousemoved( x, y, dx, dy, istouch )
+function love.mousemoved(x, y, dx, dy, istouch)
 
-    game.states:mousemoved( x, y, dx, dy, istouch )
+    game.states:mousemoved(x, y, dx, dy, istouch)
 
 end
 
-function love.mousepressed( x, y, button, istouch )
+function love.mousepressed(x, y, button, istouch)
 
-    game.states:mousepressed( x, y, button, istouch )
+    game.states:mousepressed(x, y, button, istouch)
 
 end
 
@@ -76,5 +75,11 @@ end
 function love.draw()
 
     game.states:draw()
+
+end
+
+function love.textinput(text)
+
+    game.states:textinput(text)
 
 end
