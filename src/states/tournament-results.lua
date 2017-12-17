@@ -108,6 +108,12 @@ function module:draw()
             position = position + 1
             local py = 100 + (position * 30)
 
+            if angler.player then
+                love.graphics.setColor(game.color.green)
+            else
+                love.graphics.setColor(game.color.base01)
+            end
+
             -- name
             love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
