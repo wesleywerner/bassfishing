@@ -34,6 +34,10 @@ function module:init(data)
     self.fade = 0
     self.shaking = data.shake and 60 or 0
 
+    -- this is a YN prompt message
+    self.prompt = data.prompt
+    self.callback = data.callback
+
     -- predraw the messages on a canvas
     self.width = love.graphics.getWidth()
     self.height = love.graphics.getHeight()
@@ -72,7 +76,12 @@ end
 
 function module:keypressed(key)
 
-    if self.timepassed > 1 then
+    if self.prompt and key == "Y" or key == "y" then
+        if type(self.callback) == "function" then
+            game.states:pop()
+            self.callback()
+        end
+    elseif self.timepassed > 1 then
         game.states:pop()
     end
 

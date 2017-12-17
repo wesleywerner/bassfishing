@@ -104,7 +104,7 @@ end
 
 function module:keypressed(key)
     if key == "escape" then
-        game.states:pop()
+        self:exitTournament()
     elseif key == "left" or key == "kp4" or key == "a" then
         game.logic.player:left()
         game.view.fishfinder:update()
@@ -295,5 +295,23 @@ function module:draw()
     love.graphics.pop()
 
 end
+
+function module:exitTournament()
+
+    if self.practice then
+        game.states:pop()
+    else
+        local data = {
+            message = "Are you sure you want to exit the tournament? [Y/N]",
+            prompt = true,
+            callback = function()
+                game.states:pop()
+                end
+        }
+        game.states:push("messagebox", data)
+    end
+
+end
+
 
 return module
