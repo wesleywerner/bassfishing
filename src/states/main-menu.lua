@@ -50,10 +50,20 @@ function module:init(data)
 
     table.insert(self.hotspots, game.lib.hotspot:new{
         top = 550,
+        left = 480,
+        width = love.graphics.newText(game.fonts.medium, "Records"):getWidth(),
+        height = 22,
+        text = "Records",
+        action = function() game.states:push("top lunkers") end
+    })
+
+    table.insert(self.hotspots, game.lib.hotspot:new{
+        top = 550,
         left = 600,
         width = love.graphics.newText(game.fonts.medium, "Launch boat!"):getWidth(),
         height = 22,
         text = "Launch boat!",
+        action = function() self:play() end
     })
 
     self.panel = game.lib.aperture:new{
@@ -164,7 +174,7 @@ function module:mousepressed(x, y, button, istouch)
             if hotspot.page then
                 self.panel:scrollTo(hotspot.page)
             else
-                self:play()
+                hotspot:action()
             end
         end
     end

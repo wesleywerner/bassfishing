@@ -85,6 +85,13 @@ function module:draw()
     -- apply transform
     self.transition:apply("drop down")
 
+    -- border
+    love.graphics.setColor(game.color.orange)
+    love.graphics.setLineWidth(20)
+    love.graphics.rectangle("line", 0, 0, self.width, self.height)
+    love.graphics.setLineWidth(1)
+
+    love.graphics.setColor(game.color.white)
     love.graphics.draw(self.image, 0, 0)
 
 end
