@@ -31,7 +31,7 @@ function module:init(data)
     self.hotspots = { }
 
     table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 30,
+        top = 100,
         left = 40,
         width = love.graphics.newText(game.fonts.medium, "Tournament"):getWidth(),
         height = 22,
@@ -40,7 +40,7 @@ function module:init(data)
     })
 
     table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 30,
+        top = 100,
         left = 230,
         width = love.graphics.newText(game.fonts.medium, "Practice"):getWidth(),
         height = 22,
@@ -49,7 +49,7 @@ function module:init(data)
     })
 
     table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 30,
+        top = 100,
         left = 600,
         width = love.graphics.newText(game.fonts.medium, "Launch boat!"):getWidth(),
         height = 22,
@@ -212,6 +212,12 @@ function module:draw()
     -- menu background
     love.graphics.setColor(game.color.white)
     love.graphics.draw(self.background, 0, 0)
+
+    -- title
+    love.graphics.setFont(game.fonts.large)
+    love.graphics.setColor(game.color.blue)
+    love.graphics.printf("Bass Fishing", 0, 30, self.width, "center")
+    love.graphics.draw(game.view.tiles.image, game.view.tiles.fish.large, 190, 30)
 
     -- game mode hotspots
     love.graphics.setFont(game.fonts.medium)
