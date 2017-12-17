@@ -80,6 +80,12 @@ function module:start()
 
 end
 
+function module:disable()
+
+    self.day = 0
+
+end
+
 --- Begin the next day of the tournament
 function module:nextDay()
 
@@ -125,6 +131,8 @@ end
 
 -- Reduce the tournament clock
 function module:takeTime(minutes)
+
+    if self.day == 0 then return end
 
     self.time = math.max(0, self.time - (minutes * 60))
     self.timef = os.date("!%H:%M", self.time)
