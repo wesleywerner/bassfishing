@@ -65,6 +65,7 @@ function module:init(data)
             left = 670,
             width = 57,
             height = 40,
+            tip = "select a rod (r)",
             action = function() game.states:push("tackle rods") end
         })
         table.insert(self.hotspots, game.lib.hotspot:new{
@@ -72,6 +73,7 @@ function module:init(data)
             left = 612,
             width = 57,
             height = 40,
+            tip = "select a lure (l)",
             action = function() game.states:push("tackle lures") end
         })
         table.insert(self.hotspots, game.lib.hotspot:new{
@@ -79,6 +81,7 @@ function module:init(data)
             left = 728,
             width = 57,
             height = 40,
+            tip = "view the map (m)",
             action = function() game.states:push("map") end
         })
 
@@ -139,11 +142,17 @@ function module:keypressed(key)
 
 end
 
-function module:mousemoved( x, y, dx, dy, istouch )
+function module:mousemoved(x, y, dx, dy, istouch)
+
+    -- clear tips
+    self.tip = nil
 
     -- update hotspots
     for _, hotspot in ipairs(self.hotspots) do
-        hotspot:mousemoved( x, y, dx, dy, istouch )
+        hotspot:mousemoved(x, y, dx, dy, istouch)
+        if hotspot.touched then
+            self.tip = hotspot.tip
+        end
     end
 
     -- translate the point relative to the camera frame
@@ -266,10 +275,19 @@ function module:draw()
     game.view.weather:draw()
     love.graphics.pop()
 
-    love.graphics.push()
-    love.graphics.translate(10, 570)
-    game.view.player:drawRodDetails()
-    love.graphics.pop()
+    if self.tip then
+        love.graphics.push()
+        love.graphics.translate(10, 570)
+        love.graphics.setColor(game.color.base2)
+        love.graphics.setFont(game.fonts.small)
+        love.graphics.print(self.tip, 0, 0)
+        love.graphics.pop()
+    else
+        love.graphics.push()
+        love.graphics.translate(10, 570)
+        game.view.player:drawRodDetails()
+        love.graphics.pop()
+    end
 
     love.graphics.push()
     love.graphics.translate(620, 188)
