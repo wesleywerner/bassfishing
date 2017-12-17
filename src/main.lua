@@ -28,7 +28,6 @@ function love.load()
 
     game.states:add("main menu", require("states.main-menu"))
     game.states:add("tournament", require("states.tournament"))
-    game.states:add("practice", require("states.practice"))
     game.states:add("messagebox", require("states.messagebox"))
     game.states:add("lakegen development", require("states.lakegen-development"))
     game.states:add("weigh in", require("states.weigh-in"))

@@ -22,12 +22,18 @@ local module = { }
 local scale = 2
 local drawDebug = false
 
-function module:init()
+function module:init(data)
 
     -- prepare the lake
     game.logic.genie:populateLakeWithFishAndBoats(game.lake)
     game.logic.boat:prepare(game.logic.player)
     game.logic.boat:launchBoat(game.logic.player)
+
+    -- change the weather
+    game.logic.weather:change()
+
+    -- clear live well
+    game.logic.livewell:empty()
 
     -- add player boat to the boats list so it can be included in obstacle tests
     table.insert(game.lake.boats, game.logic.player)
@@ -69,13 +75,22 @@ function module:init()
             action = function() game.states:push("tackle lures") end
         })
 
+        -- TODO: add a map button
+
     end
 
     -- fill the fish finder with data
     game.view.fishfinder:update()
 
-    -- begin the tournament
-    game.logic.tournament:start()
+    self.practice = data.practice
+
+    if self.practice then
+        -- disable tournament functions
+        game.logic.tournament:disable()
+    else
+        -- begin the tournament
+        game.logic.tournament:start()
+    end
 
 end
 
@@ -159,21 +174,25 @@ function module:update(dt)
 
     game.logic.competitors:update(dt)
 
-    -- check if the tournament is finished
-    if game.logic.tournament.day == 4 then
-        game.states:pop()
-    end
+    if not self.practice then
 
-    -- check if the day is over
-    if game.logic.tournament.time == 0 then
-        game.logic.tournament:endOfDay()
-    end
+        -- check if the tournament is finished
+        if game.logic.tournament.day == 4 then
+            game.states:pop()
+        end
 
-    -- if near the jetty and less than 30 minutes remain, end the day
-    if game.logic.tournament.displayedWarning
-        and game.logic.player.nearJetty
-        and game.logic.player.speed == 0 then
-        game.logic.tournament:endOfDay()
+        -- check if the day is over
+        if game.logic.tournament.time == 0 then
+            game.logic.tournament:endOfDay()
+        end
+
+        -- if near the jetty and less than 30 minutes remain, end the day
+        if game.logic.tournament.displayedWarning
+            and game.logic.player.nearJetty
+            and game.logic.player.speed == 0 then
+            game.logic.tournament:endOfDay()
+        end
+
     end
 
     game.logic.player:update(dt)
@@ -230,10 +249,12 @@ function module:draw()
     game.view.fishfinder:draw()
     love.graphics.pop()
 
-    love.graphics.push()
-    love.graphics.translate(620, 14)
-    game.view.clock:draw()
-    love.graphics.pop()
+    if not self.practice then
+        love.graphics.push()
+        love.graphics.translate(620, 14)
+        game.view.clock:draw()
+        love.graphics.pop()
+    end
 
     love.graphics.push()
     love.graphics.translate(612, 10)
