@@ -140,4 +140,11 @@ function module:draw()
     self:get().object:draw()
 end
 
+function module:textinput(text)
+    local object = self:get().object
+    if object.textinput then
+        object:textinput(text)
+    end
+end
+
 return module
