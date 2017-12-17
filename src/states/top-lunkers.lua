@@ -85,12 +85,6 @@ function module:draw()
     -- apply transform
     self.transition:apply("drop down")
 
-    -- border
-    love.graphics.setColor(game.color.orange)
-    love.graphics.setLineWidth(20)
-    love.graphics.rectangle("line", 0, 0, self.width, self.height)
-    love.graphics.setLineWidth(1)
-
     love.graphics.setColor(game.color.white)
     love.graphics.draw(self.image, 0, 0)
 
@@ -106,6 +100,12 @@ function module:prerender()
     love.graphics.setColor(game.color.base2)
     love.graphics.rectangle("fill", 0, 0, self.width, self.height)
 
+    -- border
+    love.graphics.setColor(game.color.base03)
+    love.graphics.setLineWidth(40)
+    love.graphics.rectangle("line", 0, 0, self.width, self.height)
+    love.graphics.setLineWidth(1)
+
     -- font color
     love.graphics.setColor(game.color.base0)
 
@@ -119,7 +119,7 @@ function module:prerender()
     love.graphics.setFont(game.fonts.small)
 
     -- print at offset
-    love.graphics.translate(0, 120)
+    love.graphics.translate(20, 120)
 
     for n, record in ipairs(game.logic.toplunkers.data.lunkers) do
 
@@ -144,7 +144,7 @@ function module:prerender()
         love.graphics.print(string.format("%.2f kg", record.weight), self.columns[3], py)
         love.graphics.print(record.name, self.columns[4], py)
         love.graphics.printf(record.lake, self.columns[5], py,
-            self.width - self.columns[5] - 20, "right")
+            self.width - self.columns[5] - 60, "right")
 
     end
 
