@@ -22,6 +22,8 @@ local module = { }
 
 function module:draw()
 
+    -- TODO: hover over tips (a cold front is approaching etc)
+
     local weather = game.logic.weather
     love.graphics.push()
     love.graphics.setFont(game.fonts.medium)

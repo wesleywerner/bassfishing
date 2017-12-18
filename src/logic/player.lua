@@ -23,6 +23,7 @@ local module = {
     -- current boat cruising speed
     speed = 0,
 
+    -- TODO: implement trolling motor
     -- maximum boat speed
     maxSpeed = 10,
 
@@ -74,6 +75,8 @@ function module:forward()
     if self.speed > self.maxSpeed then
         return
     end
+
+    -- TODO: if using outboard or over certain speed then spook nearby fish.
 
     game.logic.boat:forward(self)
     self:getDistanceFromJetty()
