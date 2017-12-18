@@ -29,9 +29,6 @@ function module:init(data)
     game.logic.boat:prepare(game.logic.player)
     game.logic.boat:launchBoat(game.logic.player)
 
-    -- change the weather
-    game.logic.weather:change()
-
     -- clear live well
     game.logic.livewell:empty()
 
@@ -93,6 +90,8 @@ function module:init(data)
     self.practice = data.practice
 
     if self.practice then
+        -- change the weather
+        game.logic.weather:change()
         -- disable tournament functions
         game.logic.tournament:disable()
     else
