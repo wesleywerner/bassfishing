@@ -184,7 +184,6 @@ function module:draw()
 
         -- print rod lure
         if hotspot.rod.lure then
-            love.graphics.setColor(game.color.base3)
             love.graphics.printf(string.format("%s %s", hotspot.rod.lure.color, hotspot.rod.lure.name),
                 hotspot.left, hotspot.top + hotspot.textY, hotspot.width, "right")
         end
