@@ -21,6 +21,30 @@
 
 local module = { }
 
+local function newButton(text, x, y, data)
+
+    -- hotspot padding
+    local padding = 5
+    local tw, th = love.graphics.newText(game.fonts.medium, text):getDimensions()
+
+    local b = game.lib.hotspot:new{
+        top = y,
+        left = x,
+        width = padding + tw + padding,
+        height = padding + th + padding,
+        text = text,
+        textY = ((padding + th + padding) - th) / 2
+        }
+
+    if data then
+        for k, v in pairs(data) do
+            b[k] = v
+        end
+    end
+
+    return b
+end
+
 function module:init(data)
 
     self.width = love.graphics.getWidth()
@@ -30,41 +54,17 @@ function module:init(data)
 
     self.hotspots = { }
 
-    table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 550,
-        left = 40,
-        width = love.graphics.newText(game.fonts.medium, "Tournament"):getWidth(),
-        height = 22,
-        text = "Tournament",
-        page = 1
-    })
+    local hotspotY = self.height - 80
 
-    table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 550,
-        left = 230,
-        width = love.graphics.newText(game.fonts.medium, "Practice"):getWidth(),
-        height = 22,
-        text = "Practice",
-        page = 2
-    })
+    table.insert(self.hotspots, newButton("Tournament", 40, hotspotY, { page = 1 }))
 
-    table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 550,
-        left = 480,
-        width = love.graphics.newText(game.fonts.medium, "Records"):getWidth(),
-        height = 22,
-        text = "Records",
-        action = function() game.states:push("top lunkers") end
-    })
+    table.insert(self.hotspots, newButton("Practice", 200, hotspotY, { page = 2 }))
 
-    table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 550,
-        left = 600,
-        width = love.graphics.newText(game.fonts.medium, "Launch boat!"):getWidth(),
-        height = 22,
-        text = "Launch boat!",
-        action = function() self:play() end
-    })
+    table.insert(self.hotspots, newButton("Records", 450, hotspotY,
+        { action = function() game.states:push("top lunkers") end }))
+
+    table.insert(self.hotspots, newButton("Launch boat!", 570, hotspotY,
+        { action = function() self:play() end }))
 
     self.panel = game.lib.aperture:new{
         top = 130,
@@ -227,8 +227,7 @@ end
 
 function module:draw()
 
-    -- cache the lake preview to canvas
-    -- has to render outside any transforms
+    -- cache the lake preview to canvas: has to render outside any transforms
     if not self.lakepreview then
         self.lakepreview = game.view.maprender.renderMini()
     end
@@ -246,18 +245,43 @@ function module:draw()
     -- game mode hotspots
     love.graphics.setFont(game.fonts.medium)
     for _, hotspot in ipairs(self.hotspots) do
+
         if hotspot.touched or self.panel.page == hotspot.page then
+            -- focus hilite
             love.graphics.setColor(game.color.magenta)
             love.graphics.rectangle("fill", hotspot.left, hotspot.top,
                 hotspot.width, hotspot.height)
+
+            -- hilite color
             love.graphics.setColor(game.color.base3)
         else
+
+            -- bottom edge
             love.graphics.setColor(game.color.base1)
-            love.graphics.rectangle("line", hotspot.left, hotspot.top,
-                hotspot.width, hotspot.height)
+            love.graphics.line(hotspot.left, hotspot.top + hotspot.height,
+                hotspot.left + hotspot.width, hotspot.top + hotspot.height)
+
+            -- right edge
+            love.graphics.line(hotspot.left + hotspot.width,
+                hotspot.top,
+                hotspot.left + hotspot.width, hotspot.top + hotspot.height)
+
+            -- top edge
+            love.graphics.setColor(game.color.base3)
+            love.graphics.line(hotspot.left, hotspot.top,
+                hotspot.left + hotspot.width, hotspot.top)
+
+            -- left edge
+            love.graphics.line(hotspot.left, hotspot.top,
+                hotspot.left, hotspot.top + hotspot.height)
+
+            -- normal color
             love.graphics.setColor(game.color.base01)
         end
-        love.graphics.printf(hotspot.text, hotspot.left, hotspot.top, hotspot.width, "center")
+
+        -- hotspot text
+        love.graphics.printf(hotspot.text, hotspot.left,
+            hotspot.top + hotspot.textY, hotspot.width, "center")
     end
 
     -- enter panel mode
