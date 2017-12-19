@@ -18,6 +18,15 @@
 
 ]]--
 
+-- TODO: create a imperial/metric conversion and apply it:
+-- * fish on messages
+-- * live well
+-- * weigh-in results
+-- * tournament results
+-- * top lunkers
+-- * weather conditions
+-- * rename rod line tests (light, medium, heavy)
+
 game = require("game")
 
 function savescreen()
