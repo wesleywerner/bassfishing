@@ -20,6 +20,23 @@
 
 game = require("game")
 
+function savescreen()
+
+    local screenshot = love.graphics.newScreenshot()
+    local dir = love.filesystem.getSaveDirectory()
+    local counter = 0
+    local filename = nil
+
+    repeat
+        counter = counter + 1
+        filename = string.format("screenshot_%.3d.png", counter)
+    until not love.filesystem.exists( filename )
+
+    screenshot:encode('png', filename)
+    print(string.format("saved %s/%s", dir, filename))
+
+end
+
 function love.load()
 
     love.window.setMode(game.window.width, game.window.height)
@@ -51,6 +68,11 @@ end
 function love.keypressed(key)
 
     game.states:keypressed(key)
+
+    -- save a screenshot
+    if key == "f12" then
+        savescreen()
+    end
 
 end
 
