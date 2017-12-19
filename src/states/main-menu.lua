@@ -239,7 +239,7 @@ function module:draw()
     -- title
     love.graphics.setFont(game.fonts.large)
     love.graphics.setColor(game.color.blue)
-    love.graphics.printf("Bass Fishing", 0, 30, self.width, "center")
+    love.graphics.printf("Bass Lover", 0, 30, self.width, "center")
     love.graphics.draw(game.view.tiles.image, game.view.tiles.fish.large, 190, 30)
 
     -- game mode hotspots

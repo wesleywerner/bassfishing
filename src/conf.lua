@@ -14,8 +14,8 @@
 ]]--
 
 function love.conf(t)
-    t.identity = "bass fishing"
+    t.identity = "basslover"
     t.version = "0.10.2"
-    t.window.title = "bass fishing"
+    t.window.title = "Bass Lover"
 end
 
