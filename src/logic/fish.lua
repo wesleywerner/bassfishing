@@ -196,6 +196,13 @@ function module:move()
                 -- fish is home and getting hungry
                 fish.feeding = math.random() < self.chanceToFeed
 
+                -- spooked fish will skip feeding this time
+                if fish.feeding and fish.spooked then
+                    -- allow feeding next time
+                    fish.spooked = false
+                    fish.feeding = false
+                end
+
                 if fish.feeding then
                     self:findPathToFeed(fish)
                 end
