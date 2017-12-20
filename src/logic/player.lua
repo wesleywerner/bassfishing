@@ -356,7 +356,7 @@ end
 function module:spookNearbyFish(optionalRange)
 
     -- range of noise in map coordinates
-    local noiseRange = (optionalRange or self.speed) * 1.5
+    local noiseRange = (optionalRange or math.max(1, self.speed)) * 2
 
     -- find fish in this range
     local nearfish = game.logic.fish:findFishInRange(self.x, self.y, noiseRange)
