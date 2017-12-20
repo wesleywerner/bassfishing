@@ -282,10 +282,17 @@ function module:draw()
         love.graphics.print(self.tip, 0, 0)
         love.graphics.pop()
     else
-        love.graphics.push()
-        love.graphics.translate(10, 570)
-        game.view.player:drawRodDetails()
-        love.graphics.pop()
+        if game.logic.player.speed > 0 then
+            love.graphics.push()
+            love.graphics.translate(10, 570)
+            game.view.player.printBoatSpeed()
+            love.graphics.pop()
+        else
+            love.graphics.push()
+            love.graphics.translate(10, 570)
+            game.view.player:drawRodDetails()
+            love.graphics.pop()
+        end
     end
 
     love.graphics.push()

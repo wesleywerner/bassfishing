@@ -100,4 +100,22 @@ function module:drawRodDetails()
 
 end
 
+function module:printBoatSpeed()
+
+    love.graphics.setFont(game.fonts.small)
+    love.graphics.setColor(game.color.base2)
+
+    if game.logic.player.speed > 3 then
+        love.graphics.print("cruising fastest")
+    elseif game.logic.player.speed > 2 then
+        love.graphics.print("cruising fast")
+    elseif game.logic.player.speed > 1 then
+        love.graphics.print("cruising faster")
+    elseif game.logic.player.speed > 0.1 then
+        love.graphics.print("cruising")
+    elseif game.logic.player.speed == 0.1 then
+        love.graphics.print("idling")
+    end
+end
+
 return module
