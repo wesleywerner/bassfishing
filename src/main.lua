@@ -76,11 +76,11 @@ end
 
 function love.keypressed(key)
 
-    game.states:keypressed(key)
-
     -- save a screenshot
     if key == "f12" then
         savescreen()
+    else
+        game.states:keypressed(key)
     end
 
 end
