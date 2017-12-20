@@ -78,10 +78,13 @@ function module:forward()
         return
     end
 
-    -- TODO: if using outboard or over certain speed then spook nearby fish.
-
     game.logic.boat:forward(self)
     self:getDistanceFromJetty()
+
+    -- if using outboard then spook nearby fish
+    if not self.trolling then
+        self:spookNearbyFish()
+    end
 
     -- clear the cast aim
     self.castOffset = nil
@@ -106,6 +109,11 @@ function module:reverse()
 
     game.logic.boat:reverse(self)
     self:getDistanceFromJetty()
+
+    -- if using outboard then spook nearby fish
+    if not self.trolling then
+        self:spookNearbyFish()
+    end
 
     -- clear the cast aim
     self.castOffset = nil
@@ -341,6 +349,20 @@ function module:toggleTrollingMotor()
     else
         self.maxSpeed = 10
         game.dprint("\nOutboard motor is now used")
+    end
+
+end
+
+function module:spookNearbyFish(optionalRange)
+
+    -- range of noise in map coordinates
+    local noiseRange = (optionalRange or self.speed) * 1.5
+
+    -- find fish in this range
+    local nearfish = game.logic.fish:findFishInRange(self.x, self.y, noiseRange)
+
+    for _, fish in ipairs(nearfish) do
+        game.logic.fish:spookFish(fish)
     end
 
 end

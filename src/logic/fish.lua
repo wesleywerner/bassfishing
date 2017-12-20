@@ -389,4 +389,36 @@ function module:update(dt)
 
 end
 
+--- Find fish in range of a specified point on the map.
+function module:findFishInRange(x, y, r)
+
+    local school = { }
+
+    for _, fish in ipairs(game.lake.fish) do
+
+        local distance = game.lib.lume.distance(x, y, fish.x, fish.y)
+
+        if distance <= r then
+            table.insert(school, fish)
+        end
+
+    end
+
+    return school
+
+end
+
+--- spook a fish
+function module:spookFish(fish)
+
+    -- the fish is feeding and very near it's destination
+    if fish.feeding and #fish.path < 3 then
+        fish.feeding = false
+        self:findPathToHome(fish)
+    end
+
+    fish.spooked = true
+
+end
+
 return module
