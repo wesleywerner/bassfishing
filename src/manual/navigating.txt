@@ -4,19 +4,23 @@ Creation-Date: 2017-12-19T20:57:38+02:00
 
 ====== navigating ======
 
-Your boat is equipped with a speedy outboard motor, you manoeuvre it using your keyboard.
+{{.\tournament-screen.png}}
+
+===== outboard motor =====
+
+Your boat is equipped with a speedy outboard motor, you manoeuvre your boat with the keyboard:
 
 * to move forward press the UP arrow or W key
 * to reverse press the DOWN arrow or S key
 * to turn your boat press the LEFT/RIGHT arrows or A/D keys
 
-To stop your outboard motor, simply idle in-place for a few seconds.
+Your outboard will start automatically as you begin to move, and it will cut off automatically when you idle in-place for a few seconds.
 
 __TODO: trolling motor and no wake zones__
 
 ===== avoid obstacles =====
 
-It is best to avoid land masses, you have an outboard, not a hovercraft. Running aground costs you valuable fishing time while you dislodge your vessel, not to mention the noise scares the fish!
+It is best to avoid land, you have an outboard, not a hovercraft. Running aground costs you valuable fishing time while you dislodge your vessel, not to mention the noise scares the fish!
 
 {{.\crunch.png}}
 
