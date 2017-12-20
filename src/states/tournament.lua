@@ -140,11 +140,13 @@ function module:keypressed(key)
         game.logic.player:right()
         game.view.fishfinder:update()
     elseif key == "up" or key == "kp8" or key == "w" then
-        game.logic.player:forward()
-        game.view.fishfinder:update()
+        if game.logic.player:forward() then
+            game.view.fishfinder:update()
+        end
     elseif key == "down" or key == "kp2" or key == "s" then
-        game.logic.player:reverse()
-        game.view.fishfinder:update()
+        if game.logic.player:reverse() then
+            game.view.fishfinder:update()
+        end
     elseif key == "r" then
         game.states:push("tackle rods")
     elseif key == "l" then

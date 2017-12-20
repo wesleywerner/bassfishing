@@ -91,6 +91,8 @@ function module:forward()
 
     game.logic.tournament:turn()
 
+    return true
+
 end
 
 -- --- Move the boat backward
@@ -119,6 +121,8 @@ function module:reverse()
     self.castOffset = nil
 
     game.logic.tournament:turn()
+
+    return true
 
 end
 
