@@ -296,6 +296,8 @@ end
 -- in real time.
 function module:calculateSpeed(boat, dt)
 
+    local idleSpeed = 0.1
+
     -- distance to the goal
     boat.distanceToGoal = self:distanceToGoal(boat)
 
@@ -316,11 +318,11 @@ function module:calculateSpeed(boat, dt)
         boat.engineCutoff = nil
     elseif boat.speed > 0 then
         -- clamp to 1 to simulate the boat idling
-        boat.speed = math.max(1, boat.speed - dt)
+        boat.speed = math.max(idleSpeed, boat.speed - dt)
     end
 
     -- if the boat is idling use a timer to cut the engine off
-    if currentSpeed == 0 and boat.speed == 1 then
+    if currentSpeed == 0 and boat.speed == idleSpeed then
 
         boat.engineCutoff = (boat.engineCutoff or 5) - (dt)
         if boat.engineCutoff < 0 then
