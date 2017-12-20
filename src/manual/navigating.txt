@@ -16,6 +16,8 @@ Your boat is equipped with a speedy outboard motor, you manoeuvre your boat with
 
 Your outboard will start automatically as you begin to move, and it will cut off automatically when you idle in-place for a few seconds.
 
+===== trolling motor =====
+
 __TODO: trolling motor and no wake zones__
 
 ===== avoid obstacles =====
