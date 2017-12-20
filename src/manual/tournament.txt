@@ -4,23 +4,23 @@ Creation-Date: 2017-12-19T21:10:03+02:00
 
 ====== tournament ======
 
-The tournament lasts for 3 days, with 6 hours of fishing time per day. Simply enter your name and select the location to fish.
+The tournament lasts for 3 days, with 6 hours of fishing time per day. Register your name and select the location to fish. The contour map shows the launching docks (yellow dots), you will be assigned a dock automatically when the tournament starts. 
 
-{{./screenshot_002.png}}
+When ready to fish, launch your boat.
 
-The contour map shows the launching docks (yellow dots) and you will launch from whichever dock you are assigned during the tournament. When ready, launch your boat.
+{{.\main-menu.png}}
 
 ===== launching dock =====
 
-{{./screenshot_004.png}}
+{{.\launch-dock.png}}
 
-Your launching dock can be different on each day, and you must return to your launching dock for weigh-in before the day ends.
+Your launching dock can be different on each day of the tournament, you start next to this dock and you must return to it for weigh-in, before the day ends.
 
 ===== weigh in =====
 
  If you miss the weigh-in you forfeit your daily catches. So be sure not to miss it! To help remind yourself, you set your wristwatch alarm 30 minutes before weigh-in.
 
-{{./screenshot_003.png}}
+{{.\time-warning.png}}
 
 To weigh in, simply return to your dock (at least 2 tiles away) and turn your outboard motor off. See [[navigating]] for more on using your boat.
 
@@ -28,18 +28,16 @@ The top 10 daily standings are shown, with your name in green. If you had the mi
 
 Click or press any key to start the next day of the tournament.
 
-{{./screenshot_005.png}}
-
+{{.\weigh-in.png}}
 
 ===== tournament results =====
 
 After you fished all 3 days, your daily weights are totalled up for the final tournament results.
 
-{{./screenshot_006.png}}
-
+{{.\tournament-results.png}}
 
 ===== top lunkers of all time =====
 
 If you are lucky or skilled enough to catch a big fish, your name is added to the wall of top lunkers, which persists between tournaments so you always have proof of the big one that didn't get away.
 
-{{./screenshot_007.png}}
+{{.\top-lunkers.png}}

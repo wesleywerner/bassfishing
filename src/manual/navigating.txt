@@ -18,17 +18,17 @@ __TODO: trolling motor and no wake zones__
 
 It is best to avoid land masses, you have an outboard, not a hovercraft. Running aground costs you valuable fishing time while you dislodge your vessel, not to mention the noise scares the fish!
 
-{{./screenshot_009.png}}
+{{.\crunch.png}}
 
 Rocks and logs also resist any attempts at ramming them with your boat, so don't go tilting at windmills either, lest nearby fishermen think you had one too many.
 
-{{./screenshot_010.png}}
+{{.\rocks-and-logs.png}}
 
 Aquatic plants on the water's surface, on the other hand, are fine to traverse.
 
-{{./screenshot_011.png}}
+{{.\aquatic-plants.png}}
 
 Try to steer clear of fellow competitors, a collision only costs time and money and you might find a disgruntled competitor trying to hook your hat as you part ways.
 
-{{./screenshot_012.png}}
+{{.\competitors.png}}
 

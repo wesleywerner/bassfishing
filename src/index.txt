@@ -42,5 +42,7 @@ I used these works to help build Bass Lover:
 * [[https://github.com/wesleywerner/lua-star|Lua A* path finding library by Wesley Werner,]] licensed under GPL
 * [[http://www.fontspace.com/kineticplasma-fonts/mechanical|Mechanical font by KineticPlasma Fonts,]] licensed under SIL Open Font License
 * [[https://openclipart.org/detail/171200/fishing-rod|Fishing rod image by hatalar205,]] licensed under Creative Commons Zero 1.0
+* [[https://openclipart.org/detail/170642/fish|Fish icon by by Last Dino]], licensed under Creative Commons Zero 1.0
+* [[https://openclipart.org/detail/524/jumping-fish|Jumping bass image by Johnny Automatic]], licensed under Creative Commons Zero 1.0
 
 Bass lover is inspired by a game called [[https://www.myabandonware.com/game/basstour-13i|BassTour]] circa 1992 created by Dick Olsen.
