@@ -293,6 +293,10 @@ function module:update(dt)
             -- auto reverse out of the pickle
             game.logic.boat:undoMove(self)
             self.stuck = false
+
+            -- make noise that scares fish away
+            self:spookNearbyFish(2)
+
         end
     end
 
