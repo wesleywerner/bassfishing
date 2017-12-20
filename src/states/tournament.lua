@@ -84,6 +84,35 @@ function module:init(data)
 
     end
 
+    -- define the outboard and trolling buttons
+    table.insert(self.hotspots, game.lib.hotspot:new{
+        top = 344,
+        left = 670,
+        width = 57,
+        height = 40,
+        tip = "use trolling motor (t)",
+        trollingButton = true,
+        action = function()
+            if not game.logic.player.trolling then
+                game.logic.player:toggleTrollingMotor()
+            end
+            end
+    })
+    table.insert(self.hotspots, game.lib.hotspot:new{
+        top = 344,
+        left = 728,
+        width = 57,
+        height = 40,
+        tip = "use outboard motor (t)",
+        outboardButton = true,
+        action = function()
+            if game.logic.player.trolling then
+                game.logic.player:toggleTrollingMotor()
+            end
+            end
+    })
+
+
     -- fill the fish finder with data
     game.view.fishfinder:update()
 
@@ -231,7 +260,19 @@ function module:draw()
 
     -- hilite over hotspots
     for _, hotspot in ipairs(self.hotspots) do
-        if hotspot.touched then
+
+        -- hilite outboard and trolling selections
+        if hotspot.trollingButton and game.logic.player.trolling then
+            love.graphics.setColor(game.color.checked)
+            love.graphics.rectangle("fill",
+                hotspot.left, hotspot.top, hotspot.width, hotspot.height)
+
+        elseif hotspot.outboardButton and not game.logic.player.trolling then
+            love.graphics.setColor(game.color.checked)
+            love.graphics.rectangle("fill",
+                hotspot.left, hotspot.top, hotspot.width, hotspot.height)
+
+        elseif hotspot.touched then
             -- hilite rectangle
             love.graphics.setColor(game.color.hilite)
             love.graphics.rectangle("fill",

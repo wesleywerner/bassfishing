@@ -55,7 +55,7 @@ module.color.blue      = {  38, 139, 210 }
 module.color.cyan      = {  42, 161, 152 }
 module.color.green     = { 133, 153,   0 }
 module.color.hilite    = {  38, 139, 210, 64 }
-
+module.color.checked   = { 133, 153,   0, 64 }
 
 -- collate modules
 module.logic = { }
