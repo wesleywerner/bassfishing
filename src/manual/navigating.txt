@@ -1,0 +1,34 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2017-12-19T20:57:38+02:00
+
+====== navigating ======
+
+Your boat is equipped with a speedy outboard motor, you manoeuvre it using your keyboard.
+
+* to move forward press the UP arrow or W key
+* to reverse press the DOWN arrow or S key
+* to turn your boat press the LEFT/RIGHT arrows or A/D keys
+
+To stop your outboard motor, simply idle in-place for a few seconds.
+
+__TODO: trolling motor and no wake zones__
+
+===== avoid obstacles =====
+
+It is best to avoid land masses, you have an outboard, not a hovercraft. Running aground costs you valuable fishing time while you dislodge your vessel, not to mention the noise scares the fish!
+
+{{./screenshot_009.png}}
+
+Rocks and logs also resist any attempts at ramming them with your boat, so don't go tilting at windmills either, lest nearby fishermen think you had one too many.
+
+{{./screenshot_010.png}}
+
+Aquatic plants on the water's surface, on the other hand, are fine to traverse.
+
+{{./screenshot_011.png}}
+
+Try to steer clear of fellow competitors, a collision only costs time and money and you might find a disgruntled competitor trying to hook your hat as you part ways.
+
+{{./screenshot_012.png}}
+

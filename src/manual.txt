@@ -1,0 +1,13 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2017-12-19T20:45:23+02:00
+
+====== Bass Lover Manual ======
+
+You signed up for a bass fishing tournament, packed your gear and chilled those beers. You head out to the dam and prepare to launch, the tournament is about to start. Good luck!
+
+1. [[+tournament|the tournament]]
+2. [[+navigating|navigating the water]]
+3. [[+tackle|using your tackle]]
+4. [[+fishfinder|the fish finder]]
+5. [[+tips|fishing tips]]

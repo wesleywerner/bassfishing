@@ -1,0 +1,22 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2017-12-19T23:26:46+02:00
+
+====== fishfinder ======
+
+Your fish finder 3000 is state of the art. It records depth, structure and fish underneath your boat, and displays from the right-hand side of the LCD (most recent scan) to the left-hand side (oldest scan).
+
+As time passes the display shifts towards the left, giving a short history of fish-finding activity.
+
+Here you can see the depth climbing as our boat moved over an underwater wall. The fish finder also displays the water temperature.
+
+{{./screenshot_019.png}}
+
+Underwater structure (plants, submerged logs or overhangs) display as columns of noise:
+
+{{./screenshot_020.png}}
+
+Fish display as chevrons. Here you see fish underneath our boat over a period of 4 turns (most recent on the right-hand side):
+
+{{./screenshot_021.png}}
+

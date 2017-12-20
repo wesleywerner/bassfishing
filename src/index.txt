@@ -1,0 +1,46 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2017-12-19T19:54:58+02:00
+
+====== BASS LOVER ======
+
+Bass lover is a fun fishing game where you enter a 3 day fishing tournament to catch the biggest fish. The game is strategic based as opposed to action based: time passes with turns, and success is determined by weather conditions, your lure selection and sometimes a little luck.
+
+{{./screenshot_001.png}}
+
+===== download =====
+
+Get the latest version from GitHub [LINK HERE]
+
+===== fishing guide =====
+
+To learn how to use your boat, fish finder and tips on finding that big fish, see the [[manual]].
+
+===== license =====
+
+Copyright 2017 Wesley Werner
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see http://www.gnu.org/licenses/.
+
+===== with thanks =====
+
+I used these works to help build Bass Lover:
+
+* [[https://erikflowers.github.io/weather-icons/|Weather icons by Erik Flowers,]] licensed under SIL OFL 1.1
+* [[https://github.com/rxi/lume|Lume Lua library by rxi,]] licensed under MIT
+* [[https://github.com/wesleywerner/lua-star|Lua A* path finding library by Wesley Werner,]] licensed under GPL
+* [[http://www.fontspace.com/kineticplasma-fonts/mechanical|Mechanical font by KineticPlasma Fonts,]] licensed under SIL Open Font License
+* [[https://openclipart.org/detail/171200/fishing-rod|Fishing rod image by hatalar205,]] licensed under Creative Commons Zero 1.0
+
+Bass lover is inspired by a game called [[https://www.myabandonware.com/game/basstour-13i|BassTour]] circa 1992 created by Dick Olsen.
