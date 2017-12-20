@@ -25,34 +25,30 @@ local module = {
 
     rods = {
         {
-            name = "Pistol grip, 10 lb",
+            name = "Pistol grip",
             range = 3.5,
         },
 
         {
-            name = "Two hand cast, 12 lb",
+            name = "Two hand cast",
             range = 4.5,
         },
 
         {
-            name = "Pitching stick, 14 lb",
+            name = "Pitching stick",
             range = 3,
         },
 
         {
-            name = "Flipping stick, 20 lb",
+            name = "Flipping stick",
             range = 3,
         },
 
         {
-            name = "Spin rod, 6 lb",
+            name = "Spin rod",
             range = 3.5,
         },
 
-        {
-            name = "Spin rod, 8 lb",
-            range = 3.5
-        },
     },
 
     -- lures are categorized
