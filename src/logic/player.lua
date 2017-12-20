@@ -23,9 +23,11 @@ local module = {
     -- current boat cruising speed
     speed = 0,
 
-    -- TODO: implement trolling motor
     -- maximum boat speed
     maxSpeed = 10,
+
+    -- flag when the trolling motor is in use
+    trolling = false,
 
     -- casting offset
     castOffset = nil,
@@ -326,6 +328,20 @@ function module:setRod(rod)
 
     -- take the time
     game.logic.tournament:takeTime(1)
+
+end
+
+function module:toggleTrollingMotor()
+
+    self.trolling = not self.trolling
+
+    if self.trolling then
+        self.maxSpeed = 0.5
+        game.dprint("\nTrolling motor is now used")
+    else
+        self.maxSpeed = 10
+        game.dprint("\nOutboard motor is now used")
+    end
 
 end
 

@@ -134,8 +134,10 @@ function module:keypressed(key)
             game.states:push("lakegen development")
         elseif key == "f9" then
             game.logic.tournament:endOfDay()
-        elseif key == "t" then
+        elseif key == "f1" then
             game.logic.tournament:takeTime(15)
+        elseif key == "t" then
+            game.logic.player:toggleTrollingMotor()
         end
     end
 
@@ -282,7 +284,7 @@ function module:draw()
         love.graphics.print(self.tip, 0, 0)
         love.graphics.pop()
     else
-        if game.logic.player.speed > 0 then
+        if game.logic.player.speed > 0 and not game.logic.player.trolling then
             love.graphics.push()
             love.graphics.translate(10, 570)
             game.view.player.printBoatSpeed()
