@@ -93,9 +93,6 @@ module.view.clock = require("views.clock")
 module.view.screentransition = require("views.screen-transition")
 
 -- libraries
--- extend the path where modules are searched to include the "libs" directory.
-package.path = package.path .. ';libs/?.lua'
-
 module.lib.camera = require("libs.harness.camera")
 module.lib.trig = require("libs.harness.trig")
 module.lib.hotspot = require("libs.harness.hotspot")
