@@ -1,0 +1,77 @@
+<!--
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program. If not, see http://www.gnu.org/licenses/.
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<title>[% title %] - Bass Lover</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta name="generator" content="[% generator.name %]" />
+
+  <link rel="stylesheet" href="[% resource('css/basslover.css') %]">
+
+<!--
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+-->
+
+</head>
+
+<body>
+
+<!--
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li><a href="[% uri('manual') %]">Index</a></li>
+        </ul>
+    </div>
+  </nav>
+-->
+
+  <a name="top"></a>
+  <div class="container header">
+    <a href="[% uri('index') %]">Index</a>
+    <a href="[% uri('manual') %]">Manual</a>
+  </div>
+
+  <!--[% FOR page IN pages %]-->
+  <div class="container article">
+    [% page.content %]
+  </div>
+  <!--[% END %]-->
+
+  <footer class="container header">
+    <a href="#top">Top</a>
+  </footer>
+
+<!--
+    <footer>
+    <!--[% FOR link IN page.backlinks %]-->
+      [% IF loop.first %]
+      <b>Backlinks:</b>
+      [% END %]
+      <a class="page" href='[% uri(link) %]'>[% link.name %]</a>
+      [% IF loop.last %]<br /><br />[% END %]
+    <!--[% END %]-->
+    </footer>
+-->
+
+</body>
+
+</html>
