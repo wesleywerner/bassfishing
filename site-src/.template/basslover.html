@@ -23,26 +23,10 @@
 	<title>[% title %] - Bass Lover</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<meta name="generator" content="[% generator.name %]" />
-
-  <link rel="stylesheet" href="[% resource('css/basslover.css') %]">
-
-<!--
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
--->
-
+    <link rel="stylesheet" href="[% resource('css/basslover.css') %]">
 </head>
 
 <body>
-
-<!--
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-          <li><a href="[% uri('manual') %]">Index</a></li>
-        </ul>
-    </div>
-  </nav>
--->
 
   <a name="top"></a>
   <div class="container header">
@@ -59,18 +43,6 @@
   <footer class="container header">
     <a href="#top">Top</a>
   </footer>
-
-<!--
-    <footer>
-    <!--[% FOR link IN page.backlinks %]-->
-      [% IF loop.first %]
-      <b>Backlinks:</b>
-      [% END %]
-      <a class="page" href='[% uri(link) %]'>[% link.name %]</a>
-      [% IF loop.last %]<br /><br />[% END %]
-    <!--[% END %]-->
-    </footer>
--->
 
 </body>
 
