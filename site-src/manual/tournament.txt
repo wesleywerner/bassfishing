@@ -3,7 +3,6 @@ Wiki-Format: zim 0.4
 Creation-Date: 2017-12-19T21:10:03+02:00
 
 ====== tournament ======
-
 The tournament lasts for 3 days, with 6 hours of fishing time per day. Register your name and select the location to fish. The contour map shows the launching docks (yellow dots), you will be assigned a dock automatically when the tournament starts. 
 
 When ready to fish, launch your boat.
@@ -11,14 +10,12 @@ When ready to fish, launch your boat.
 {{.\main-menu.png}}
 
 ===== launching dock =====
-
 {{.\launch-dock.png}}
 
 Your launching dock can be different on each day of the tournament, you start next to this dock and you must return to it for weigh-in, before the day ends.
 
 ===== weigh in =====
-
- If you miss the weigh-in you forfeit your daily catches. So be sure not to miss it! To help remind yourself, you set your wristwatch alarm 30 minutes before weigh-in.
+If you miss the weigh-in you forfeit your daily catches. So be sure not to miss it! To help remind yourself, you set your wristwatch alarm 30 minutes before weigh-in.
 
 {{.\time-warning.png}}
 
@@ -31,13 +28,14 @@ Click or press any key to start the next day of the tournament.
 {{.\weigh-in.png}}
 
 ===== tournament results =====
-
 After you fished all 3 days, your daily weights are totalled up for the final tournament results.
 
 {{.\tournament-results.png}}
 
 ===== top lunkers of all time =====
-
 If you are lucky or skilled enough to catch a big fish, your name is added to the wall of top lunkers, which persists between tournaments so you always have proof of the big one that didn't get away.
 
 {{.\top-lunkers.png}}
+
+==== next topic ====
+[[navigating]]

@@ -3,11 +3,9 @@ Wiki-Format: zim 0.4
 Creation-Date: 2017-12-19T20:57:38+02:00
 
 ====== navigating ======
-
 {{.\tournament-screen.png}}
 
 ===== outboard motor =====
-
 Your boat is equipped with a speedy outboard motor, you manoeuvre your boat with the keyboard:
 
 * to move forward press the UP arrow or W key
@@ -17,11 +15,9 @@ Your boat is equipped with a speedy outboard motor, you manoeuvre your boat with
 Your outboard will start automatically as you begin to move, and it will cut off automatically when you idle in-place for a few seconds.
 
 ===== trolling motor =====
-
 Your trolling motor is good for moving quietly, at the cost of moving much slower. Click on the trolling motor button or press the T key to toggle between trolling and outboard.
 
 ===== avoid obstacles =====
-
 It is best to avoid land, you have an outboard, not a hovercraft. Running aground costs you valuable fishing time while you dislodge your vessel, not to mention the noise scares the fish!
 
 {{.\crunch.png}}
@@ -38,3 +34,5 @@ Try to steer clear of fellow competitors, a collision only costs time and money 
 
 {{.\competitors.png}}
 
+==== next topic ====
+[[tackle|using your tackle]]

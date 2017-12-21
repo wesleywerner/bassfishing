@@ -3,7 +3,6 @@ Wiki-Format: zim 0.4
 Creation-Date: 2017-12-19T23:26:46+02:00
 
 ====== fish finder 3000 ======
-
 Your fish finder is state of the art. It records depth, structure and fish underneath your boat, and displays a history from the right-hand side of the LCD (most recent scan) to the left-hand side (oldest scan).
 
 As time passes the display shifts towards the left, giving a short history of fish-finding activity.
@@ -16,6 +15,9 @@ Underwater structure (plants, submerged logs or overhangs) display as columns of
 
 {{.\structure.png}}
 
-Fish display as chevrons. Here you see fish underneath our boat over a period of 4 turns (most recent on the right-hand side):
+Fish display as chevrons. Here you see fish underneath our boat over a period of a few turns (most recent on the right-hand side):
 
 {{.\fish.png}}
+
+==== next topic ====
+[[tips|fishing tips]]

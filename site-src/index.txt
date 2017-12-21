@@ -3,21 +3,17 @@ Wiki-Format: zim 0.4
 Creation-Date: 2017-12-19T19:54:58+02:00
 
 ====== BASS LOVER ======
-
 Bass lover is a fun fishing game where you enter a 3 day fishing tournament to catch the biggest fish. The game is strategic based as opposed to action based: time passes with turns, and success is determined by weather conditions, your lure selection and sometimes a little luck.
 
 {{./screenshot_001.png}}
 
 ===== download =====
-
-Get the latest version from GitHub [LINK HERE]
+Get the latest version from [[https://github.com/wesleywerner/basslover/releases|GitHub]]
 
 ===== fishing guide =====
-
 To learn how to use your boat, fish finder and tips on finding that big fish, see the [[manual]].
 
 ===== license =====
-
 Copyright 2017 Wesley Werner
 
 This program is free software: you can redistribute it and/or modify
@@ -34,7 +30,6 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see http://www.gnu.org/licenses/.
 
 ===== with thanks =====
-
 I used these works to help build Bass Lover:
 
 * [[https://erikflowers.github.io/weather-icons/|Weather icons by Erik Flowers,]] licensed under SIL OFL 1.1

@@ -37,6 +37,10 @@ h1 {
   text-align: center;
 }
 
+h2 {
+	padding-top: 60px;
+}
+
 a {
     color: rgb(38, 139, 210);
 }

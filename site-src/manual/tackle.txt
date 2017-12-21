@@ -3,7 +3,6 @@ Wiki-Format: zim 0.4
 Creation-Date: 2017-12-19T22:42:55+02:00
 
 ====== tackle ======
-
 You have half a dozen rods and a tackle box of multifarious colored lures - a compliment usually found in dreams or games. So use it wisely!
 
 * Use the "rods" button on-screen or press the R key to select a rod
@@ -12,7 +11,6 @@ You have half a dozen rods and a tackle box of multifarious colored lures - a co
 {{.\rod-and-lure-buttons.png}}
 
 ===== rods =====
-
 {{.\rod-selection.png}}
 
 The range of your cast is limited by the length of the rod and the line test. A lighter test line casts further as it gives less air resistance, combined with a longer rod for the reach.
@@ -21,18 +19,18 @@ The range of your cast is limited by the length of the rod and the line test. A 
 
 
 ===== lures =====
-
-If you don't have a rod selected, you will be asked to pick one first. If you select a rod that does not have a lure, you will open your tackle box and pick a lure automatically.
+If you don't have a rod selected, you will be asked to pick one first. If you select a rod that does not have a lure, you will open your tackle box and pick a lure.
 
 {{.\lure-selection.png}}
 
 Setting a lure takes fishing time, so once you have a couple of rods set, switch between them to quickly cast with different lures.
 
-
 ===== casting =====
-
 Use your mouse cursor to aim, and click the mouse button to cast.
 
-Casting in open water, into aquatic vegetation, and around rocks and logs is a good bet. Aiming for land, however, is not. Your lure can snag and you will lose it, costing yet more time retying a new one.
+Casting in open water, into aquatic vegetation, and around rocks and logs is a good bet. Aiming for land, however, is not. Your lure can snag and you will lose it, costing you time while tying a new one.
 
 {{.\cast-action.png}}
+
+==== next topic ====
+[[fishfinder|the fish finder]]
