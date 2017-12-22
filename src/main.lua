@@ -82,6 +82,8 @@ function love.keypressed(key)
     -- save a screenshot
     if key == "f12" then
         savescreen()
+    elseif key == "f2" then
+        game.lib.convert.metric = not game.lib.convert.metric
     else
         game.states:keypressed(key)
     end
