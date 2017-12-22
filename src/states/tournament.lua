@@ -57,6 +57,8 @@ function module:init(data)
     if not self.hotspots then
 
         self.hotspots = { }
+
+        -- rods button
         table.insert(self.hotspots, game.lib.hotspot:new{
             top = 385,
             left = 670,
@@ -65,6 +67,8 @@ function module:init(data)
             tip = "select a rod (r)",
             action = function() game.states:push("tackle rods") end
         })
+
+        -- lures buttons
         table.insert(self.hotspots, game.lib.hotspot:new{
             top = 385,
             left = 612,
@@ -73,6 +77,8 @@ function module:init(data)
             tip = "select a lure (l)",
             action = function() game.states:push("tackle lures") end
         })
+
+        -- map button
         table.insert(self.hotspots, game.lib.hotspot:new{
             top = 385,
             left = 728,
@@ -82,35 +88,48 @@ function module:init(data)
             action = function() game.states:push("map") end
         })
 
+        -- trolling motor button
+        table.insert(self.hotspots, game.lib.hotspot:new{
+            top = 344,
+            left = 670,
+            width = 57,
+            height = 40,
+            tip = "use trolling motor (t)",
+            trollingButton = true,
+            action = function()
+                if not game.logic.player.trolling then
+                    game.logic.player:toggleTrollingMotor()
+                end
+                end
+        })
+
+        -- outboard motor button
+        table.insert(self.hotspots, game.lib.hotspot:new{
+            top = 344,
+            left = 728,
+            width = 57,
+            height = 40,
+            tip = "use outboard motor (t)",
+            outboardButton = true,
+            action = function()
+                if game.logic.player.trolling then
+                    game.logic.player:toggleTrollingMotor()
+                end
+                end
+        })
+
+        -- weather forecast tip
+        table.insert(self.hotspots, game.lib.hotspot:new{
+            top = 10,
+            left = 610,
+            width = 175,
+            height = 175,
+            weathertip = true,
+            action = function() end
+        })
+
     end
 
-    -- define the outboard and trolling buttons
-    table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 344,
-        left = 670,
-        width = 57,
-        height = 40,
-        tip = "use trolling motor (t)",
-        trollingButton = true,
-        action = function()
-            if not game.logic.player.trolling then
-                game.logic.player:toggleTrollingMotor()
-            end
-            end
-    })
-    table.insert(self.hotspots, game.lib.hotspot:new{
-        top = 344,
-        left = 728,
-        width = 57,
-        height = 40,
-        tip = "use outboard motor (t)",
-        outboardButton = true,
-        action = function()
-            if game.logic.player.trolling then
-                game.logic.player:toggleTrollingMotor()
-            end
-            end
-    })
 
 
     -- fill the fish finder with data
@@ -182,7 +201,9 @@ function module:mousemoved(x, y, dx, dy, istouch)
     -- update hotspots
     for _, hotspot in ipairs(self.hotspots) do
         hotspot:mousemoved(x, y, dx, dy, istouch)
-        if hotspot.touched then
+        if hotspot.touched and hotspot.weathertip then
+            self.tip = game.logic.weather.forecast
+        elseif hotspot.touched then
             self.tip = hotspot.tip
         end
     end
@@ -274,8 +295,8 @@ function module:draw()
             love.graphics.rectangle("fill",
                 hotspot.left, hotspot.top, hotspot.width, hotspot.height)
 
-        elseif hotspot.touched then
-            -- hilite rectangle
+        elseif hotspot.touched and not hotspot.weathertip then
+            -- hilite rectangle (except for the weathertip hotspot)
             love.graphics.setColor(game.color.hilite)
             love.graphics.rectangle("fill",
                 hotspot.left, hotspot.top, hotspot.width, hotspot.height)
