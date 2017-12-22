@@ -124,7 +124,7 @@ function module:draw()
             love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(string.format("%.2f kg", angler.dailyWeight), 0, py, self.width - 60, "right")
+            love.graphics.printf(game.lib.convert:weight(angler.dailyWeight), 0, py, self.width - 60, "right")
 
         end
 
@@ -133,8 +133,8 @@ function module:draw()
     -- lunker of the day
     love.graphics.setColor(game.color.violet)
     love.graphics.printf(
-        string.format("The lunker of the day goes to:\n%s with a catch of %.2f kg!",
-        tour.lunkerOfTheDay.name, tour.lunkerOfTheDay.weight),
+        string.format("The lunker of the day goes to:\n%s with a catch of %s!",
+        tour.lunkerOfTheDay.name, game.lib.convert:weight(tour.lunkerOfTheDay.weight)),
         0, self.height - 140, self.width, "center")
 
     -- print last day message

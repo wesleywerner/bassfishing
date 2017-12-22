@@ -118,7 +118,7 @@ function module:draw()
             love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(string.format("%.2f kg", angler.totalWeight), 0, py, self.width - 60, "right")
+            love.graphics.printf(game.lib.convert:weight(angler.totalWeight), 0, py, self.width - 60, "right")
 
         end
 

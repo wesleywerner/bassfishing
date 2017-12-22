@@ -141,7 +141,7 @@ function module:prerender()
 
         love.graphics.print(n, self.columns[1], py)
         love.graphics.print(os.date("%x", record.date), self.columns[2], py)
-        love.graphics.print(string.format("%.2f kg", record.weight), self.columns[3], py)
+        love.graphics.print(game.lib.convert:weight(record.weight), self.columns[3], py)
         love.graphics.print(record.name, self.columns[4], py)
         love.graphics.printf(record.lake, self.columns[5], py,
             self.width - self.columns[5] - 60, "right")

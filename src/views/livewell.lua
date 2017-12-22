@@ -36,7 +36,7 @@ function module:draw()
         love.graphics.setColor(game.color.base1)
         local py = (i - 1) * 24
         love.graphics.draw(game.view.tiles.image, game.view.tiles.fish[fish.size], 0, py)
-        love.graphics.printf(string.format("%.2f kg", fish.weight), 0, py, w, "right")
+        love.graphics.printf(game.lib.convert:weight(fish.weight), 0, py, w, "right")
 
         -- hilite a fish in the live well
         if fish.hilite then

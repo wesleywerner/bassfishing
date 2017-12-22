@@ -31,7 +31,7 @@ function module:draw()
 
     -- print temp
     love.graphics.draw(self.icons.image, self.icons.smallthermometer, 0, 86)
-    love.graphics.print(string.format("%d°C", weather.airTemperature), 40, 86)
+    love.graphics.print(game.lib.convert:temp(weather.airTemperature), 40, 86)
 
     -- print cloud cover
     love.graphics.draw(self.icons.image, self.icons.smallcloud, 0, 116)
@@ -39,7 +39,7 @@ function module:draw()
 
     -- print wind
     love.graphics.draw(self.icons.image, self.icons.smallwind, 0, 146)
-    love.graphics.print(string.format("%dkph %s", weather.windSpeed, weather.windDirection), 40, 146)
+    love.graphics.print(string.format("%s %s", game.lib.convert:speed(weather.windSpeed), weather.windDirection), 40, 146)
 
     -- the weather icon priority is:
     -- approaching cold fronts
