@@ -55,7 +55,10 @@ local module = {
 
     coldfront = false,
 
-    postfrontal = false
+    postfrontal = false,
+
+    -- the human readable forecast
+    forecast = nil
 
 }
 
@@ -68,16 +71,24 @@ function module:change()
     local cold = 15
     local average = 22
     local hot = 30
-    local coldFrontCloudsLimit = 50
+    -- % clouds for a cold front to hit
+    local coldFrontCloudsLimit = 70
     local coldFrontWindLimit = highWindSpeed / 2
+    -- % clouds to consider rain
+    local rainCloudsLimit = 40
+    -- % chance (0..1) of rain if rainCloudsLimit is met
+    local rainChance = 0.2
     local clarities = { "clear", "murky" }
     local directions = { "N", "NE", "NW", "S", "SE", "SW", "E", "W" }
+
+    self.forecast = ""
 
     -- air temperature considered hot
     hotLimit = 26
 
     self.cloudcover = math.random() * 100
-    self.rain = math.random() < 0.2
+    -- precipatation if there is enough clouds
+    self.rain = (math.random() < rainChance) and (self.cloudcover > rainCloudsLimit)
     self.airTemperature = math.random(average, hot)
     self.waterTemperature = math.random(average, hot - 5)
     self.waterClarity = clarities[math.random(1, #clarities)]
@@ -116,6 +127,7 @@ function module:change()
         game.dprint("A cold front is here!")
         self.airTemperature = math.random(cold, average - 4)
         self.waterTemperature = math.random(cold, average - 2)
+        -- always rain during a cold front
         self.rain = true
         self.cloudcover = 100
     elseif self.postfrontal then
@@ -124,7 +136,44 @@ function module:change()
 
     self.isHot = self.airTemperature > hotLimit
 
+    -- update the forecast
+    if self.approachingfront then
+        self.forecast = "A cold front is approaching"
+    elseif self.coldfront then
+        self.forecast = "It is pretty darn cold"
+    else
+        -- reset
+        self.forecast = ""
+        -- heat
+        if self.isHot then
+            self.forecast = self.forecast .. "hot, "
+        elseif self.airTemperature <= cold then
+            self.forecast = self.forecast .. "cold, "
+        end
+        -- cloud cover
+        if self.cloudcover <= 10 then
+            self.forecast = self.forecast .. "clear "
+        elseif self.cloudcover > 10 and self.cloudcover < rainCloudsLimit then
+            self.forecast = self.forecast .. "partially cloudy "
+        elseif self.cloudcover >= rainCloudsLimit then
+            self.forecast = self.forecast .. "overcast "
+        end
+        -- wind
+        if self.windSpeed <= 5 then
+            self.forecast = self.forecast .. "and calm "
+        elseif self.windSpeed > 5 and self.windSpeed < coldFrontWindLimit then
+            self.forecast = self.forecast .. "and breezy "
+        elseif self.windSpeed >= coldFrontWindLimit then
+            self.forecast = self.forecast .. "and gusty "
+        end
+        -- rain
+        if self.rain then
+            self.forecast = self.forecast .. "with rain"
+        end
+    end
+
     game.dprint("\nThe weather is changing...")
+    game.dprint(self.forecast)
     game.dprint(string.format("approachingfront\t: %s", tostring(self.approachingfront) ))
     game.dprint(string.format("coldfront\t\t: %s", tostring(self.coldfront) ))
     game.dprint(string.format("postfrontal\t\t: %s", tostring(self.postfrontal) ))
