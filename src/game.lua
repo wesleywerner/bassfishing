@@ -104,6 +104,7 @@ module.lib.lume = require("libs.lume.lume")
 module.lib.luastar = require("libs.lua-star.src.lua-star")
 module.lib.list = require("libs.list")
 module.lib.tween = require("libs.tween.tween")
+module.lib.convert = require("libs.conversion")
 
 -- fonts
 module.fonts = { }
