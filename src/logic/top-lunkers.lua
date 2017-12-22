@@ -33,12 +33,12 @@ function module:load()
 
     -- upgrade data as needed
     if not self.data.version then
-        self.data.version = 1
+        self.data.version = game.version
     end
 
     if not self.data.lunkers then
 
-        game.dprint("generating new list of top lunkers")
+        game.dprint("\ngenerating a new list of top lunkers:")
         self.data.lunkers = { }
 
         -- generate random names
@@ -68,6 +68,7 @@ end
 function module:printLunkerList()
 
     -- print the generated list
+    game.dprint("\ntop lunkers:")
     if game.debug then
         for i, v in ipairs(self.data.lunkers) do
             game.dprint(string.format("%.2d) %.2f %s (%s)", i, v.weight, v.name, v.lake))

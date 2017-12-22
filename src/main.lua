@@ -27,6 +27,8 @@
 -- * weather conditions
 -- * rename rod line tests (light, medium, heavy)
 
+-- TODO: write release process & versioning
+
 game = require("game")
 
 function savescreen()
@@ -48,9 +50,10 @@ end
 
 function love.load()
 
+    game.dprint(string.format("Running bass lover version %s", game.version))
+
     love.window.setMode(game.window.width, game.window.height)
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
-    --game.states:add("lake selection", require("states.lake-selection"))
 
     game.states:add("main menu", require("states.main-menu"))
     game.states:add("tournament", require("states.tournament"))

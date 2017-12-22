@@ -20,6 +20,9 @@
 
 local module = { }
 
+-- The game version
+module.version = "1"
+
 -- enable debug printing
 module.debug = true
 module.dprint = function(...) if module.debug then print(...) end end

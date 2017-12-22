@@ -344,6 +344,12 @@ function module:draw()
 
     self.panel:release()
 
+    -- print game version
+    love.graphics.setFont(game.fonts.small)
+    love.graphics.setColor(game.color.base1)
+    love.graphics.printf(string.format("version %s", game.version), 0, self.height - 20, self.width, "center")
+
+
 end
 
 function module:seedFromString(name)
