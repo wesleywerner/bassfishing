@@ -155,6 +155,8 @@ function module:keypressed(key)
         game.states:push("map")
     elseif key == "f8" then
         game.states:push("top lunkers")
+    elseif key == "t" then
+        game.logic.player:toggleTrollingMotor()
     end
 
     -- debug shortcuts
@@ -167,8 +169,6 @@ function module:keypressed(key)
             game.logic.tournament:endOfDay()
         elseif key == "f1" then
             game.logic.tournament:takeTime(15)
-        elseif key == "t" then
-            game.logic.player:toggleTrollingMotor()
         end
     end
 
