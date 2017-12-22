@@ -60,6 +60,13 @@ function module:init(data)
 
     table.insert(self.hotspots, newButton("Practice", 200, hotspotY, { page = 2 }))
 
+    -- toggle for metric vs imperial values
+    table.insert(self.hotspots, newButton("kg", 400, hotspotY,
+        { action = function(hotspot)
+            game.lib.convert.metric = not game.lib.convert.metric
+            hotspot.text = game.lib.convert.metric and "kg" or "lb"
+            end }))
+
     table.insert(self.hotspots, newButton("Records", 450, hotspotY,
         { action = function() game.states:push("top lunkers") end }))
 
