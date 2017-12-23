@@ -13,22 +13,22 @@ You have half a dozen rods and a tackle box of multifarious colored lures - a co
 ===== rods =====
 {{.\rod-selection.png}}
 
-The range of your cast is limited by the length of the rod and the line test. A lighter test line casts further as it gives less air resistance, combined with a longer rod for the reach.
+If you select a rod that does not have a lure, you will open your tackle box and pick a lure. Your rods have varying cast ranges, and once a rod has a lure set you can quickly switch to it without retying a lure.
 
-{{.\cast-range-shorter.png}} {{.\cast-range-longer.png}}
+{{.\cast-range-shorter.png}} 
+
+{{.\cast-range-longer.png}}
 
 
 ===== lures =====
-If you don't have a rod selected, you will be asked to pick one first. If you select a rod that does not have a lure, you will open your tackle box and pick a lure.
+If you don't have a rod selected, you will be asked to pick one first. Pick a lure type and color.
 
 {{.\lure-selection.png}}
-
-Setting a lure takes fishing time, so once you have a couple of rods set, switch between them to quickly cast with different lures.
 
 ===== casting =====
 Use your mouse cursor to aim, and click the mouse button to cast.
 
-Casting in open water, into aquatic vegetation, and around rocks and logs is a good bet. Aiming for land, however, is not. Your lure can snag and you will lose it, costing you time while tying a new one.
+Casting into aquatic vegetation or around rocks and logs is a good bet. Aiming for land, however, is not. Your lure can snag and you will lose it, costing you time while tying a new one.
 
 {{.\cast-action.png}}
 
