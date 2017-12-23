@@ -1,9 +1,12 @@
 # release process
 
+toggle debug game flag
+
 update version in game.lua
+
 commit and tag:
 
-    git tag -a -m "v1"
+    git tag -a "v1"
     git push --tags
 
 zip the source into the builds directory:
