@@ -104,9 +104,3 @@ function love.draw()
     game.states:draw()
 
 end
-
-function love.textinput(text)
-
-    game.states:textinput(text)
-
-end

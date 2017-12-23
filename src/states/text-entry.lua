@@ -26,6 +26,7 @@ function module:init(data)
     -- expect data to contain a callback on successful input
     self.callback = data.callback
     self.text = data.text
+    self.alphabet = "abcdefghijklmnopqrstuvwxyz"
 
     self.width = love.graphics.getWidth()
     self.height = love.graphics.getHeight()
@@ -70,6 +71,10 @@ function module:keypressed(key)
             -- so we couldn't do string.sub(text, 1, -2).
             self.text = string.sub(self.text, 1, byteoffset - 1)
         end
+    elseif self.alphabet:find(key) and self.text:len() < 24 then
+        self.text = self.text..key
+    elseif key == "space" and self.text:len() < 24 then
+        self.text = self.text.." "
     end
 
 end
@@ -119,14 +124,5 @@ function module:draw()
     love.graphics.pop()
 
 end
-
-function module:textinput(text)
-
-    if self.text:len() < 24 then
-        self.text = self.text .. text
-    end
-
-end
-
 
 return module

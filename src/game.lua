@@ -24,7 +24,7 @@ local module = { }
 module.version = "1"
 
 -- enable debug printing
-module.debug = true
+module.debug = false
 module.dprint = function(...) if module.debug then print(...) end end
 
 -- global defaults
