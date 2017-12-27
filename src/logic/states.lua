@@ -129,6 +129,13 @@ function module:mousepressed( x, y, button, istouch )
     end
 end
 
+function module:mousereleased(x, y, button, istouch)
+    local object = self:get().object
+    if object.mousereleased then
+        object:mousereleased(x, y, button, istouch)
+    end
+end
+
 function module:wheelmoved(x, y)
     local object = self:get().object
     if object.wheelmoved then

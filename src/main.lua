@@ -93,6 +93,12 @@ function love.mousepressed(x, y, button, istouch)
 
 end
 
+function love.mousereleased(x, y, button, istouch)
+
+    game.states:mousereleased(x, y, button, istouch)
+
+end
+
 function love.wheelmoved(x, y)
 
     game.states:wheelmoved(x, y)
