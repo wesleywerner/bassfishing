@@ -29,6 +29,9 @@ function module:init(data)
     game.logic.boat:prepare(game.logic.player)
     game.logic.boat:launchBoat(game.logic.player)
 
+    -- create mini map
+    self.minimap = game.view.maprender:renderMini()
+
     -- clear live well
     game.logic.livewell:empty()
 
@@ -72,7 +75,7 @@ function module:init(data)
             { action = function() game.states:push("tackle lures") end }))
 
         table.insert(self.buttons,
-            game.view.button:new(714, 140, "Rods",
+            game.view.button:new(722, 140, "Rods",
             { action = function() game.states:push("tackle rods") end }))
 
     end
@@ -262,13 +265,13 @@ function module:draw()
 
     if not self.practice then
         love.graphics.push()
-        love.graphics.translate(627, 16)
+        love.graphics.translate(634, 14)
         game.view.clock:draw()
         love.graphics.pop()
     end
 
     love.graphics.push()
-    love.graphics.translate(622, 32)
+    love.graphics.translate(622, 36)
     game.view.weather:draw()
     love.graphics.pop()
 
@@ -289,9 +292,25 @@ function module:draw()
     game.view.livewell:draw()
     love.graphics.pop()
 
+    -- draw buttons
     for _, button in ipairs(self.buttons) do
         button:draw()
     end
+
+    -- draw mini map
+    love.graphics.push()
+    love.graphics.translate(634, 371)
+    love.graphics.scale(1.8, 1.8)
+    love.graphics.draw(self.minimap)
+    -- player position
+    love.graphics.scale(1, 1)
+    love.graphics.translate(-1, -1)
+    love.graphics.setColor(game.color.white)
+    love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 2, 2)
+    love.graphics.pop()
+    -- border
+    love.graphics.setColor(game.color.blue)
+    love.graphics.rectangle("line", 634, 371, 150, 56)
 
 end
 

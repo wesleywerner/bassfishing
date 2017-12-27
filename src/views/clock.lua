@@ -26,7 +26,7 @@ function module:draw()
     love.graphics.setColor(game.color.white)
     love.graphics.setFont(game.fonts.small)
     love.graphics.print(string.format("Day %d", game.logic.tournament.day), 0, 0)
-    love.graphics.printf(game.logic.tournament.timef, 0, 0, 160, "right")
+    love.graphics.printf(game.logic.tournament.timef, 0, 0, 150, "right")
 
 end
 
