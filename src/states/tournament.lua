@@ -41,9 +41,7 @@ function module:init(data)
         game.lake.height * game.view.tiles.size * scale)
 
     -- set camera lens size
-    game.lib.camera:frame(10, 10,
-        love.graphics.getWidth( ) - 200,
-        love.graphics.getHeight( ) - 42)
+    game.lib.camera:frame(6, 6, 613, 588)
 
     -- center the camera
     game.lib.camera:instant(-game.lake.width * game.view.tiles.size / 2, -game.lake.height * game.view.tiles.size / 2)
@@ -53,84 +51,31 @@ function module:init(data)
         self.borderImage = love.graphics.newImage("res/game-border.png")
     end
 
-    -- define the rod and lure buttons
-    if not self.hotspots then
+    -- define menu buttons
+    if not self.buttons then
 
-        self.hotspots = { }
+        self.buttons = { }
 
-        -- rods button
-        table.insert(self.hotspots, game.lib.hotspot:new{
-            top = 385,
-            left = 670,
-            width = 57,
-            height = 40,
-            tip = "select a rod (r)",
-            action = function() game.states:push("tackle rods") end
-        })
+        table.insert(self.buttons,
+            game.view.switch:new(640, 92, { "Outboard", "Trolling" },
+            { action = function()
+                game.logic.player:toggleTrollingMotor()
+            end }))
 
-        -- lures buttons
-        table.insert(self.hotspots, game.lib.hotspot:new{
-            top = 385,
-            left = 612,
-            width = 57,
-            height = 40,
-            tip = "select a lure (l)",
-            action = function() game.states:push("tackle lures") end
-        })
+        -- weather forecast
+        table.insert(self.buttons,
+            game.view.button:new(678, 46, "Forecast",
+            { action = function() end }))
 
-        -- map button
-        table.insert(self.hotspots, game.lib.hotspot:new{
-            top = 385,
-            left = 728,
-            width = 57,
-            height = 40,
-            tip = "view the map (m)",
-            action = function() game.states:push("map") end
-        })
+        table.insert(self.buttons,
+            game.view.button:new(625, 140, "Lures",
+            { action = function() game.states:push("tackle lures") end }))
 
-        -- trolling motor button
-        table.insert(self.hotspots, game.lib.hotspot:new{
-            top = 344,
-            left = 670,
-            width = 57,
-            height = 40,
-            tip = "use trolling motor (t)",
-            trollingButton = true,
-            action = function()
-                if not game.logic.player.trolling then
-                    game.logic.player:toggleTrollingMotor()
-                end
-                end
-        })
-
-        -- outboard motor button
-        table.insert(self.hotspots, game.lib.hotspot:new{
-            top = 344,
-            left = 728,
-            width = 57,
-            height = 40,
-            tip = "use outboard motor (t)",
-            outboardButton = true,
-            action = function()
-                if game.logic.player.trolling then
-                    game.logic.player:toggleTrollingMotor()
-                end
-                end
-        })
-
-        -- weather forecast tip
-        table.insert(self.hotspots, game.lib.hotspot:new{
-            top = 10,
-            left = 610,
-            width = 175,
-            height = 175,
-            weathertip = true,
-            action = function() end
-        })
+        table.insert(self.buttons,
+            game.view.button:new(714, 140, "Rods",
+            { action = function() game.states:push("tackle rods") end }))
 
     end
-
-
 
     -- fill the fish finder with data
     game.view.fishfinder:update()
@@ -176,6 +121,7 @@ function module:keypressed(key)
         game.states:push("top lunkers")
     elseif key == "t" then
         game.logic.player:toggleTrollingMotor()
+        self.buttons[1]:toggleSwitch()
     end
 
     -- debug shortcuts
@@ -195,17 +141,9 @@ end
 
 function module:mousemoved(x, y, dx, dy, istouch)
 
-    -- clear tips
-    self.tip = nil
-
-    -- update hotspots
-    for _, hotspot in ipairs(self.hotspots) do
-        hotspot:mousemoved(x, y, dx, dy, istouch)
-        if hotspot.touched and hotspot.weathertip then
-            self.tip = game.logic.weather.forecast
-        elseif hotspot.touched then
-            self.tip = hotspot.tip
-        end
+    -- move over buttons
+    for _, button in ipairs(self.buttons) do
+        button:mousemoved(x, y, dx, dy, istouch)
     end
 
     -- translate the point relative to the camera frame
@@ -220,11 +158,9 @@ end
 
 function module:mousepressed( x, y, button, istouch )
 
-    -- update hotspots
-    for _, hotspot in ipairs(self.hotspots) do
-        if hotspot.touched then
-            hotspot:action()
-        end
+    -- button presses
+    for _, button in ipairs(self.buttons) do
+        button:mousepressed(x, y, button, istouch)
     end
 
     -- translate the point relative to the camera frame
@@ -233,6 +169,17 @@ function module:mousepressed( x, y, button, istouch )
     if x and y then
         game.view.fishfinder:update()
         game.logic.player:cast()
+    end
+
+end
+
+function module:mousereleased(x, y, button, istouch)
+
+    for _, button in ipairs(self.buttons) do
+        button:mousereleased(x, y, button, istouch)
+        if button.hover then
+            button:action()
+        end
     end
 
 end
@@ -269,6 +216,13 @@ function module:update(dt)
     game.lib.camera:center(game.logic.player.screenX * scale, game.logic.player.screenY * scale)
     game.lib.camera:update(dt)
 
+    -- update switch buttons animations
+    for _, button in ipairs(self.buttons) do
+        if button.update then
+            button:update(dt)
+        end
+    end
+
 end
 
 function module:draw()
@@ -276,32 +230,6 @@ function module:draw()
     -- must render the map outside any transformations
     game.view.maprender:render()
     game.view.fishfinder:render()
-
-    -- draw game border
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(self.borderImage)
-
-    -- hilite over hotspots
-    for _, hotspot in ipairs(self.hotspots) do
-
-        -- hilite outboard and trolling selections
-        if hotspot.trollingButton and game.logic.player.trolling then
-            love.graphics.setColor(game.color.checked)
-            love.graphics.rectangle("fill",
-                hotspot.left, hotspot.top, hotspot.width, hotspot.height)
-
-        elseif hotspot.outboardButton and not game.logic.player.trolling then
-            love.graphics.setColor(game.color.checked)
-            love.graphics.rectangle("fill",
-                hotspot.left, hotspot.top, hotspot.width, hotspot.height)
-
-        elseif hotspot.touched and not hotspot.weathertip then
-            -- hilite rectangle (except for the weathertip hotspot)
-            love.graphics.setColor(game.color.hilite)
-            love.graphics.rectangle("fill",
-                hotspot.left, hotspot.top, hotspot.width, hotspot.height)
-        end
-    end
 
     -- pose the camera, all drawings are relative to the frame.
     game.lib.camera:pose()
@@ -322,49 +250,48 @@ function module:draw()
 
     game.lib.camera:relax()
 
+    -- draw game border
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(self.borderImage)
+
     -- fish finder
     love.graphics.push()
-    love.graphics.translate(628, 434)
+    love.graphics.translate(634, 433)
     game.view.fishfinder:draw()
     love.graphics.pop()
 
     if not self.practice then
         love.graphics.push()
-        love.graphics.translate(620, 14)
+        love.graphics.translate(627, 16)
         game.view.clock:draw()
         love.graphics.pop()
     end
 
     love.graphics.push()
-    love.graphics.translate(612, 10)
+    love.graphics.translate(622, 32)
     game.view.weather:draw()
     love.graphics.pop()
 
-    if self.tip then
+    if game.logic.player.speed > 0 and not game.logic.player.trolling then
         love.graphics.push()
         love.graphics.translate(10, 570)
-        love.graphics.setColor(game.color.base2)
-        love.graphics.setFont(game.fonts.small)
-        love.graphics.print(self.tip, 0, 0)
+        game.view.player.printBoatSpeed()
         love.graphics.pop()
     else
-        if game.logic.player.speed > 0 and not game.logic.player.trolling then
-            love.graphics.push()
-            love.graphics.translate(10, 570)
-            game.view.player.printBoatSpeed()
-            love.graphics.pop()
-        else
-            love.graphics.push()
-            love.graphics.translate(10, 570)
-            game.view.player:drawRodDetails()
-            love.graphics.pop()
-        end
+        love.graphics.push()
+        love.graphics.translate(20, 570)
+        game.view.player:drawRodDetails()
+        love.graphics.pop()
     end
 
     love.graphics.push()
     love.graphics.translate(620, 188)
     game.view.livewell:draw()
     love.graphics.pop()
+
+    for _, button in ipairs(self.buttons) do
+        button:draw()
+    end
 
 end
 

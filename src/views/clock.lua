@@ -23,7 +23,7 @@ local module = { }
 function module:draw()
 
     -- print day and time
-    love.graphics.setColor(game.color.base1)
+    love.graphics.setColor(game.color.white)
     love.graphics.setFont(game.fonts.small)
     love.graphics.print(string.format("Day %d", game.logic.tournament.day), 0, 0)
     love.graphics.printf(game.logic.tournament.timef, 0, 0, 160, "right")

@@ -25,21 +25,21 @@ function module:draw()
     -- TODO: hover over tips (a cold front is approaching etc)
 
     local weather = game.logic.weather
-    love.graphics.push()
-    love.graphics.setFont(game.fonts.medium)
-    love.graphics.setColor(game.color.base1)
+    --love.graphics.push()
+    --love.graphics.setFont(game.fonts.medium)
+    --love.graphics.setColor(game.color.base1)
 
-    -- print temp
-    love.graphics.draw(self.icons.image, self.icons.smallthermometer, 0, 86)
-    love.graphics.print(game.lib.convert:temp(weather.airTemperature), 40, 86)
+    ---- print temp
+    --love.graphics.draw(self.icons.image, self.icons.smallthermometer, 0, 86)
+    --love.graphics.print(game.lib.convert:temp(weather.airTemperature), 40, 86)
 
-    -- print cloud cover
-    love.graphics.draw(self.icons.image, self.icons.smallcloud, 0, 116)
-    love.graphics.print(string.format("%d%%", weather.cloudcover), 40, 116)
+    ---- print cloud cover
+    --love.graphics.draw(self.icons.image, self.icons.smallcloud, 0, 116)
+    --love.graphics.print(string.format("%d%%", weather.cloudcover), 40, 116)
 
-    -- print wind
-    love.graphics.draw(self.icons.image, self.icons.smallwind, 0, 146)
-    love.graphics.print(string.format("%s %s", game.lib.convert:speed(weather.windSpeed), weather.windDirection), 40, 146)
+    ---- print wind
+    --love.graphics.draw(self.icons.image, self.icons.smallwind, 0, 146)
+    --love.graphics.print(string.format("%s %s", game.lib.convert:speed(weather.windSpeed), weather.windDirection), 40, 146)
 
     -- the weather icon priority is:
     -- approaching cold fronts
@@ -69,9 +69,9 @@ function module:draw()
         icon = self.icons.overcast
     end
 
-    love.graphics.draw(self.icons.image, icon, 60, 30)
+    love.graphics.draw(self.icons.image, icon, 0, 0, 0, .9, .9)
 
-    love.graphics.pop()
+    --love.graphics.pop()
 
 end
 

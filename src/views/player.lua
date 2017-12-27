@@ -87,7 +87,7 @@ end
 function module:drawRodDetails()
 
     love.graphics.setFont(game.fonts.small)
-    love.graphics.setColor(game.color.base1)
+    love.graphics.setColor(game.color.white)
 
     if game.logic.player.rod then
 
