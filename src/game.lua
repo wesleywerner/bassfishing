@@ -24,7 +24,7 @@ local module = { }
 module.version = "1"
 
 -- enable debug printing
-module.debug = false
+module.debug = true
 module.dprint = function(...) if module.debug then print(...) end end
 
 -- global defaults
@@ -94,6 +94,8 @@ module.view.weather = require("views.weather-display")
 module.view.livewell = require("views.livewell")
 module.view.clock = require("views.clock")
 module.view.screentransition = require("views.screen-transition")
+module.view.button = require("views.button")
+module.view.switch = require("views.switch")
 
 -- libraries
 module.lib.camera = require("libs.harness.camera")
