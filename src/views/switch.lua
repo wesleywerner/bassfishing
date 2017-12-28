@@ -91,6 +91,10 @@ function module_mt:toggleSwitch()
         self.tween = game.lib.tween.new(.3, self, { scale=0 })
     end
 
+    if self.callback then
+        self.callback(self)
+    end
+
 end
 
 function module:new(left, top, options, data)
@@ -122,8 +126,12 @@ function module:new(left, top, options, data)
     instance.width = edgeWidth + switchWidth + edgeWidth + tw
     instance.height = buttonHeight
 
-    for k, v in pairs(data) do
-        instance[k] = v
+    if type(data) == "table" then
+        for k, v in pairs(data) do
+            instance[k] = v
+        end
+    elseif type(data) == "function" then
+        instance.callback = data
     end
 
     local renderButton = function(leftQuad, fillQuad, rightQuad)
