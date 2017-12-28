@@ -26,15 +26,23 @@ function module_mt:draw()
         love.graphics.draw(self.image, self.left, self.top)
     end
 
-    if self.selected == 1 then
-        love.graphics.draw(self.switchImage, self.switchLeft, self.top)
-        love.graphics.print(self.options[1], self.option1Left, self.option1Top)
-        --love.graphics.draw(self.option1, self.option1Left, self.top)
-    else
-        love.graphics.draw(self.switchImage, self.switchLeft, self.top)
-        love.graphics.print(self.options[2], self.option2Left, self.option1Top)
-        --love.graphics.draw(self.option2, self.option2Left, self.top)
-    end
+    -- switch button
+    love.graphics.draw(self.switchImage,
+        self.left + (self.scale * (self.width - self.switchWidth)), self.top)
+
+    -- limit text printing to this control
+    love.graphics.setScissor(self.left, self.top, self.width, self.height)
+
+    -- print option 1 text
+    love.graphics.print(self.options[1],
+        self.option1Left + (self.width * self.scale), self.option1Top)
+
+    -- print option 2 text
+    love.graphics.print(self.options[2],
+        self.option2Left - (self.width * (1 - self.scale)), self.option1Top)
+
+    -- clear scissor
+    love.graphics.setScissor()
 
     love.graphics.pop()
 
@@ -77,10 +85,10 @@ function module_mt:toggleSwitch()
 
     if self.selected == 1 then
         self.selected = 2
-        self.tween = game.lib.tween.new(.3, self, { switchLeft=self.switch2Left})
+        self.tween = game.lib.tween.new(.3, self, { scale=1 })
     else
         self.selected = 1
-        self.tween = game.lib.tween.new(.3, self, { switchLeft=self.switch1Left})
+        self.tween = game.lib.tween.new(.3, self, { scale=0 })
     end
 
 end
@@ -181,6 +189,7 @@ function module:new(left, top, options, data)
     instance.switch1Left = instance.left
     instance.switch2Left = instance.left + instance.width - instance.switchWidth
     instance.switchLeft = instance.switch1Left
+    instance.scale = 0
 
     instance.option1Left = instance.left + instance.switchWidth + (instance.switchWidth / 2)
     instance.option2Left = instance.left + (instance.switchWidth / 2)
