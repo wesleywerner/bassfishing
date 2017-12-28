@@ -1,5 +1,5 @@
 --[[
-   array2d.lua
+   states.lua
 
    Copyright 2017 wesley werner <wesley.werner@gmail.com>
 
@@ -20,7 +20,6 @@
 
 --- Provides a simple state manager.
 -- @module states
-
 
 local module = {}
 
@@ -85,11 +84,6 @@ function module:pop()
         table.remove(self.stack)
     end
 
-    -- nothing left to do
-    if #self.stack == 0 then
-        love.event.quit()
-    end
-
 end
 
 function module:initCurrent()
@@ -101,11 +95,16 @@ function module:initCurrent()
 
 end
 
-
-
 -- hook into love events
 function module:update(dt)
-    self:get().object:update(dt)
+
+    -- nothing left to do
+    if #self.stack == 0 then
+        love.event.quit()
+    else
+        self:get().object:update(dt)
+    end
+
 end
 
 function module:keypressed(key)
