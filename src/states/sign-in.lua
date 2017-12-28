@@ -170,28 +170,6 @@ end
 function module:mousereleased(x, y, button, istouch)
 
     self:selectFocused()
-    for i, angler in ipairs(self.anglers) do
-
-        if angler.focus then
-            if angler.addNew then
-                -- new angler
-                game.states:push("text entry", {
-                    text="",
-                    title="Angler's name:",
-                    callback=function(text)
-                        self:newAnglerInput(text)
-                    end
-                    })
-            else
-                game.dprint(string.format("\nselected angler %q", angler.name))
-                game.logic.stats:load(angler.name)
-                game.logic.player.name = game.logic.stats.data.name
-                self.transition:close(1, "inBack")
-            end
-        end
-
-    end
-
 end
 
 function module:update(dt)
@@ -274,7 +252,7 @@ function module:selectFocused()
 
     for i, angler in ipairs(self.anglers) do
 
-        if angler.focus then
+        if angler.focus or i == self.keyfocus then
             if angler.addNew then
                 -- new angler
                 game.states:push("text entry", {
