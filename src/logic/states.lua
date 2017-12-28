@@ -144,6 +144,7 @@ function module:wheelmoved(x, y)
 end
 
 function module:draw()
+    if #self.stack == 0 then return end
     self:get().object:draw()
 end
 
