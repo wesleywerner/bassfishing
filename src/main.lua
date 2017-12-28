@@ -46,6 +46,8 @@ function love.load()
     love.window.setMode(game.window.width, game.window.height)
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
 
+    game.logic.anglers:load()
+    game.states:add("sign-in", require("states.sign-in"))
     game.states:add("main menu", require("states.main-menu"))
     game.states:add("tournament", require("states.tournament"))
     game.states:add("messagebox", require("states.messagebox"))

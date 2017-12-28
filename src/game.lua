@@ -81,6 +81,8 @@ module.logic.tournament = require("logic.tournament")
 module.logic.tackle = require("logic.tackle")
 module.logic.toplunkers = require("logic.top-lunkers")
 module.logic.pickle = require("logic.pickle")
+module.logic.anglers = require("logic.anglers")
+module.logic.stats = require("logic.stats")
 
 -- view modules
 module.view.messages = require("views.messages")
