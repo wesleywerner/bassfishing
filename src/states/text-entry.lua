@@ -19,13 +19,34 @@
 
 ]]--
 
+--- Provides a text input state.
+-- @module text-entry
+
 local module = { }
 
+--- Initialize the text entry state.
+--
+-- @tparam init_data data
 function module:init(data)
+
+    --- state initialization data
+    --
+    -- @table init_data
+    --
+    -- @tfield function callback
+    -- The callback function when input is accepted.
+    -- Receives the input text as first parameter.
+    --
+    -- @tfield[opt] string title
+    -- The title to display on the text entry.
+    --
+    -- @tfield[opt] string text
+    -- The default text for the input operation.
 
     -- expect data to contain a callback on successful input
     self.callback = data.callback
-    self.text = data.text
+    self.title = data.title
+    self.text = data.text or ""
     self.alphabet = "abcdefghijklmnopqrstuvwxyz"
 
     self.width = love.graphics.getWidth()
@@ -36,6 +57,8 @@ function module:init(data)
     self.frameHeight = self.height * 0.4
     self.textLeft = self.frameLeft + 100
     self.textTop = self.frameTop + 100
+    self.titleLeft = self.frameLeft + 40
+    self.titleTop = self.frameTop + 40
 
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
@@ -115,6 +138,12 @@ function module:draw()
     love.graphics.setColor(game.color.base2)
     love.graphics.rectangle("fill", self.frameLeft, self.frameTop,
         self.frameWidth, self.frameHeight)
+
+    -- print title
+    if self.title then
+        love.graphics.setColor(game.color.base01)
+        love.graphics.print(self.title, self.titleLeft, self.titleTop)
+    end
 
     -- print text
     love.graphics.setColor(game.color.base01)
