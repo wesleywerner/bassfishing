@@ -52,6 +52,9 @@ function module:init(data)
     self:loadAnglers()
     self:buildButtons()
 
+    -- flags when an angler was selected
+    self.anglerSelected = false
+
 end
 
 function module:loadAnglers()
@@ -63,6 +66,10 @@ function module:loadAnglers()
     end
 
     table.insert(self.anglers, { name="New Angler", icon=1, addNew=true })
+
+    -- keyboard navigation focus
+    self.keyfocus = 1
+    self.anglers[self.keyfocus].focus = true
 
 end
 
@@ -124,9 +131,15 @@ end
 function module:keypressed(key)
 
     if key == "escape" then
-
         self.transition:close(1, "inBack")
-
+    elseif key == "left" then
+        self.keyfocus = math.max(1, self.keyfocus - 1)
+        self:updateFocus()
+    elseif key == "right" then
+        self.keyfocus = math.min(#self.anglers, self.keyfocus + 1)
+        self:updateFocus()
+    elseif key == "return" then
+        self:selectFocused()
     end
 
 end
@@ -134,12 +147,17 @@ end
 function module:mousemoved(x, y, dx, dy, istouch)
 
     -- focus angler buttons
-    for _, angler in ipairs(self.anglers) do
+    for i, angler in ipairs(self.anglers) do
 
         -- focus
         local hitX = x > angler.left and x < angler.hitX
         local hitY = y > angler.top and y < angler.hitY
         angler.focus = hitX and hitY
+
+        -- sync keyboard focus
+        if angler.focus then
+            self.keyfocus = i
+        end
 
     end
 
@@ -151,7 +169,7 @@ end
 
 function module:mousereleased(x, y, button, istouch)
 
-    -- focus angler buttons
+    self:selectFocused()
     for i, angler in ipairs(self.anglers) do
 
         if angler.focus then
@@ -183,10 +201,15 @@ function module:update(dt)
     self.transition:update(math.min(0.02, dt))
 
     if self.transition.isClosed then
+
         -- close this sign-in state
         game.states:pop()
+
         -- begin the menu state
-        game.states:push("main menu")
+        if self.anglerSelected then
+            game.states:push("main menu")
+        end
+
     end
 
 end
@@ -222,7 +245,7 @@ function module:draw()
         love.graphics.draw(self.icons, angler.quad, angler.left, angler.top)
 
         -- focus
-        if angler.focus then
+        if angler.focus or i == self.keyfocus then
             love.graphics.setColor(game.color.blue)
         else
             love.graphics.setColor(game.color.base2)
@@ -236,6 +259,41 @@ function module:draw()
 
     -- restore state
     love.graphics.pop()
+
+end
+
+function module:updateFocus()
+
+    for i, angler in ipairs(self.anglers) do
+        angler.focus = i == self.keyfocus
+    end
+
+end
+
+function module:selectFocused()
+
+    for i, angler in ipairs(self.anglers) do
+
+        if angler.focus then
+            if angler.addNew then
+                -- new angler
+                game.states:push("text entry", {
+                    text="",
+                    title="Angler's name:",
+                    callback=function(text)
+                        self:newAnglerInput(text)
+                    end
+                    })
+            else
+                game.dprint(string.format("\nselected angler %q", angler.name))
+                game.logic.stats:load(angler.name)
+                game.logic.player.name = game.logic.stats.data.name
+                self.anglerSelected = true
+                self.transition:close(1, "inBack")
+            end
+        end
+
+    end
 
 end
 
