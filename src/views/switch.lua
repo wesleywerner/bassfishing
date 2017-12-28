@@ -148,19 +148,7 @@ function module:new(left, top, options, data)
 
     end
 
-    --local renderOption = function(text)
-
-        --local canvas = love.graphics.newCanvas(instance.width)
-        --love.graphics.setCanvas(canvas)
-
-        ---- text
-        --love.graphics.printf(text, 0, math.ceil((h-th)/2), tw, "center")
-
-        --love.graphics.setCanvas()
-        --return canvas
-
-    --end
-
+    -- helper function to extract the switch button from the image map
     local extractSwitch = function(quad)
         local canvas = love.graphics.newCanvas(switchWidth)
         love.graphics.setCanvas(canvas)
@@ -169,7 +157,7 @@ function module:new(left, top, options, data)
         return canvas
     end
 
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(game.color.white)
 
     local normLeftQuad = love.graphics.newQuad(75, 0, edgeWidth, buttonHeight, w, h)
     local normFillQuad = love.graphics.newQuad(91, 0, 1, buttonHeight, w, h)
@@ -180,23 +168,21 @@ function module:new(left, top, options, data)
     local downLeftQuad = love.graphics.newQuad(110, 0, edgeWidth, buttonHeight, w, h)
     local downFillQuad = love.graphics.newQuad(126, 0, 1, buttonHeight, w, h)
     local downRightQuad = love.graphics.newQuad(128, 0, edgeWidth, buttonHeight, w, h)
-    --local downSwitchQuad = love.graphics.newQuad(181, 0, 30, buttonHeight, w, h)
     instance.downimage = renderButton(downLeftQuad, downFillQuad, downRightQuad)
-
-    --instance.option1 = renderOption(options[1])
-    --instance.option2 = renderOption(options[2])
 
     instance.switch1Left = instance.left
     instance.switch2Left = instance.left + instance.width - instance.switchWidth
-    instance.switchLeft = instance.switch1Left
     instance.scale = 0
 
+    -- calculate position of option texts
     instance.option1Left = instance.left + instance.switchWidth + (instance.switchWidth / 2)
     instance.option2Left = instance.left + (instance.switchWidth / 2)
+
+    -- center text vertically
     instance.option1Top = instance.top + math.ceil((h-th)/2)
 
+    -- store switch button image on the object
     instance.switchImage = extractSwitch(normSwitchQuad)
-    instance.switchQuad = normSwitchQuad
 
     return instance
 
