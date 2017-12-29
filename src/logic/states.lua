@@ -88,10 +88,9 @@ end
 
 function module:initCurrent()
 
-    if #self.stack > 0 then
-        local item = self:get()
-        item.object:init(item.data)
-    end
+    if #self.stack == 0 then return end
+    local item = self:get()
+    item.object:init(item.data)
 
 end
 
@@ -108,6 +107,7 @@ function module:update(dt)
 end
 
 function module:keypressed(key)
+    if #self.stack == 0 then return end
     local object = self:get().object
     if object.keypressed then
         self:get().object:keypressed(key)
@@ -115,6 +115,7 @@ function module:keypressed(key)
 end
 
 function module:mousemoved( x, y, dx, dy, istouch )
+    if #self.stack == 0 then return end
     local object = self:get().object
     if object.mousemoved then
         self:get().object:mousemoved( x, y, dx, dy, istouch )
@@ -122,6 +123,7 @@ function module:mousemoved( x, y, dx, dy, istouch )
 end
 
 function module:mousepressed( x, y, button, istouch )
+    if #self.stack == 0 then return end
     local object = self:get().object
     if object.mousepressed then
         object:mousepressed( x, y, button, istouch )
@@ -129,6 +131,7 @@ function module:mousepressed( x, y, button, istouch )
 end
 
 function module:mousereleased(x, y, button, istouch)
+    if #self.stack == 0 then return end
     local object = self:get().object
     if object.mousereleased then
         object:mousereleased(x, y, button, istouch)
@@ -136,6 +139,7 @@ function module:mousereleased(x, y, button, istouch)
 end
 
 function module:wheelmoved(x, y)
+    if #self.stack == 0 then return end
     local object = self:get().object
     if object.wheelmoved then
         object:wheelmoved(x, y)
