@@ -30,8 +30,12 @@ function module_mt:draw()
     love.graphics.draw(self.switchImage,
         self.left + (self.scale * (self.width - self.switchWidth)), self.top)
 
-    -- limit text printing to this control
-    love.graphics.setScissor(self.left, self.top, self.width, self.height)
+    -- limit printing to this control
+    local function myStencilFunction()
+       love.graphics.rectangle("fill", self.left, self.top, self.width, self.height)
+    end
+    love.graphics.stencil(myStencilFunction, "replace", 1)
+    love.graphics.setStencilTest("greater", 0)
 
     -- print option 1 text
     love.graphics.print(self.options[1],
@@ -41,8 +45,8 @@ function module_mt:draw()
     love.graphics.print(self.options[2],
         self.option2Left - (self.width * (1 - self.scale)), self.option1Top)
 
-    -- clear scissor
-    love.graphics.setScissor()
+    -- remove print limit
+    love.graphics.setStencilTest()
 
     love.graphics.pop()
 
