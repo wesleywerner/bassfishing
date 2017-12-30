@@ -177,7 +177,7 @@ end
 function module:mousepressed(x, y, button, istouch)
 
     for _, hotspot in ipairs(self.hotspots) do
-        if hotspot.touched then
+        if hotspot.focused then
             if hotspot.page then
                 self.panel:scrollTo(hotspot.page)
             else
@@ -253,7 +253,7 @@ function module:draw()
     love.graphics.setFont(game.fonts.medium)
     for _, hotspot in ipairs(self.hotspots) do
 
-        if hotspot.touched or self.panel.page == hotspot.page then
+        if hotspot.focused or self.panel.page == hotspot.page then
             -- focus hilite
             love.graphics.setColor(game.color.magenta)
             love.graphics.rectangle("fill", hotspot.left, hotspot.top,
