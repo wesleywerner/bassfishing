@@ -34,12 +34,7 @@ quad.switch = { }
 quad.switch.left = love.graphics.newQuad(75, 0, 15, 32, imw, imh)
 quad.switch.fill = love.graphics.newQuad(91, 0, 1, 32, imw, imh)
 quad.switch.right = love.graphics.newQuad(93, 0, 15, 32, imw, imh)
-
--- define the quads that make up the switch parts
---local switchLeftQuad = love.graphics.newQuad(0, 0, 15, 32, imw, imh)
---local switchRightQuad = love.graphics.newQuad(18, 0, 15, 32, imw, imh)
---local switchFillQuad = love.graphics.newQuad(16, 0, 1, 32, imw, imh)
-local switchQuad = love.graphics.newQuad(181, 0, 30, 32, imw, imh)
+quad.switch.button = love.graphics.newQuad(181, 0, 30, 32, imw, imh)
 
 -- a nice lerping function
 local function lerp(a, b, amt)
@@ -141,13 +136,29 @@ function module.drawSwitch(btn)
     -- draw right corner (right of bounds)
     love.graphics.draw(image, quad.switch.right, btn.width, 0)
 
-    -- draw the switch position, lerped by "a" and "b" via "dt"
-    local switchX = lerp(btn.a, btn.b, btn.dt) * (btn.width) - 15
-    love.graphics.draw(image, switchQuad, switchX, 0)
+    -- draw the switch button, lerped by "a" and "b" via "dt"
+    local lerpX = lerp(btn.a, btn.b, btn.dt)
+    local switchX = lerpX * (btn.width) - 15
+    love.graphics.draw(image, quad.switch.button, switchX, 0)
 
-    -- print text
-    -- TODO: copy the sliding text from switch.lua
-    love.graphics.printf(btn.options[btn.value], 0, btn.textY, btn.width, "center")
+    -- print the switch text.
+    -- clamp printing to the switch bounds
+    local function myStencilFunction()
+       love.graphics.rectangle("fill", 0, 0, btn.width, btn.height)
+    end
+    love.graphics.stencil(myStencilFunction, "replace", 1)
+    love.graphics.setStencilTest("greater", 0)
+
+    -- print option 1 text
+    love.graphics.print(btn.options[1],
+        (btn.width * lerpX), btn.textY)
+
+    -- print option 2 text
+    love.graphics.print(btn.options[2],
+        - (btn.width * (1 - lerpX)), btn.textY)
+
+    -- remove print limit
+    love.graphics.setStencilTest()
 
     -- restore graphics state
     love.graphics.pop()
