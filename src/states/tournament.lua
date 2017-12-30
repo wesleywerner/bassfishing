@@ -54,31 +54,48 @@ function module:init(data)
         self.borderImage = love.graphics.newImage("res/game-border.png")
     end
 
-    -- define menu buttons
-    if not self.buttons then
+    -- set up the buttons
+    game.lib.widgetCollection:clear()
 
-        self.buttons = { }
+    game.lib.widgetCollection:button("forecast", {
+        left = 678,
+        top = 46,
+        text = "Forecast",
+        draw = game.view.ui.drawButton,
+        callback = function(btn)
+            end
+    })
 
-        table.insert(self.buttons,
-            game.view.switch:new(640, 92, { "Outboard", "Trolling" },
-            { action = function()
-                game.logic.player:toggleTrollingMotor()
-            end }))
+    local motorswitch = game.lib.widgetCollection:button("motor", {
+        left = 640,
+        top = 92,
+        text = "motor",
+        draw = game.view.ui.drawButton,
+        callback = function(btn)
+            end
+    })
 
-        -- weather forecast
-        table.insert(self.buttons,
-            game.view.button:new(678, 46, "Forecast",
-            { action = function() end }))
+    game.view.ui:setSwitch(motorswitch, {"Outboard", "Trolling"})
 
-        table.insert(self.buttons,
-            game.view.button:new(625, 140, "Lures",
-            { action = function() game.states:push("tackle lures") end }))
+    game.lib.widgetCollection:button("lures", {
+        left = 625,
+        top = 140,
+        text = "Lures",
+        draw = game.view.ui.drawButton,
+        callback = function(btn)
+            game.states:push("tackle lures")
+            end
+    })
 
-        table.insert(self.buttons,
-            game.view.button:new(722, 140, "Rods",
-            { action = function() game.states:push("tackle rods") end }))
-
-    end
+    game.lib.widgetCollection:button("rods", {
+        left = 722,
+        top = 140,
+        text = "Rods",
+        draw = game.view.ui.drawButton,
+        callback = function(btn)
+            game.states:push("tackle rods")
+            end
+    })
 
     -- fill the fish finder with data
     game.view.fishfinder:update()
@@ -124,7 +141,7 @@ function module:keypressed(key)
         game.states:push("top lunkers")
     elseif key == "t" then
         game.logic.player:toggleTrollingMotor()
-        self.buttons[1]:toggleSwitch()
+        --self.buttons[1]:toggleSwitch()
     end
 
     -- debug shortcuts
@@ -145,9 +162,7 @@ end
 function module:mousemoved(x, y, dx, dy, istouch)
 
     -- move over buttons
-    for _, button in ipairs(self.buttons) do
-        button:mousemoved(x, y, dx, dy, istouch)
-    end
+    game.lib.widgetCollection:mousemoved(x, y, dx, dy, istouch)
 
     -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
@@ -159,12 +174,10 @@ function module:mousemoved(x, y, dx, dy, istouch)
 
 end
 
-function module:mousepressed( x, y, button, istouch )
+function module:mousepressed(x, y, button, istouch)
 
-    -- button presses
-    for _, button in ipairs(self.buttons) do
-        button:mousepressed(x, y, button, istouch)
-    end
+    -- press on buttons
+    game.lib.widgetCollection:mousepressed(x, y, button, istouch)
 
     -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
@@ -178,12 +191,8 @@ end
 
 function module:mousereleased(x, y, button, istouch)
 
-    for _, button in ipairs(self.buttons) do
-        button:mousereleased(x, y, button, istouch)
-        if button.hover then
-            button:action()
-        end
-    end
+    -- release over buttons
+    game.lib.widgetCollection:mousereleased(x, y, button, istouch)
 
 end
 
@@ -214,17 +223,13 @@ function module:update(dt)
 
     game.logic.player:update(dt)
 
+    -- update buttons
+    game.lib.widgetCollection:update(dt)
+
     if drawDebug then game.logic.fish:update(dt) end
 
     game.lib.camera:center(game.logic.player.screenX * scale, game.logic.player.screenY * scale)
     game.lib.camera:update(dt)
-
-    -- update switch buttons animations
-    for _, button in ipairs(self.buttons) do
-        if button.update then
-            button:update(dt)
-        end
-    end
 
 end
 
@@ -256,6 +261,9 @@ function module:draw()
     -- draw game border
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.borderImage)
+
+    -- draw buttons
+    game.lib.widgetCollection:draw()
 
     -- fish finder
     love.graphics.push()
@@ -293,9 +301,6 @@ function module:draw()
     love.graphics.pop()
 
     -- draw buttons
-    for _, button in ipairs(self.buttons) do
-        button:draw()
-    end
 
     -- draw mini map
     love.graphics.push()
