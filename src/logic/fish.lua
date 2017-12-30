@@ -217,6 +217,11 @@ end
 
 function module:findPathToFeed(fish)
 
+    if #fish.feedingZones == 0 then
+        game.dprint(string.format("warning: fish %d/%d has no feeding zones", fish.x, fish.y))
+        return
+    end
+
     fish.pathNumber = math.random(1, #fish.feedingZones)
     fish.path = { }
 
@@ -227,6 +232,11 @@ function module:findPathToFeed(fish)
 end
 
 function module:findPathToHome(fish)
+
+    if #fish.feedingZones == 0 then
+        game.dprint(string.format("warning: fish %d/%d has no feeding zones", fish.x, fish.y))
+        return
+    end
 
     fish.path = { }
 

@@ -257,7 +257,7 @@ function module:spawnFishFeedingZones(data, x, y)
     local numberOfFeedingZones = 3
 
     -- the maximum distance a fish will travel to a feeding zone (in map coordinates)
-    local maxFeedingZoneDistance = 10
+    local maxFeedingZoneDistance = 15
 
     -- stores the list of paths to feeding zones
     local listOfPaths = { }
@@ -302,21 +302,30 @@ function module:spawnFishFeedingZones(data, x, y)
         local id = math.random(1, #nearbyPlants)
         local plantPoint = table.remove(nearbyPlants, id)
 
-        -- get a path to this point
-        local start = { x = x, y = y }
-        local goal = { x = plantPoint.x, y = plantPoint.y }
-        local path = game.lib.luastar:find( data.width, data.height, start, goal, getMapPositionOpen, false)
-
-        -- the path length must be within range.
-        -- a plant can be nearby on the map, but could be seperated by a land mass
-        -- so we have to ensure a fish won't travel too far to get to it.
-        if #path <= maxFeedingZoneDistance then
-            table.insert( listOfPaths, path )
-        end
-
-        -- stop when we have enough paths, or if we run out of points to test
-        if #listOfPaths == numberOfFeedingZones or #nearbyPlants == 0 then
+        if not plantPoint then
             done = true
+            if #listOfPaths == 0 then
+                game.dprint(string.format("warning: no nearby feeding zones found at map %d/%d", x, y))
+            end
+        else
+
+            -- get a path to this point
+            local start = { x = x, y = y }
+            local goal = { x = plantPoint.x, y = plantPoint.y }
+            local path = game.lib.luastar:find( data.width, data.height, start, goal, getMapPositionOpen, false)
+
+            -- the path length must be within range.
+            -- a plant can be nearby on the map, but could be seperated by a land mass
+            -- so we have to ensure a fish won't travel too far to get to it.
+            if #path <= maxFeedingZoneDistance then
+                table.insert( listOfPaths, path )
+            end
+
+            -- stop when we have enough paths, or if we run out of points to test
+            if #listOfPaths == numberOfFeedingZones or #nearbyPlants == 0 then
+                done = true
+            end
+
         end
 
     end
