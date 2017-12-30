@@ -72,6 +72,7 @@ function module:init(data)
         text = "motor",
         draw = game.view.ui.drawButton,
         callback = function(btn)
+            game.logic.player:toggleTrollingMotor()
             end
     })
 
@@ -140,8 +141,7 @@ function module:keypressed(key)
     elseif key == "f8" then
         game.states:push("top lunkers")
     elseif key == "t" then
-        game.logic.player:toggleTrollingMotor()
-        --self.buttons[1]:toggleSwitch()
+        game.lib.widgetCollection:get("motor"):callback()
     end
 
     -- debug shortcuts
