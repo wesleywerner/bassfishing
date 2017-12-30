@@ -57,46 +57,51 @@ function module:init(data)
     -- set up the buttons
     game.lib.widgetCollection:clear()
 
-    game.lib.widgetCollection:button("forecast", {
-        left = 678,
-        top = 46,
-        text = "Forecast",
-        draw = game.view.ui.drawButton,
-        callback = function(btn)
-            end
-    })
+    game.view.ui:setButton(
+        game.lib.widgetCollection:button("forecast", {
+            left = 678,
+            top = 46,
+            text = "Forecast",
+            draw = game.view.ui.drawButton,
+            callback = function(btn)
+                end
+        })
+    )
 
-    local motorswitch = game.lib.widgetCollection:button("motor", {
-        left = 640,
-        top = 92,
-        text = "motor",
-        draw = game.view.ui.drawButton,
-        callback = function(btn)
-            game.logic.player:toggleTrollingMotor()
-            end
-    })
+    game.view.ui:setSwitch(
+        game.lib.widgetCollection:button("motor", {
+            left = 640,
+            top = 92,
+            text = "motor",
+            draw = game.view.ui.drawButton,
+            callback = function(btn)
+                game.logic.player:toggleTrollingMotor()
+                end
+        }), {"Outboard", "Trolling"})
 
-    game.view.ui:setSwitch(motorswitch, {"Outboard", "Trolling"})
+    game.view.ui:setButton(
+        game.lib.widgetCollection:button("lures", {
+            left = 625,
+            top = 140,
+            text = "Lures",
+            draw = game.view.ui.drawButton,
+            callback = function(btn)
+                game.states:push("tackle lures")
+                end
+        })
+    )
 
-    game.lib.widgetCollection:button("lures", {
-        left = 625,
-        top = 140,
-        text = "Lures",
-        draw = game.view.ui.drawButton,
-        callback = function(btn)
-            game.states:push("tackle lures")
-            end
-    })
-
-    game.lib.widgetCollection:button("rods", {
-        left = 722,
-        top = 140,
-        text = "Rods",
-        draw = game.view.ui.drawButton,
-        callback = function(btn)
-            game.states:push("tackle rods")
-            end
-    })
+    game.view.ui:setButton(
+        game.lib.widgetCollection:button("rods", {
+            left = 722,
+            top = 140,
+            text = "Rods",
+            draw = game.view.ui.drawButton,
+            callback = function(btn)
+                game.states:push("tackle rods")
+                end
+        })
+    )
 
     -- fill the fish finder with data
     game.view.fishfinder:update()

@@ -26,9 +26,14 @@ local image = love.graphics.newImage("res/button.png")
 local imw, imh = image:getDimensions()
 
 -- define the quads that make up the button parts
-local leftQuad = love.graphics.newQuad(0, 0, 15, 32, imw, imh)
-local rightQuad = love.graphics.newQuad(18, 0, 15, 32, imw, imh)
-local fillQuad = love.graphics.newQuad(16, 0, 1, 32, imw, imh)
+local quad = { }
+quad.left = love.graphics.newQuad(0, 0, 15, 32, imw, imh)
+quad.right = love.graphics.newQuad(18, 0, 15, 32, imw, imh)
+quad.fill = love.graphics.newQuad(16, 0, 1, 32, imw, imh)
+quad.switch = { }
+quad.switch.left = love.graphics.newQuad(75, 0, 15, 32, imw, imh)
+quad.switch.fill = love.graphics.newQuad(91, 0, 1, 32, imw, imh)
+quad.switch.right = love.graphics.newQuad(93, 0, 15, 32, imw, imh)
 
 -- define the quads that make up the switch parts
 --local switchLeftQuad = love.graphics.newQuad(0, 0, 15, 32, imw, imh)
@@ -49,6 +54,16 @@ function module.drawButton(btn)
     -- it is worth noting the round corners are draw outside
     -- the button's bounds.
 
+    -- pre-render the fill to canvas
+    if not btn.fillimage then
+        btn.fillimage = love.graphics.newCanvas(btn.width, imh)
+        love.graphics.setCanvas(btn.fillimage)
+        for n=0, btn.width do
+            love.graphics.draw(image, quad.fill, n, 0)
+        end
+        love.graphics.setCanvas()
+    end
+
     -- save graphics state
     love.graphics.push()
 
@@ -68,18 +83,16 @@ function module.drawButton(btn)
     end
 
     -- draw left corner (left of bounds)
-    love.graphics.draw(image, leftQuad, -15, 0)
+    love.graphics.draw(image, quad.left, -15, 0)
 
     -- draw fill
-    for n=0, btn.width do
-        love.graphics.draw(image, fillQuad, n, 0)
-    end
+    love.graphics.draw(btn.fillimage, 0, 0)
 
     -- draw right corner (right of bounds)
-    love.graphics.draw(image, rightQuad, btn.width, 0)
+    love.graphics.draw(image, quad.right, btn.width, 0)
 
     -- print text
-    love.graphics.print(btn.text)
+    love.graphics.print(btn.text, 0, btn.textY)
 
     -- restore graphics state
     love.graphics.pop()
@@ -92,6 +105,16 @@ function module.drawSwitch(btn)
     -- a better way is to pre-render this to canvas.
     -- it is worth noting the round corners are draw outside
     -- the button's bounds.
+
+    -- pre-render the fill to canvas
+    if not btn.fillimage then
+        btn.fillimage = love.graphics.newCanvas(btn.width, imh)
+        love.graphics.setCanvas(btn.fillimage)
+        for n=0, btn.width do
+            love.graphics.draw(image, quad.switch.fill, n, 0)
+        end
+        love.graphics.setCanvas()
+    end
 
     -- save graphics state
     love.graphics.push()
@@ -110,30 +133,52 @@ function module.drawSwitch(btn)
     end
 
     -- draw left corner (left of bounds)
-    love.graphics.draw(image, leftQuad, -15, 0)
+    love.graphics.draw(image, quad.switch.left, -15, 0)
 
     -- draw fill
-    for n=0, btn.width do
-        love.graphics.draw(image, fillQuad, n, 0)
-    end
+    love.graphics.draw(btn.fillimage, 0, 0)
 
     -- draw right corner (right of bounds)
-    love.graphics.draw(image, rightQuad, btn.width, 0)
+    love.graphics.draw(image, quad.switch.right, btn.width, 0)
 
     -- draw the switch position, lerped by "a" and "b" via "dt"
     local switchX = lerp(btn.a, btn.b, btn.dt) * (btn.width) - 15
     love.graphics.draw(image, switchQuad, switchX, 0)
 
     -- print text
-    love.graphics.printf(btn.options[btn.value], 0, 0, btn.width, "center")
+    -- TODO: copy the sliding text from switch.lua
+    love.graphics.printf(btn.options[btn.value], 0, btn.textY, btn.width, "center")
 
     -- restore graphics state
     love.graphics.pop()
 
 end
 
+--- Apply custom button settings.
+function module:setButton(btn)
+
+    -- store the measured text height
+    local textheight = btn.height
+
+    -- increase height for fatter buttons
+    btn.height = 32
+
+    -- center text
+    btn.textY = math.floor((btn.height / 2) - (textheight / 2))
+
+end
+
 --- Convert a button to a switch.
 function module:setSwitch(btn, options)
+
+    -- store the measured text height
+    local textheight = btn.height
+
+    -- increase height for fatter buttons
+    btn.height = 32
+
+    -- center text
+    btn.textY = math.floor((btn.height / 2) - (textheight / 2))
 
     -- measure options and resize the button
     for _, option in ipairs(options) do
@@ -142,7 +187,7 @@ function module:setSwitch(btn, options)
 
         -- use the larger of the options
         if ow > btn.width then
-            btn.width = ow + (ow * .2)
+            btn.width = ow --+ math.ceil(ow * .2)
         end
 
     end
