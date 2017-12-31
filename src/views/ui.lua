@@ -28,13 +28,13 @@ local imw, imh = image:getDimensions()
 -- define the quads that make up the button parts
 local quad = { }
 quad.left = love.graphics.newQuad(0, 0, 15, 32, imw, imh)
-quad.right = love.graphics.newQuad(18, 0, 15, 32, imw, imh)
-quad.fill = love.graphics.newQuad(16, 0, 1, 32, imw, imh)
+quad.fill = love.graphics.newQuad(30, 0, 1, 32, imw, imh)
+quad.right = love.graphics.newQuad(136, 0, 15, 32, imw, imh)
 quad.switch = { }
-quad.switch.left = love.graphics.newQuad(75, 0, 15, 32, imw, imh)
-quad.switch.fill = love.graphics.newQuad(91, 0, 1, 32, imw, imh)
-quad.switch.right = love.graphics.newQuad(93, 0, 15, 32, imw, imh)
-quad.switch.button = love.graphics.newQuad(181, 0, 30, 32, imw, imh)
+quad.switch.left = love.graphics.newQuad(0, 112, 15, 32, imw, imh)
+quad.switch.fill = love.graphics.newQuad(30, 112, 1, 32, imw, imh)
+quad.switch.right = love.graphics.newQuad(136, 112, 15, 32, imw, imh)
+quad.switch.button = love.graphics.newQuad(60, 112, 30, 32, imw, imh)
 
 -- a nice lerping function
 local function lerp(a, b, amt)
