@@ -26,12 +26,32 @@
 
 local module = { }
 
--- the total number of anglers that can register
-local maxAnglers = 6
-local iconsLeft = 170
-local iconTop = 120
-local iconColumns = 3
-local iconPadding = 36
+-- stores list of sign-in buttons
+local collection = { }
+
+-- load the sign-in icons
+local icons = love.graphics.newImage("res/sign-in-icons.png")
+
+-- Set icons and spritesheet size
+local spritesW, spritesH = icons:getDimensions()
+local iconWidth = 144
+local iconHeight = 150
+
+-- number of available icon variations
+local iconVariations = 6
+
+-- horizontal padding between angler buttons
+local padding = 40
+
+-- Id of the selected button
+local selectedId = 1
+
+-- Animating carousel offsets
+local previousCarouselX = 0
+local carouselX = 0
+local carouselY = 200
+local carouselCenter = 300
+local carouselScale = 0
 
 --- State initialization.
 --
@@ -42,78 +62,94 @@ function module:init(data)
     self.width = love.graphics.getWidth()
     self.height = love.graphics.getHeight()
 
-    -- save screen and use it as a menu background
-    --self.screenshot = love.graphics.newImage(love.graphics.newScreenshot())
+    self.transition = game.view.screentransition:new(.3, "outBack")
 
-    self.transition = game.view.screentransition:new(1, "outBack")
+    -- add a new angler option
+    love.graphics.setFont(game.fonts.small)
+    self.newButton = game.lib.button:new{
+        top = self.height - 60,
+        left = self.width - 160,
+        text = "New Angler",
+        callback = function()
+            game.states:push("text entry", {
+                text="",
+                title="Angler's name:",
+                callback=function(text)
+                    self:newAnglerInput(text)
+                end
+                })
+            end
+    }
+    game.view.ui:setButton(self.newButton)
 
     -- sign in icons
-    self.icons = love.graphics.newImage("res/sign-in-icons.png")
-    self:loadAnglers()
     self:buildButtons()
-
-    -- flags when an angler was selected
-    self.anglerSelected = false
 
 end
 
-function module:loadAnglers()
+-- a nice lerping function
+local function lerp(a, b, amt)
+    return a + (b - a) * (amt < 0 and 0 or (amt > 1 and 1 or amt))
+end
 
-    self.anglers = { }
+local function drawSigninButton(btn)
 
-    for _, angler in ipairs(game.logic.anglers.data) do
-        table.insert(self.anglers, { name=angler.name, icon=#self.anglers + 2 })
+    love.graphics.push()
+
+    if btn.Id == selectedId then
+        love.graphics.setColor(255, 255, 255, carouselScale * 255)
+    else
+        love.graphics.setColor(255, 255, 255, 92)
     end
 
-    table.insert(self.anglers, { name="New Angler", icon=1, addNew=true })
+    love.graphics.draw(icons, btn.quad, btn.left, btn.top)
 
-    -- keyboard navigation focus
-    self.keyfocus = 1
-    self.anglers[self.keyfocus].focus = true
+    -- print angler name
+    love.graphics.setFont(game.fonts.medium)
+    love.graphics.printf(btn.name, btn.left + 10, btn.top + 10,
+        btn.width - 20, "center")
+
+    love.graphics.pop()
 
 end
 
 --- Builds the angler login buttons
-function module:buildButtons()
+function module:buildButtons(autoselectname)
 
-    local spritesW, spritesH = self.icons:getDimensions()
+    collection = { }
 
-    -- add icon quads and positions
-    local iconWidth = 144
-    local iconHeight = 150
-    local iconX = iconsLeft
-    local iconY = iconTop
-    local column = 1
+    -- build list of anglers
+    for anglerId, angler in ipairs(game.logic.anglers.data) do
+        table.insert(collection, {
+            name = angler.name
+        })
+    end
 
-    for id, angler in ipairs(self.anglers) do
+    -- order alphabetically
+    table.sort(collection, function(a, b) return a.name < b.name end)
 
-        -- remove "add new" if maximum reached
-        if #self.anglers > maxAnglers and angler.addNew then
-            table.remove(self.anglers, id)
-        else
+    -- set the button data
+    for anglerId, button in ipairs(collection) do
 
-            angler.quad = love.graphics.newQuad(
-                (angler.icon - 1) * iconWidth, 0,   -- x, y
-                iconWidth, iconHeight,   -- width, height
-                spritesW, spritesH) -- sprite sheet size
-
-            angler.left = iconX
-            angler.top = iconY
-            angler.width = iconWidth
-            angler.height = iconHeight
-            angler.hitX = angler.left + angler.width
-            angler.hitY = angler.top + angler.height
-
-            iconX = iconX + iconWidth + iconPadding
-
-            column = column + 1
-            if column > iconColumns then
-                iconX = iconsLeft
-                column = 1
-                iconY = iconY + iconHeight + iconPadding
-            end
-
+        -- auto select this button
+        if button.name == autoselectname then
+            selectedId = anglerId
         end
+
+        button.Id = anglerId
+        button.top = 0
+        button.left = (iconWidth + padding) * (anglerId - 1)
+        button.width = iconWidth
+        button.height = iconHeight
+        button.draw = drawSigninButton
+        button.update = function() end
+
+        -- the button icon quad
+        local iconIndex = math.max(1, anglerId % iconVariations)
+        button.quad = love.graphics.newQuad(
+            iconIndex * iconWidth, 0,   -- x, y
+            iconWidth, iconHeight,   -- width, height
+            spritesW, spritesH) -- sprite sheet size
 
     end
 
@@ -123,56 +159,82 @@ function module:newAnglerInput(value)
 
     if value:len() == 0 then return end
     game.logic.anglers:addAngler(value)
-    self:loadAnglers()
-    self:buildButtons()
+    self:buildButtons(value)
 
 end
 
 function module:keypressed(key)
 
     if key == "escape" then
-        self.transition:close(1, "inBack")
+        self.transition:close(.5, "inBack")
     elseif key == "left" then
-        self.keyfocus = math.max(1, self.keyfocus - 1)
-        self:updateFocus()
+        self:carouselLeft()
     elseif key == "right" then
-        self.keyfocus = math.min(#self.anglers, self.keyfocus + 1)
-        self:updateFocus()
+        self:carouselRight()
     elseif key == "return" then
-        self:selectFocused()
+        self:signIn()
     end
+
+end
+
+function module:carouselLeft()
+
+    selectedId = math.max(1, selectedId - 1)
+    previousCarouselX = carouselX
+    carouselScale = 0
+
+end
+
+function module:carouselRight()
+
+    selectedId = math.min(#collection, selectedId + 1)
+    previousCarouselX = carouselX
+    carouselScale = 0
 
 end
 
 function module:mousemoved(x, y, dx, dy, istouch)
 
-    -- focus angler buttons
-    for i, angler in ipairs(self.anglers) do
-
-        -- focus
-        local hitX = x > angler.left and x < angler.hitX
-        local hitY = y > angler.top and y < angler.hitY
-        angler.focus = hitX and hitY
-
-        -- sync keyboard focus
-        if angler.focus then
-            self.keyfocus = i
-        end
-
-    end
+    self.newButton:mousemoved(x, y, dx, dy, istouch)
 
 end
 
 function module:mousepressed(x, y, button, istouch)
 
+    self.newButton:mousepressed(x, y, button, istouch)
+
 end
 
 function module:mousereleased(x, y, button, istouch)
 
-    self:selectFocused()
+    self.newButton:mousereleased(x, y, button, istouch)
+
+    -- move the carousel
+    if y > carouselY and y < (carouselY + iconHeight) then
+        if x > (carouselCenter + iconWidth) then
+            self:carouselRight()
+        elseif x < (carouselCenter) then
+            self:carouselLeft()
+        elseif x > carouselCenter and x < (carouselCenter + iconWidth) then
+            self:signIn()
+        end
+    end
+
+end
+
+function module:wheelmoved(x, y)
+
+    if y > 0 then
+        self:carouselLeft()
+    else
+        self:carouselRight()
+    end
+
 end
 
 function module:update(dt)
+
+    self.newButton:update(dt)
 
     -- limit delta as the end of day weigh-in can use up to .25 seconds
     -- causing a transition jump.
@@ -190,16 +252,22 @@ function module:update(dt)
 
     end
 
+    -- update button scaling animation
+    for _, v in ipairs(collection) do
+        v:update(dt)
+    end
+
+    -- upate carousel sliding animation
+    local targetX = carouselCenter - (selectedId - 1) * (iconWidth + padding)
+    carouselScale = math.min(1, carouselScale + (dt * 4))
+    carouselX = lerp(previousCarouselX, targetX, carouselScale)
+
 end
 
 function module:draw()
 
     -- save state
     love.graphics.push()
-
-    -- underlay screenshot
-    --love.graphics.setColor(game.color.white)
-    --love.graphics.draw(self.screenshot)
 
     -- apply transform
     -- "center zoom", "slide up", "drop down", "drop up"
@@ -213,27 +281,15 @@ function module:draw()
     love.graphics.setFont(game.fonts.large)
     love.graphics.printf("angler sign-in", 0, 20, self.width, "center")
 
-    -- anglers
-    love.graphics.setColor(game.color.white)
-    love.graphics.setFont(game.fonts.medium)
-    for i, angler in ipairs(self.anglers) do
-
-        -- draw angler icon
-        love.graphics.setColor(game.color.white)
-        love.graphics.draw(self.icons, angler.quad, angler.left, angler.top)
-
-        -- focus
-        if angler.focus or i == self.keyfocus then
-            love.graphics.setColor(game.color.blue)
-        else
-            love.graphics.setColor(game.color.base2)
-        end
-
-        -- print angler name
-        love.graphics.printf(angler.name, angler.left + 10, angler.top + 10,
-            angler.width - 20, "center")
-
+    -- draw sign-in button carousel
+    love.graphics.push()
+    love.graphics.translate(carouselX, carouselY)
+    for _, v in ipairs(collection) do
+        v:draw()
     end
+    love.graphics.pop()
+
+    self.newButton:draw()
 
     -- restore state
     love.graphics.pop()
@@ -248,30 +304,14 @@ function module:updateFocus()
 
 end
 
-function module:selectFocused()
+function module:signIn()
 
-    for i, angler in ipairs(self.anglers) do
-
-        if angler.focus or i == self.keyfocus then
-            if angler.addNew then
-                -- new angler
-                game.states:push("text entry", {
-                    text="",
-                    title="Angler's name:",
-                    callback=function(text)
-                        self:newAnglerInput(text)
-                    end
-                    })
-            else
-                game.dprint(string.format("\nselected angler %q", angler.name))
-                game.logic.stats:load(angler.name)
-                game.logic.player.name = game.logic.stats.data.name
-                self.anglerSelected = true
-                self.transition:close(1, "inBack")
-            end
-        end
-
-    end
+    local anglername = collection[selectedId].name
+    game.dprint(string.format("\nselected angler %q", anglername))
+    game.logic.stats:load(anglername)
+    game.logic.player.name = game.logic.stats.data.name
+    self.anglerSelected = true
+    self.transition:close(1, "inBack")
 
 end
 
