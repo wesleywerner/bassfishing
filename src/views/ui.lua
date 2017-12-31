@@ -30,11 +30,31 @@ local quad = { }
 quad.left = love.graphics.newQuad(0, 0, 15, 32, imw, imh)
 quad.fill = love.graphics.newQuad(30, 0, 1, 32, imw, imh)
 quad.right = love.graphics.newQuad(136, 0, 15, 32, imw, imh)
+
+-- button hover
+quad.focused = { }
+quad.focused.left = love.graphics.newQuad(0, 39, 15, 32, imw, imh)
+quad.focused.fill = love.graphics.newQuad(30, 39, 1, 32, imw, imh)
+quad.focused.right = love.graphics.newQuad(136, 39, 15, 32, imw, imh)
+
+-- button down
+quad.down = { }
+quad.down.left = love.graphics.newQuad(0, 76, 15, 32, imw, imh)
+quad.down.fill = love.graphics.newQuad(30, 76, 1, 32, imw, imh)
+quad.down.right = love.graphics.newQuad(136, 76, 15, 32, imw, imh)
+
+-- switch quads
 quad.switch = { }
 quad.switch.left = love.graphics.newQuad(0, 112, 15, 32, imw, imh)
 quad.switch.fill = love.graphics.newQuad(30, 112, 1, 32, imw, imh)
 quad.switch.right = love.graphics.newQuad(136, 112, 15, 32, imw, imh)
 quad.switch.button = love.graphics.newQuad(60, 112, 30, 32, imw, imh)
+
+quad.switch.focused = { }
+quad.switch.focused.left = love.graphics.newQuad(0, 151, 15, 32, imw, imh)
+quad.switch.focused.fill = love.graphics.newQuad(30, 151, 1, 32, imw, imh)
+quad.switch.focused.right = love.graphics.newQuad(136, 151, 15, 32, imw, imh)
+quad.switch.focused.button = love.graphics.newQuad(60, 151, 30, 32, imw, imh)
 
 -- a nice lerping function
 local function lerp(a, b, amt)
@@ -49,16 +69,6 @@ function module.drawButton(btn)
     -- it is worth noting the round corners are draw outside
     -- the button's bounds.
 
-    -- pre-render the fill to canvas
-    if not btn.fillimage then
-        btn.fillimage = love.graphics.newCanvas(btn.width, imh)
-        love.graphics.setCanvas(btn.fillimage)
-        for n=0, btn.width do
-            love.graphics.draw(image, quad.fill, n, 0)
-        end
-        love.graphics.setCanvas()
-    end
-
     -- save graphics state
     love.graphics.push()
 
@@ -67,24 +77,40 @@ function module.drawButton(btn)
     -- position the button
     love.graphics.translate(btn.left, btn.top)
 
-    -- push up/down on focus/click
+    -- pushed down effect
     if btn.down then
         love.graphics.translate(0, 1)
-        love.graphics.setColor(255, 200, 255)
-    elseif btn.focused then
-        love.graphics.setColor(200, 255, 200)
-    else
-        love.graphics.setColor(255, 255, 255)
     end
 
+    -- reset draw color
+    love.graphics.setColor(255, 255, 255)
+
     -- draw left corner (left of bounds)
-    love.graphics.draw(image, quad.left, -15, 0)
+    if btn.down then
+        love.graphics.draw(image, quad.down.left, -15, 0)
+    elseif btn.focused then
+        love.graphics.draw(image, quad.focused.left, -15, 0)
+    else
+        love.graphics.draw(image, quad.left, -15, 0)
+    end
 
     -- draw fill
-    love.graphics.draw(btn.fillimage, 0, 0)
+    if btn.down then
+        love.graphics.draw(btn.downfill, 0, 0)
+    elseif btn.focused then
+        love.graphics.draw(btn.focusfill, 0, 0)
+    else
+        love.graphics.draw(btn.fill, 0, 0)
+    end
 
     -- draw right corner (right of bounds)
-    love.graphics.draw(image, quad.right, btn.width, 0)
+    if btn.down then
+        love.graphics.draw(image, quad.down.right, btn.width, 0)
+    elseif btn.focused then
+        love.graphics.draw(image, quad.focused.right, btn.width, 0)
+    else
+        love.graphics.draw(image, quad.right, btn.width, 0)
+    end
 
     -- print text
     love.graphics.print(btn.text, 0, btn.textY)
@@ -101,16 +127,6 @@ function module.drawSwitch(btn)
     -- it is worth noting the round corners are draw outside
     -- the button's bounds.
 
-    -- pre-render the fill to canvas
-    if not btn.fillimage then
-        btn.fillimage = love.graphics.newCanvas(btn.width, imh)
-        love.graphics.setCanvas(btn.fillimage)
-        for n=0, btn.width do
-            love.graphics.draw(image, quad.switch.fill, n, 0)
-        end
-        love.graphics.setCanvas()
-    end
-
     -- save graphics state
     love.graphics.push()
 
@@ -120,26 +136,46 @@ function module.drawSwitch(btn)
     -- push up/down on focus/click
     if btn.down then
         love.graphics.translate(0, 1)
-        love.graphics.setColor(255, 200, 255)
-    elseif btn.focused then
-        love.graphics.setColor(200, 255, 200)
-    else
-        love.graphics.setColor(255, 255, 255)
     end
 
+    -- reset draw color
+    love.graphics.setColor(255, 255, 255)
+
     -- draw left corner (left of bounds)
-    love.graphics.draw(image, quad.switch.left, -15, 0)
+    if btn.down then
+        love.graphics.draw(image, quad.switch.left, -15, 0)
+    elseif btn.focused then
+        love.graphics.draw(image, quad.switch.focused.left, -15, 0)
+    else
+        love.graphics.draw(image, quad.switch.left, -15, 0)
+    end
 
     -- draw fill
-    love.graphics.draw(btn.fillimage, 0, 0)
+    if btn.down then
+        love.graphics.draw(btn.fill, 0, 0)
+    elseif btn.focused then
+        love.graphics.draw(btn.focusfill, 0, 0)
+    else
+        love.graphics.draw(btn.fill, 0, 0)
+    end
 
     -- draw right corner (right of bounds)
-    love.graphics.draw(image, quad.switch.right, btn.width, 0)
+    if btn.down then
+        love.graphics.draw(image, quad.switch.right, btn.width, 0)
+    elseif btn.focused then
+        love.graphics.draw(image, quad.switch.focused.right, btn.width, 0)
+    else
+        love.graphics.draw(image, quad.switch.right, btn.width, 0)
+    end
 
     -- draw the switch button, lerped by "a" and "b" via "dt"
     local lerpX = lerp(btn.a, btn.b, btn.dt)
     local switchX = lerpX * (btn.width) - 15
-    love.graphics.draw(image, quad.switch.button, switchX, 0)
+    if btn.focused then
+        love.graphics.draw(image, quad.switch.focused.button, switchX, 0)
+    else
+        love.graphics.draw(image, quad.switch.button, switchX, 0)
+    end
 
     -- print the switch text.
     -- clamp printing to the switch bounds
@@ -168,6 +204,9 @@ end
 --- Apply custom button settings.
 function module:setButton(btn)
 
+    -- reset draw color
+    love.graphics.setColor(255, 255, 255)
+
     -- store the measured text height
     local textheight = btn.height
 
@@ -177,10 +216,40 @@ function module:setButton(btn)
     -- center text
     btn.textY = math.floor((btn.height / 2) - (textheight / 2))
 
+    -- overwrite drawing
+    btn.draw = module.drawButton
+
+    -- pre-render the fill to canvas
+    btn.fill = love.graphics.newCanvas(btn.width, imh)
+    love.graphics.setCanvas(btn.fill)
+    for n=0, btn.width do
+        love.graphics.draw(image, quad.fill, n, 0)
+    end
+    love.graphics.setCanvas()
+
+    -- pre-render the focus fill to canvas
+    btn.focusfill = love.graphics.newCanvas(btn.width, imh)
+    love.graphics.setCanvas(btn.focusfill)
+    for n=0, btn.width do
+        love.graphics.draw(image, quad.focused.fill, n, 0)
+    end
+    love.graphics.setCanvas()
+
+    -- pre-render the down fill to canvas
+    btn.downfill = love.graphics.newCanvas(btn.width, imh)
+    love.graphics.setCanvas(btn.downfill)
+    for n=0, btn.width do
+        love.graphics.draw(image, quad.down.fill, n, 0)
+    end
+    love.graphics.setCanvas()
+
 end
 
 --- Convert a button to a switch.
 function module:setSwitch(btn, options)
+
+    -- reset draw color
+    love.graphics.setColor(255, 255, 255)
 
     -- store the measured text height
     local textheight = btn.height
@@ -244,6 +313,70 @@ function module:setSwitch(btn, options)
     btn.update = function(btn, dt)
         btn.dt = btn.dt + dt * 4
         end
+
+    -- pre-render the fill to canvas
+    btn.fill = love.graphics.newCanvas(btn.width, imh)
+    love.graphics.setCanvas(btn.fill)
+    for n=0, btn.width do
+        love.graphics.draw(image, quad.switch.fill, n, 0)
+    end
+    love.graphics.setCanvas()
+
+    -- pre-render the focus fill to canvas
+    btn.focusfill = love.graphics.newCanvas(btn.width, imh)
+    love.graphics.setCanvas(btn.focusfill)
+    for n=0, btn.width do
+        love.graphics.draw(image, quad.switch.focused.fill, n, 0)
+    end
+    love.graphics.setCanvas()
+
+end
+
+function module:createTournamentButtons()
+
+    game.lib.widgetCollection:clear()
+
+    game.view.ui:setButton(
+        game.lib.widgetCollection:button("forecast", {
+            left = 678,
+            top = 46,
+            text = "Forecast",
+            callback = function(btn)
+                end
+        })
+    )
+
+    game.view.ui:setSwitch(
+        game.lib.widgetCollection:button("motor", {
+            left = 640,
+            top = 92,
+            text = "#",
+            callback = function(btn)
+                game.logic.player:toggleTrollingMotor()
+                end
+        }), {"Outboard", "Trolling"})
+
+    game.view.ui:setButton(
+        game.lib.widgetCollection:button("lures", {
+            left = 625,
+            top = 140,
+            text = "Lures",
+            callback = function(btn)
+                game.states:push("tackle lures")
+                end
+        })
+    )
+
+    game.view.ui:setButton(
+        game.lib.widgetCollection:button("rods", {
+            left = 722,
+            top = 140,
+            text = "Rods",
+            callback = function(btn)
+                game.states:push("tackle rods")
+                end
+        })
+    )
 
 end
 
