@@ -102,6 +102,8 @@ function module:keypressed(key)
         game.states:push("top lunkers")
     elseif key == "t" then
         buttons:get("motor"):callback()
+    else
+        buttons:keypressed(key)
     end
 
     -- debug shortcuts
