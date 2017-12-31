@@ -334,10 +334,10 @@ end
 
 function module:createTournamentButtons()
 
-    game.lib.widgetCollection:clear()
+    local collection = game.lib.widgetCollection:new()
 
     game.view.ui:setButton(
-        game.lib.widgetCollection:button("forecast", {
+        collection:button("forecast", {
             left = 678,
             top = 46,
             text = "Forecast",
@@ -347,7 +347,7 @@ function module:createTournamentButtons()
     )
 
     game.view.ui:setSwitch(
-        game.lib.widgetCollection:button("motor", {
+        collection:button("motor", {
             left = 640,
             top = 92,
             text = "#",
@@ -357,7 +357,7 @@ function module:createTournamentButtons()
         }), {"Outboard", "Trolling"})
 
     game.view.ui:setButton(
-        game.lib.widgetCollection:button("lures", {
+        collection:button("lures", {
             left = 625,
             top = 140,
             text = "Lures",
@@ -368,7 +368,7 @@ function module:createTournamentButtons()
     )
 
     game.view.ui:setButton(
-        game.lib.widgetCollection:button("rods", {
+        collection:button("rods", {
             left = 722,
             top = 140,
             text = "Rods",
@@ -377,6 +377,8 @@ function module:createTournamentButtons()
                 end
         })
     )
+
+    return collection
 
 end
 

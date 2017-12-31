@@ -21,6 +21,7 @@
 local module = { }
 local scale = 2
 local drawDebug = false
+local buttons = nil
 
 function module:init(data)
 
@@ -55,7 +56,7 @@ function module:init(data)
     end
 
     -- set up the buttons
-    game.view.ui:createTournamentButtons()
+    buttons = game.view.ui:createTournamentButtons()
 
     -- fill the fish finder with data
     game.view.fishfinder:update()
@@ -100,7 +101,7 @@ function module:keypressed(key)
     elseif key == "f8" then
         game.states:push("top lunkers")
     elseif key == "t" then
-        game.lib.widgetCollection:get("motor"):callback()
+        buttons:get("motor"):callback()
     end
 
     -- debug shortcuts
@@ -121,7 +122,7 @@ end
 function module:mousemoved(x, y, dx, dy, istouch)
 
     -- move over buttons
-    game.lib.widgetCollection:mousemoved(x, y, dx, dy, istouch)
+    buttons:mousemoved(x, y, dx, dy, istouch)
 
     -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
@@ -136,7 +137,7 @@ end
 function module:mousepressed(x, y, button, istouch)
 
     -- press on buttons
-    game.lib.widgetCollection:mousepressed(x, y, button, istouch)
+    buttons:mousepressed(x, y, button, istouch)
 
     -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
@@ -151,7 +152,7 @@ end
 function module:mousereleased(x, y, button, istouch)
 
     -- release over buttons
-    game.lib.widgetCollection:mousereleased(x, y, button, istouch)
+    buttons:mousereleased(x, y, button, istouch)
 
 end
 
@@ -183,7 +184,7 @@ function module:update(dt)
     game.logic.player:update(dt)
 
     -- update buttons
-    game.lib.widgetCollection:update(dt)
+    buttons:update(dt)
 
     if drawDebug then game.logic.fish:update(dt) end
 
@@ -222,7 +223,7 @@ function module:draw()
     love.graphics.draw(self.borderImage)
 
     -- draw buttons
-    game.lib.widgetCollection:draw()
+    buttons:draw()
 
     -- fish finder
     love.graphics.push()
