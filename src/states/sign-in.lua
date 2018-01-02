@@ -316,6 +316,7 @@ end
 
 function module:signIn()
 
+    if #collection == 0 then return end
     local anglername = collection[selectedId].name
     game.dprint(string.format("\nselected angler %q", anglername))
     game.logic.stats:load(anglername)
