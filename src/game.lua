@@ -31,6 +31,7 @@ module.dprint = function(...) if module.debug then print(...) end end
 module.window = { }
 module.window.width = 800
 module.window.height = 600
+-- TODO: use window sizes in all modules
 
 module.defaultMapWidth = 80
 module.defaultMapHeight = 30
@@ -105,6 +106,7 @@ module.lib.hotspot = require("libs.harness.hotspot")
 module.lib.button = require("libs.harness.button")
 module.lib.widgetCollection = require("libs.harness.widgetcollection")
 module.lib.aperture = require("libs.harness.aperture")
+module.lib.chart = require("libs.harness.chart")
 module.lib.lume = require("libs.lume.lume")
 module.lib.luastar = require("libs.lua-star.src.lua-star")
 module.lib.list = require("libs.list")
@@ -113,6 +115,7 @@ module.lib.convert = require("libs.conversion")
 
 -- fonts
 module.fonts = { }
+module.fonts.tiny = love.graphics.newFont("res/MechanicalBd.otf", 10)
 module.fonts.small = love.graphics.newFont("res/MechanicalBd.otf", 18)
 module.fonts.medium = love.graphics.newFont("res/MechanicalBd.otf", 24)
 module.fonts.large = love.graphics.newFont("res/MechanicalBdOutObl.otf", 48)

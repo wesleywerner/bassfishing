@@ -48,6 +48,9 @@ function module:load(name)
         end
     end
 
+    -- alias stats onto the game object
+    game.stats = self.data
+
     if game.debug then self:printDetails() end
 
 end

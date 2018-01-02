@@ -68,7 +68,7 @@ function module:init(data)
     self.fishimageX = (self.width - fishimgW) / 2
     self.fishimageY = (self.height - fishimgH) / 2
 
-    self.transition = game.view.screentransition:new(1, "outBack")
+    self.transition = game.view.screentransition:new(.1, "outBack")
 
     -- add a new angler option
     love.graphics.setFont(game.fonts.small)
@@ -322,7 +322,7 @@ function module:signIn()
     game.logic.stats:load(anglername)
     game.logic.player.name = game.logic.stats.data.name
     self.anglerSelected = true
-    self.transition:close(1, "inBack")
+    self.transition:close(.1, "inBack")
 
 end
 
