@@ -31,6 +31,7 @@ local collection = { }
 
 -- load the sign-in icons
 local icons = love.graphics.newImage("res/sign-in-icons.png")
+local fishimage = love.graphics.newImage("res/johnny-automatic-jumping-fish-300px.png")
 
 -- Set icons and spritesheet size
 local spritesW, spritesH = icons:getDimensions()
@@ -62,7 +63,12 @@ function module:init(data)
     self.width = love.graphics.getWidth()
     self.height = love.graphics.getHeight()
 
-    self.transition = game.view.screentransition:new(.3, "outBack")
+    -- center fish image
+    local fishimgW, fishimgH = fishimage:getDimensions()
+    self.fishimageX = (self.width - fishimgW) / 2
+    self.fishimageY = (self.height - fishimgH) / 2
+
+    self.transition = game.view.screentransition:new(1, "outBack")
 
     -- add a new angler option
     love.graphics.setFont(game.fonts.small)
@@ -275,6 +281,10 @@ function module:draw()
 
     -- background
     love.graphics.clear(game.color.base03)
+
+    -- fish image
+    love.graphics.setColor(255, 255, 255, 192)
+    love.graphics.draw(fishimage, self.fishimageX, self.fishimageY)
 
     -- title
     love.graphics.setColor(game.color.yellow)
