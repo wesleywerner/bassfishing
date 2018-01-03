@@ -115,7 +115,7 @@ module.lib.convert = require("libs.conversion")
 
 -- fonts
 module.fonts = { }
-module.fonts.tiny = love.graphics.newFont("res/MechanicalBd.otf", 10)
+module.fonts.tiny = love.graphics.newFont("res/MechanicalBd.otf", 14)
 module.fonts.small = love.graphics.newFont("res/MechanicalBd.otf", 18)
 module.fonts.medium = love.graphics.newFont("res/MechanicalBd.otf", 24)
 module.fonts.large = love.graphics.newFont("res/MechanicalBdOutObl.otf", 48)

@@ -337,93 +337,6 @@ function module:setSwitch(btn, options)
 
 end
 
-function module:createMainMenuButtons()
-
-    local top = 300
-    local left = 600
-    local width, height = 150, 40
-    local collection = game.lib.widgetCollection:new()
-
-    game.view.ui:setButton(
-        collection:button("tournament", {
-            left = left,
-            top = top,
-            text = "Tournament",
-            callback = function(btn)
-                -- TODO: go to lake selection state
-                end
-        }), width
-    )
-
-    top = top + height
-    game.view.ui:setButton(
-        collection:button("educational", {
-            left = left,
-            top = top,
-            text = "Educational",
-            callback = function(btn)
-                -- TODO: go to educational state + map generator
-                end
-        }), width
-    )
-
-    top = top + height
-    game.view.ui:setButton(
-        collection:button("tutorial", {
-            left = left,
-            top = top,
-            text = "Tutorial",
-            callback = function(btn)
-                local seed = os.time()
-                game.dprint(string.format("generating practice map with seed %d", seed))
-                game.lake = game.logic.genie:generate(game.defaultMapWidth,
-                game.defaultMapHeight, seed,
-                game.defaultMapDensity, game.defaultMapIterations)
-                game.states:push("tournament", { tutorial = true })
-                end
-        }), width
-    )
-
-    top = top + height
-    game.view.ui:setButton(
-        collection:button("options", {
-            left = left,
-            top = top,
-            text = "Options",
-            callback = function(btn)
-                -- TODO: go to options state
-                end
-        }), width
-    )
-
-    top = top + height
-    game.view.ui:setButton(
-        collection:button("records", {
-            left = left,
-            top = top,
-            text = "Records",
-            callback = function(btn)
-                game.states:push("top lunkers")
-                end
-        }), width
-    )
-
-    top = top + height
-    game.view.ui:setButton(
-        collection:button("about", {
-            left = left,
-            top = top,
-            text = "About",
-            callback = function(btn)
-                -- TODO: go to about state
-                end
-        }), width
-    )
-
-    return collection
-
-end
-
 function module:createTournamentButtons()
 
     local collection = game.lib.widgetCollection:new()
@@ -476,7 +389,7 @@ end
 
 function module:chart(width, height)
 
-    local function drawGrid(width, height)
+    local function drawGrid(chart, width, height)
 
         love.graphics.setColor(game.color.base3)
 
@@ -492,50 +405,48 @@ function module:chart(width, height)
 
     end
 
-    local function drawLabels(labels)
+    local function drawLabels(chart, labels)
 
         love.graphics.setColor(game.color.base01)
         love.graphics.setFont(game.fonts.tiny)
 
         for _, label in ipairs(labels) do
 
-            -- draw label point
-            love.graphics.circle("line", label.x, label.y, 3)
-
             -- print label text
             if label.axiz == "x" then
-                love.graphics.print(label.text, math.floor(label.x), math.floor(label.y + 12))
+                --love.graphics.print(
+                    --label.text,
+                    --math.floor(label.x), math.floor(label.y + 12))
             else
-                love.graphics.print(label.text, math.floor(label.x - 24), math.floor(label.y - 6))
+                -- draw label point
+                love.graphics.line(chart.width, label.y, chart.width + 20, label.y)
+
+                love.graphics.print(
+                    game.lib.convert:weight(label.text, true),
+                    math.floor(4 + chart.width), math.floor(label.y))
             end
 
         end
 
     end
 
-    local function drawBorder(width, height)
+    local function drawBorder(chart, width, height)
 
         love.graphics.setColor(game.color.base1)
         love.graphics.rectangle("line", 0, 0, width, height)
 
     end
 
-    local function drawLine(dataset, node1, node2)
+    local function drawLine(chart, dataset, node1, node2)
 
-        -- switch color for each dataset
-        if dataset == "dataset 1" then
-            love.graphics.setColor(game.color.magenta)
-        else
-            love.graphics.setColor(game.color.blue)
-        end
-
+        love.graphics.setColor(game.color.blue)
         love.graphics.setLineWidth(4)
         love.graphics.line(node1.x, node1.y, node2.x, node2.y)
         love.graphics.setLineWidth(1)
 
     end
 
-    local function drawNode(dataset, node)
+    local function drawNode(chart, dataset, node)
 
         love.graphics.setFont(game.fonts.small)
         love.graphics.setColor(game.color.blue)
@@ -547,15 +458,15 @@ function module:chart(width, height)
             love.graphics.setColor(0, 0, 0)
             love.graphics.rectangle("fill", node.x + 20, node.y - 4, 120, 40)
             love.graphics.setColor(game.color.white)
-            love.graphics.print(string.format("point: %d\nvalue: %d", node.a, node.b),
-                math.floor(node.x + 24), math.floor(node.y))
+            local nodeText = string.format("tour #%d\n%s", node.a, game.lib.convert:weight(node.b))
+            love.graphics.print(nodeText, math.floor(node.x + 24), math.floor(node.y))
         else
             love.graphics.circle("fill", node.x, node.y, 6)
         end
 
     end
 
-    local function drawFill(dataset, triangles)
+    local function drawFill(chart, dataset, triangles)
 
         if dataset == "dataset 1" then
             love.graphics.setColor(211, 54, 130, 64)

@@ -114,7 +114,7 @@ function module:mousepressed( x, y, button, istouch )
     for _, hotspot in ipairs(self.hotspots) do
         hotspot:mousemoved(x, y, dx, dy, istouch)
 
-        if hotspot.touched then
+        if hotspot.focused then
 
             -- set the player cast range and rod name
             game.logic.player:setRod(hotspot.rod)
@@ -168,7 +168,7 @@ function module:draw()
 
     for _, hotspot in ipairs(self.hotspots) do
 
-        if hotspot.rod.name == self.playerRod or hotspot.touched then
+        if hotspot.rod.name == self.playerRod or hotspot.focused then
             -- selected focus
             love.graphics.setColor(game.color.magenta)
             love.graphics.rectangle("fill", hotspot.left, hotspot.top,

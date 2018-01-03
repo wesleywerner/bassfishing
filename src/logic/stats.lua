@@ -34,9 +34,18 @@ function module:load(name)
 
     -- angler file does not exist, create version 1
     if not self.data.version then
+
+        -- stores file version
         self.data.version = game.version
+
+        -- stores the angler name
         self.data.name = name
-        -- add new values below in the upgrade tests
+
+        -- stores a list of tournament statistics
+        self.data.tours = { }
+
+        -- WARNING: for new versions
+        -- add new storage values below in the upgrade tests
     end
 
     -- upgrade data as needed
@@ -48,8 +57,7 @@ function module:load(name)
         end
     end
 
-    -- alias stats onto the game object
-    game.stats = self.data
+    self:updateStatistics()
 
     if game.debug then self:printDetails() end
 
@@ -63,8 +71,6 @@ function module:save()
 
     game.logic.pickle:write(self.filename, self.data)
 
-    game.dprint("written angler stats")
-
 end
 
 function module:printDetails()
@@ -75,6 +81,75 @@ function module:printDetails()
         for k, v in pairs(self.data) do
             game.dprint(string.format("%s: %s", k, v))
         end
+
+        for n, tour in ipairs(self.data.tours) do
+            print(string.format("tour #%d", n))
+            for _, fish in ipairs(tour.fish) do
+                print(string.format("\tfish wt: %.2f", fish.weight))
+            end
+        end
+    end
+
+end
+
+function module:record(livewell, lake, position, casts)
+
+    -- build tour statistics
+    local tour = {
+        date=os.time(),
+        lake=lake,
+        position = position,
+        casts = casts,
+        fish = { }
+    }
+
+    -- add live well statistics
+    for _, fish in ipairs(livewell) do
+        table.insert(tour.fish, fish)
+    end
+
+    -- record this tour
+    table.insert(self.data.tours, tour)
+
+    self:save()
+
+end
+
+function module:updateStatistics()
+
+    self.data.total = {
+        fish=0,
+        weight=0,
+        heaviest=0
+    }
+
+    -- alias for totals
+    local total = self.data.total
+
+    for _, tour in ipairs(self.data.tours) do
+
+        tour.totalWeight = 0
+
+        for _, fish in ipairs(tour.fish) do
+
+            -- total fish
+            total.fish = total.fish + 1
+
+            -- total fish weight
+            total.weight = total.weight + fish.weight
+
+            -- tour total weight
+            tour.totalWeight = tour.totalWeight + fish.weight
+
+            -- heaviest fish ever caught
+            if fish.weight > total.heaviest then
+                total.heaviest = fish.weight
+            end
+
+        end
+
+        print("tour wt ", tour.totalWeight)
+
     end
 
 end

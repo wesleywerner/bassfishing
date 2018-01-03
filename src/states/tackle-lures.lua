@@ -200,7 +200,7 @@ function module:init(data)
                     textY = (self.linespacing / 2) - fontHeight,
                     category = category,
                     page = page,
-                    action = function(hotspot)
+                    callback = function(hotspot)
                         self.selectedCategory = hotspot.category
                         self.lureList:scrollTo(hotspot.page)
                         -- auto select first lure in this category
@@ -243,7 +243,7 @@ function module:init(data)
                         height = self.linespacing,
                         textY = (self.linespacing / 2) - fontHeight,
                         lure = lure,
-                        action = function(hotspot)
+                        callback = function(hotspot)
                             self:selectLure(hotspot.lure)
                             end
                         }
@@ -281,7 +281,7 @@ function module:init(data)
                     width = self.paletteSize,
                     height = self.paletteSize,
                     color = color,
-                    action = function(hotspot)
+                    callback = function(hotspot)
                         self:setLure()
                         end
                 }
@@ -354,7 +354,7 @@ function module:mousemoved( x, y, dx, dy, istouch )
 
     -- draw in hovered color
     for _, hotspot in ipairs(self.palette.hotspots) do
-        if hotspot.touched then
+        if hotspot.focused then
             self.selectedColor = hotspot.color
         end
     end
@@ -374,6 +374,14 @@ function module:mousepressed( x, y, button, istouch )
     self.lureList:mousepressed( x, y, button, istouch )
 
     self.palette:mousepressed( x, y, button, istouch )
+
+end
+
+function module:mousereleased(x, y, button, istouch)
+
+    self.categoryList:mousereleased(x, y, button, istouch)
+    self.lureList:mousereleased(x, y, button, istouch)
+    self.palette:mousereleased(x, y, button, istouch)
 
 end
 
@@ -423,7 +431,7 @@ function module:draw()
     love.graphics.setFont(self.listFont)
     self.categoryList:apply()
     for _, hotspot in ipairs(self.categoryList.hotspots) do
-        if hotspot.category == self.selectedCategory or hotspot.touched then
+        if hotspot.category == self.selectedCategory or hotspot.focused then
             -- selected focus
             love.graphics.setColor(game.color.magenta)
             love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
@@ -440,7 +448,7 @@ function module:draw()
     love.graphics.setFont(self.listFont)
     self.lureList:apply()
     for _, hotspot in ipairs(self.lureList.hotspots) do
-        if hotspot.lure == self.selectedLure or hotspot.touched then
+        if hotspot.lure == self.selectedLure or hotspot.focused then
             -- selected focus
             love.graphics.setColor(game.color.magenta)
             love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
@@ -459,7 +467,7 @@ function module:draw()
         love.graphics.setColor(game.logic.tackle.colors[hotspot.color])
         love.graphics.rectangle("fill", hotspot.left, hotspot.top, self.paletteSize, self.paletteSize)
         -- selected color focus
-        if hotspot.touched or hotspot.color == self.selectedColor then
+        if hotspot.focused or hotspot.color == self.selectedColor then
             love.graphics.setColor(game.color.base01)
         else
             love.graphics.setColor(game.color.base3)

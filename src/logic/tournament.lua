@@ -57,7 +57,11 @@ module.displayedWarning = false
 -- The tournament score card
 module.standings = nil
 
+-- Records the largest fish weighed each day
 module.lunkerOfTheDay = nil
+
+-- Keeps a list of all fish weighed by the player over the tournament
+module.fishStatistics = nil
 
 
 --- Start the tournament.
@@ -65,6 +69,9 @@ module.lunkerOfTheDay = nil
 function module:start()
 
     self.day = 0
+
+    -- clear the list of fish caught by the player
+    self.fishStatistics = { }
 
     -- generate the list of angler standings
     -- assume each boat has two anglers
@@ -187,7 +194,7 @@ function module:endOfDay()
     -- share out remaining fish
     local fishper = math.floor(#game.lake.fish / #self.standings)
 
-    -- add fish to each
+    -- process player and competitor catches of the day
     for _, angler in ipairs(self.standings) do
 
         if angler.player then
@@ -195,14 +202,24 @@ function module:endOfDay()
             -- the player is near the weigh-in area
             if player.nearJetty then
 
-                -- add up the player's livewell
+                -- weigh the fish in the live well
                 for _, fish in ipairs(game.logic.livewell.contents) do
+
+                    -- store fish data for statistics
+                    table.insert(self.fishStatistics, {
+                        weight=fish.weight,
+                        lure="TODO"
+                    })
+
+                    print(string.format("record fish lure: %s", "TODO"))
+
+                    -- TODO: move tournament-results standing sorting to end of this function
 
                     angler.dailyWeight = angler.dailyWeight + fish.weight
                     angler.totalWeight = angler.totalWeight + angler.dailyWeight
                     self:recordDailyLunker(angler, fish)
 
-                    -- the player also gets to record in the total lunker record list
+                    -- record in the top lunkers (returns false if no record is entered)
                     local newRecord = game.logic.toplunkers:recordLunker(
                         player.name, player.lake, fish.weight)
 
@@ -217,6 +234,7 @@ function module:endOfDay()
 
         else
 
+            -- share out the remaining fish between competitors
             for n=1, fishper do
 
                 local fish = table.remove(game.lake.fish)
@@ -257,7 +275,13 @@ function module:endOfDay()
     -- push the tournament results state
     -- (this state is displayed after weigh in)
     if game.logic.tournament.day == 3 then
+
+        -- add all fish caught during the tournament to statistics
+        game.logic.stats:record(self.fishStatistics, player.lake)
+
+        -- show the tournament results
         game.states:push("tournament results")
+
     end
 
     -- push the weigh in state

@@ -24,6 +24,18 @@ local module = { }
 local chartX, chartY = 50, 300
 local chartWidth, chartHeight = 445, 215
 
+-- available charts
+local chartTypes = {
+    {
+        key="weigh-in",
+        text="total weighed-in"
+    },
+    {
+        key="heaviest",
+        text="heaviest fish"
+    }
+}
+
 function module:init(data)
 
     -- load menu background
@@ -33,10 +45,43 @@ function module:init(data)
     self.statsText = self:makeStatsText()
 
     -- buttons
-    self.buttons = game.view.ui:createMainMenuButtons()
+    self.buttons = self:makeButtons()
 
     -- chart
     self.chart = game.view.ui:chart(chartWidth, chartHeight)
+
+    -- overwrite chart node drawing
+    self.chart.drawNode = function (chart, dataset, node)
+        love.graphics.setColor(game.color.blue)
+        if node.focus then
+            love.graphics.setColor(game.color.magenta)
+            love.graphics.circle("fill", node.x, node.y, 6)
+            -- tooltip size
+            local tip = chart.tips[node.a]
+            local tipwidth, tipheight = tip:getDimensions()
+            -- offset tooltip from the cursor
+            love.graphics.push()
+            love.graphics.translate(math.floor(-tipwidth * .5), 20)
+            -- tooltip fill (with padding)
+            local pad1, pad2 = 5, 10
+            love.graphics.setColor(game.color.base02)
+            love.graphics.rectangle("fill", node.x - pad1, node.y - pad1,
+                tipwidth + pad2, tipheight + pad2)
+            -- outline
+            love.graphics.setColor(game.color.base2)
+            love.graphics.rectangle("line", node.x - pad1, node.y - pad1,
+                tipwidth + pad2, tipheight + pad2)
+            -- print tip text
+            love.graphics.setColor(game.color.white)
+            love.graphics.draw(tip, math.floor(node.x), math.floor(node.y))
+            love.graphics.pop()
+        else
+            love.graphics.circle("fill", node.x, node.y, 6)
+        end
+    end
+
+    -- set chart data
+    self.chartType = 1
     self:setChartData()
 
 
@@ -230,7 +275,7 @@ function module:draw()
     -- angler name
     love.graphics.setFont(game.fonts.medium)
     love.graphics.setColor(game.color.base01)
-    love.graphics.print(game.stats.name, 105, 42)
+    love.graphics.print(game.logic.stats.data.name, 105, 42)
 
     -- stats
     love.graphics.setFont(game.fonts.small)
@@ -247,7 +292,7 @@ function module:draw()
     love.graphics.translate(0, -24)
     love.graphics.setColor(game.color.cyan)
     love.graphics.setFont(game.fonts.small)
-    love.graphics.printf("fish weighed per tour", 0, 0, chartWidth, "right")
+    love.graphics.printf(chartTypes[self.chartType].text, 0, 0, chartWidth, "right")
     love.graphics.pop()
 
     -- tournament slug
@@ -323,26 +368,27 @@ end
 
 function module:makeStatsText()
 
+    local stats = game.logic.stats.data
     local left = 0
     local top = 0
     local width = 220
     local spacing = 20
 
-    local w, h = love.graphics.newText(game.fonts.small, "BASS"):getDimensions()
-    local text = love.graphics.newText(game.fonts.small)
+    local w, h = love.graphics.newText(game.fonts.tiny, "BASS"):getDimensions()
+    local text = love.graphics.newText(game.fonts.tiny)
 
     local stats = {
         {
             label="Tournaments fished:",
-            value=100
+            value=#stats.tours
         },
         {
             label="Fish weighed:",
-            value="300 fish, " .. game.lib.convert:weight(500)
+            value=string.format("%d fish, %s", stats.total.fish, game.lib.convert:weight(stats.total.weight))
         },
         {
-            label="Largest fish:",
-            value=game.lib.convert:weight(5) .. ", in Wes's Pond"
+            label="Heaviest ever caught:",
+            value=game.lib.convert:weight(stats.total.heaviest)
         },
         {
             label="Most effective lure:",
@@ -364,15 +410,181 @@ function module:makeStatsText()
 
 end
 
-function module:setChartData(name)
+function module:setChartData()
 
-    local points = { }
+    -- alias the stats
+    local stats = game.logic.stats.data
 
-    for n=1, 10 do
-        table.insert(points, { a=n, b=math.random(20, 90) })
+    -- get the chart type
+    local chartType = chartTypes[self.chartType]
+
+    -- clear the chart
+    self.chart:clear()
+
+    if chartType.key == "weigh-in" then
+
+        -- total fish weighed-in per tournament
+        local points = { }
+        self.chart.tips = { }
+
+        for n, tour in ipairs(stats.tours) do
+
+            -- insert the data points
+            table.insert(points, { a=n, b=tour.totalWeight })
+
+            -- pre-create each point tooltip
+            local tourdate = os.date("%d %b %Y", tour.date)
+            local weight = game.lib.convert:weight(tour.totalWeight)
+            local tiptext = love.graphics.newText(game.fonts.tiny)
+            tiptext:add(string.format("%s\n%s", tourdate, weight, 0, 0))
+            self.chart.tips[n] = tiptext
+
+        end
+
+        self.chart:data(points, "weigh-in")
+
+    elseif chartType.key == "heaviest" then
+
+        -- heaviest fish caught per tournament
+        local points = { }
+        self.chart.tips = { }
+
+        for n, tour in ipairs(stats.tours) do
+
+            -- find the heaviest catch in this tournament
+            local lunker = 0
+            for _, fish in ipairs(tour.fish) do
+                if fish.weight > lunker then
+                    lunker = fish.weight
+                end
+            end
+
+            -- insert the data points
+            table.insert(points, { a=n, b=lunker })
+
+            -- pre-create each point tooltip
+            local tourdate = os.date("%d %b %Y", tour.date)
+            local weight = game.lib.convert:weight(lunker)
+            local tiptext = love.graphics.newText(game.fonts.tiny)
+            tiptext:add(string.format("%s\n%s", tourdate, weight, 0, 0))
+            self.chart.tips[n] = tiptext
+
+        end
+
+        self.chart:data(points, "heaviest")
+
     end
 
-    self.chart:data(points, "dataset")
+end
+
+
+function module:makeButtons()
+
+    local top = 300
+    local left = 600
+    local width, height = 150, 40
+    local collection = game.lib.widgetCollection:new()
+
+    -- Tournament mode
+    game.view.ui:setButton(
+        collection:button("tournament", {
+            left = left,
+            top = top,
+            text = "Tournament",
+            callback = function(btn)
+                -- TODO: go to lake selection state
+                end
+        }), width
+    )
+
+    -- Education mode
+    top = top + height
+    game.view.ui:setButton(
+        collection:button("educational", {
+            left = left,
+            top = top,
+            text = "Educational",
+            callback = function(btn)
+                -- TODO: go to educational state + map generator
+                end
+        }), width
+    )
+
+    -- Tutorial
+    top = top + height
+    game.view.ui:setButton(
+        collection:button("tutorial", {
+            left = left,
+            top = top,
+            text = "Tutorial",
+            callback = function(btn)
+                local seed = os.time()
+                game.dprint(string.format("generating practice map with seed %d", seed))
+                game.lake = game.logic.genie:generate(game.defaultMapWidth,
+                game.defaultMapHeight, seed,
+                game.defaultMapDensity, game.defaultMapIterations)
+                game.states:push("tournament", { tutorial = true })
+                end
+        }), width
+    )
+
+    -- Game options
+    top = top + height
+    game.view.ui:setButton(
+        collection:button("options", {
+            left = left,
+            top = top,
+            text = "Options",
+            callback = function(btn)
+                -- TODO: go to options state
+                end
+        }), width
+    )
+
+    -- Top lunkers
+    top = top + height
+    game.view.ui:setButton(
+        collection:button("records", {
+            left = left,
+            top = top,
+            text = "Records",
+            callback = function(btn)
+                game.states:push("top lunkers")
+                end
+        }), width
+    )
+
+    -- About game
+    top = top + height
+    game.view.ui:setButton(
+        collection:button("about", {
+            left = left,
+            top = top,
+            text = "About",
+            callback = function(btn)
+                -- TODO: go to about state
+                end
+        }), width
+    )
+
+    -- chart left
+    game.view.ui:setButton(
+        collection:button("chart right", {
+            left = chartX,
+            top = chartY + chartHeight + 20,
+            text = ">",
+            callback = function(btn)
+                if self.chartType < #chartTypes then
+                    self.chartType = math.min(#chartTypes, self.chartType + 1)
+                else
+                    self.chartType = 1
+                end
+                self:setChartData()
+            end
+        })
+    )
+
+    return collection
 
 end
 

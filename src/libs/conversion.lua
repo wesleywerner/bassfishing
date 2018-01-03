@@ -46,12 +46,20 @@ function module:mphkph(value)
     return value * 1.609344
 end
 
-function module:weight(value)
+function module:weight(value, rounded)
 
     if self.metric then
-        return string.format("%.2f kg", value)
+        if rounded then
+            return string.format("%d kg", value)
+        else
+            return string.format("%.2f kg", value)
+        end
     else
-        return string.format("%.2f lb", self:kglb(value))
+        if rounded then
+            return string.format("%d lb", self:kglb(value))
+        else
+            return string.format("%.2f lb", self:kglb(value))
+        end
     end
 
 end
