@@ -34,6 +34,10 @@ local chartTypes = {
     {
         key="heaviest",
         text="heaviest fish"
+    },
+    {
+        key="casts",
+        text="number of casts"
     }
 }
 
@@ -441,14 +445,17 @@ function module:setChartData()
         local points = { }
         self.chart.tips = { }
 
+        -- format chart labels with weight conversion
+        self.chart.formatWeight = true
+
         for n, tour in ipairs(stats.tours) do
 
             -- insert the data points
-            table.insert(points, { a=n, b=tour.totalWeight })
+            table.insert(points, { a=n, b=tour.weight })
 
             -- pre-create each point tooltip
             local tourdate = os.date("%d %b %Y", tour.date)
-            local weight = game.lib.convert:weight(tour.totalWeight)
+            local weight = game.lib.convert:weight(tour.weight)
             local tiptext = love.graphics.newText(game.fonts.tiny)
             tiptext:add(string.format("%s\n%s", tourdate, weight, 0, 0))
             self.chart.tips[n] = tiptext
@@ -462,6 +469,9 @@ function module:setChartData()
         -- heaviest fish caught per tournament
         local points = { }
         self.chart.tips = { }
+
+        -- format chart labels with weight conversion
+        self.chart.formatWeight = true
 
         for n, tour in ipairs(stats.tours) do
 
@@ -486,6 +496,31 @@ function module:setChartData()
         end
 
         self.chart:data(points, "heaviest")
+
+
+    elseif chartType.key == "casts" then
+
+        -- number of casts made per tournament
+        local points = { }
+        self.chart.tips = { }
+
+        -- format chart labels normal
+        self.chart.formatWeight = false
+
+        for n, tour in ipairs(stats.tours) do
+
+            -- insert the data points
+            table.insert(points, { a=n, b=tour.casts })
+
+            -- pre-create each point tooltip
+            local tourdate = os.date("%d %b %Y", tour.date)
+            local tiptext = love.graphics.newText(game.fonts.tiny)
+            tiptext:add(string.format("%s\n%d casts", tourdate, tour.casts, 0, 0))
+            self.chart.tips[n] = tiptext
+
+        end
+
+        self.chart:data(points, "casts")
 
     end
 
@@ -538,6 +573,8 @@ function module:makeButtons()
                 game.defaultMapHeight, seed,
                 game.defaultMapDensity, game.defaultMapIterations)
                 game.states:push("tournament", { tutorial = true })
+                -- refresh chart
+                self:setChartData()
                 end
         }), width
     )

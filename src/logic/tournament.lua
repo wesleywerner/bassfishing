@@ -87,6 +87,9 @@ function module:start()
     -- advance the day
     self:nextDay()
 
+    -- reset player
+    game.logic.player:resetTour()
+
     game.dprint("The tournament has begun!")
 
 end
@@ -117,8 +120,8 @@ function module:nextDay()
     -- reset the 30 minute remain warning flag
     self.displayedWarning = false
 
-    -- clear the player's cast data
-    game.logic.player:reset()
+    -- reset player
+    game.logic.player:resetDay()
 
     -- clear the daily lunker
     self.lunkerOfTheDay = nil
@@ -277,7 +280,7 @@ function module:endOfDay()
     if game.logic.tournament.day == 3 then
 
         -- add all fish caught during the tournament to statistics
-        game.logic.stats:record(self.fishStatistics, player.lake)
+        game.logic.stats:record(self.fishStatistics, player.lake, 0, game.logic.player.castsCount)
 
         -- show the tournament results
         game.states:push("tournament results")

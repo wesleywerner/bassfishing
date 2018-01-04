@@ -430,9 +430,14 @@ function module:chart(width, height)
                 -- draw label point
                 love.graphics.line(chart.width, label.y, chart.width + 20, label.y)
 
-                love.graphics.print(
-                    game.lib.convert:weight(label.text, true),
-                    math.floor(4 + chart.width), math.floor(label.y))
+                local text = label.text
+
+                if chart.formatWeight then
+                    text = game.lib.convert:weight(label.text, true)
+                end
+
+                love.graphics.print(text, math.floor(4 + chart.width),
+                math.floor(label.y))
             end
 
         end

@@ -45,7 +45,10 @@ local module = {
     name = "Player",
 
     -- name of the lake the player is fishing
-    lake = "Wes's Pond"
+    lake = "Wes's Pond",
+
+    -- records the number of casts made
+    castsCount = 0
 }
 
 --- Turn the boat left
@@ -170,7 +173,11 @@ function module:cast()
     if distance < 5 then
         game.dprint("you hooked your partner's hat!")
         game.states:push("messagebox", { title="OOPS", message="You hooked your partner's hat!", shake=false } )
+        return
     end
+
+    -- count casts made
+    self.castsCount = self.castsCount + 1
 
     -- see if the fish wants to strike
     local fish = game.logic.fish:attemptStrike(self.castOffset.x, self.castOffset.y, self.rod.lure)
@@ -184,6 +191,7 @@ function module:cast()
         fish = fish
     }
 
+    -- take time
     game.logic.tournament:turn()
 
 end
@@ -302,11 +310,19 @@ function module:update(dt)
 
 end
 
-function module:reset()
+--- Reset the player cast aiming and launch distance
+function module:resetDay()
 
     self.castLine = nil
     self.castOffset = nil
     self.distanceFromJetty = 1
+
+end
+
+--- Reset the player angling statistics
+function module:resetTour()
+
+    self.castsCount = 0
 
 end
 

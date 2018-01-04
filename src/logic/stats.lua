@@ -127,18 +127,26 @@ function module:updateStatistics()
 
     for _, tour in ipairs(self.data.tours) do
 
-        tour.totalWeight = 0
+        -- default tour values
+        tour.casts = tour.casts or 1
+        tour.position = tour.position or 0
+        tour.lake = tour.lake or "NONE"
+
+        print(tour.casts, "casts")
+
+        -- reset totals
+        tour.weight = 0
 
         for _, fish in ipairs(tour.fish) do
 
-            -- total fish
+            -- total number of fish
             total.fish = total.fish + 1
 
             -- total fish weight
             total.weight = total.weight + fish.weight
 
             -- tour total weight
-            tour.totalWeight = tour.totalWeight + fish.weight
+            tour.weight = tour.weight + fish.weight
 
             -- heaviest fish ever caught
             if fish.weight > total.heaviest then
