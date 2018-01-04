@@ -77,17 +77,14 @@ function module:printDetails()
 
     -- print the generated list
     if game.debug then
-        game.dprint(string.format("Details for angler %q:", self.data.name))
-        for k, v in pairs(self.data) do
-            game.dprint(string.format("%s: %s", k, v))
+
+        game.dprint(string.format("file version: %s", self.data.version))
+        game.dprint(string.format("number of tours: %d", #self.data.tours))
+
+        for k, v in pairs(self.data.total) do
+            game.dprint(string.format("total %s: %.2f", k, v))
         end
 
-        for n, tour in ipairs(self.data.tours) do
-            print(string.format("tour #%d", n))
-            for _, fish in ipairs(tour.fish) do
-                print(string.format("\tfish wt: %.2f", fish.weight))
-            end
-        end
     end
 
 end
@@ -110,6 +107,8 @@ function module:record(livewell, lake, position, casts)
 
     -- record this tour
     table.insert(self.data.tours, tour)
+
+    self:updateStatistics()
 
     self:save()
 
@@ -147,8 +146,6 @@ function module:updateStatistics()
             end
 
         end
-
-        print("tour wt ", tour.totalWeight)
 
     end
 
