@@ -403,6 +403,15 @@ function module:chart(width, height)
             love.graphics.line(0, y, width, y)
         end
 
+        -- print no-data text
+        if #chart.datapoints == 0 or #chart.datapoints[1].points < 2 then
+
+            love.graphics.setColor(game.color.yellow)
+            love.graphics.setFont(game.fonts.small)
+            love.graphics.printf("no data yet", 0, 0, width, "center")
+
+        end
+
     end
 
     local function drawLabels(chart, labels)
