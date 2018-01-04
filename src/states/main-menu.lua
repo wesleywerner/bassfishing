@@ -21,10 +21,11 @@
 
 local module = { }
 
+-- statistics chart position and size
 local chartX, chartY = 50, 300
 local chartWidth, chartHeight = 445, 215
 
--- available charts
+-- list of available charts
 local chartTypes = {
     {
         key="weigh-in",
@@ -35,6 +36,12 @@ local chartTypes = {
         text="heaviest fish"
     }
 }
+
+-- chart page indicators
+local chartDotRadius = 6
+local chartDotSpacing = 16
+local chartDotWidth = #chartTypes * (chartDotRadius + chartDotSpacing)
+local chartDotCenter = chartX + (chartWidth / 2) - (chartDotWidth / 2)
 
 function module:init(data)
 
@@ -81,7 +88,7 @@ function module:init(data)
     end
 
     -- set chart data
-    self.chartType = 1
+    self.selectedChartId = 1
     self:setChartData()
 
 
@@ -175,8 +182,8 @@ function module:keypressed(key)
     --elseif key == "down" then
         --self.lakelist:selectNext()
         --self:newMap(self:seedFromString(self.lakelist:selectedItem()))
-    --elseif key == "left" then
-        --self.panel:scrollTo(1)
+    elseif key == "left" or key == "right" then
+        self:cycleChart()
     --elseif key == "right" then
         --self.panel:scrollTo(2)
     --elseif key == "return" then
@@ -246,11 +253,7 @@ end
 
 function module:wheelmoved(x, y)
 
-    --if y > 0 then
-        --self.panel:scrollTo(1)
-    --else
-        --self.panel:scrollTo(2)
-    --end
+    self:cycleChart()
 
 end
 
@@ -292,8 +295,19 @@ function module:draw()
     love.graphics.translate(0, -24)
     love.graphics.setColor(game.color.cyan)
     love.graphics.setFont(game.fonts.small)
-    love.graphics.printf(chartTypes[self.chartType].text, 0, 0, chartWidth, "right")
+    love.graphics.printf(chartTypes[self.selectedChartId].text, 0, 0, chartWidth, "right")
     love.graphics.pop()
+
+    -- chart selection indicators
+    love.graphics.push()
+    love.graphics.translate(chartDotCenter, chartY + chartHeight + chartDotSpacing)
+    love.graphics.setColor(game.color.base1)
+    for n, _ in ipairs(chartTypes) do
+        local mode = (n == self.selectedChartId) and "fill" or "line"
+        love.graphics.circle(mode, ((n - 1) * chartDotSpacing), 0, chartDotRadius)
+    end
+    love.graphics.pop()
+
 
     -- tournament slug
     --love.graphics.printf("3 day tournament:\nyou are eligible to be entered into the big fish record books", 0, 0, self.panel.width, "center")
@@ -416,7 +430,7 @@ function module:setChartData()
     local stats = game.logic.stats.data
 
     -- get the chart type
-    local chartType = chartTypes[self.chartType]
+    local chartType = chartTypes[self.selectedChartId]
 
     -- clear the chart
     self.chart:clear()
@@ -567,24 +581,19 @@ function module:makeButtons()
         }), width
     )
 
-    -- chart left
-    game.view.ui:setButton(
-        collection:button("chart right", {
-            left = chartX,
-            top = chartY + chartHeight + 20,
-            text = ">",
-            callback = function(btn)
-                if self.chartType < #chartTypes then
-                    self.chartType = math.min(#chartTypes, self.chartType + 1)
-                else
-                    self.chartType = 1
-                end
-                self:setChartData()
-            end
-        })
-    )
-
     return collection
+
+end
+
+function module:cycleChart()
+
+    if self.selectedChartId < #chartTypes then
+        self.selectedChartId = math.min(#chartTypes, self.selectedChartId + 1)
+    else
+        self.selectedChartId = 1
+    end
+
+    self:setChartData()
 
 end
 
