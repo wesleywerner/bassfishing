@@ -257,7 +257,11 @@ end
 
 function module:wheelmoved(x, y)
 
-    self:cycleChart()
+    if y > 0 then
+        self:cycleChart(-1)
+    else
+        self:cycleChart(1)
+    end
 
 end
 
@@ -622,12 +626,14 @@ function module:makeButtons()
 
 end
 
-function module:cycleChart()
+function module:cycleChart(dir)
 
-    if self.selectedChartId < #chartTypes then
-        self.selectedChartId = math.min(#chartTypes, self.selectedChartId + 1)
-    else
+    self.selectedChartId = self.selectedChartId + dir
+
+    if self.selectedChartId > #chartTypes then
         self.selectedChartId = 1
+    elseif self.selectedChartId == 0 then
+        self.selectedChartId = #chartTypes
     end
 
     self:setChartData()
