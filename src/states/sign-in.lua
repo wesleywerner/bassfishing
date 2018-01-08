@@ -307,9 +307,11 @@ function module:draw()
     -- draw sign-in button carousel
     love.graphics.push()
     love.graphics.translate(carouselX, carouselY)
+    love.graphics.setScissor(40, carouselY, game.window.width - 80, carouselY + iconHeight)
     for _, v in ipairs(collection) do
         v:draw()
     end
+    love.graphics.setScissor()
     love.graphics.pop()
 
     self.newButton:draw()
