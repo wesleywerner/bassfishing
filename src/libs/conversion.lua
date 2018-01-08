@@ -46,6 +46,10 @@ function module:mphkph(value)
     return value * 1.609344
 end
 
+function module:mf(value)
+    return value * 3.2808398950131
+end
+
 function module:weight(value, rounded)
 
     if self.metric then
@@ -80,6 +84,16 @@ function module:speed(value)
         return string.format("%d kph", value)
     else
         return string.format("%d mph", self:kphmph(value))
+    end
+
+end
+
+function module:distance(value)
+
+    if self.metric then
+        return string.format("%d m", value)
+    else
+        return string.format("%d ft", self:mf(value))
     end
 
 end
