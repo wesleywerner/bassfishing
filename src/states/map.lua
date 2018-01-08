@@ -33,7 +33,7 @@ function module:init()
     -- render the map
     self.mapimage = game.view.maprender:renderMini(true)
 
-    self.transition = game.view.screentransition:new(0.5, "inCubic")
+    self.transition = game.view.screentransition:new(game.transition.time / 2, game.transition.enter)
 
     self.flasher = 0
 
@@ -42,13 +42,13 @@ end
 
 function module:keypressed(key)
 
-    self.transition:close(0.5, "inCubic")
+    self.transition:close(game.transition.time / 2, game.transition.exit)
 
 end
 
 function module:mousepressed( x, y, button, istouch )
 
-    self.transition:close(0.5, "inCubic")
+    self.transition:close(game.transition.time / 2, game.transition.exit)
 
 end
 

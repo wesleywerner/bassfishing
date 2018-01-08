@@ -63,7 +63,7 @@ function module:init(data)
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
-    self.transition = game.view.screentransition:new(.5, "outBack")
+    self.transition = game.view.screentransition:new(game.transition.time / 2, game.transition.enter)
 
     love.graphics.setFont(game.fonts.medium)
 
@@ -75,12 +75,12 @@ end
 function module:keypressed(key)
 
     if key == "escape" then
-        self.transition:close(.5, "inBack")
+        self.transition:close(game.transition.time / 2, game.transition.exit)
     elseif key == "return" then
         if type(self.callback) == "function" then
             self.callback(self.text)
         end
-        self.transition:close(.5, "inBack")
+        self.transition:close(game.transition.time / 2, game.transition.exit)
     elseif key == "backspace" then
 
         local utf8 = require("utf8")

@@ -22,6 +22,7 @@ local module = { }
 
 -- The game version
 module.version = "1"
+module.title = "Bass Lover"
 
 -- enable debug printing
 module.debug = true
@@ -60,6 +61,13 @@ module.color.cyan      = {  42, 161, 152 }
 module.color.green     = { 133, 153,   0 }
 module.color.hilite    = {  38, 139, 210, 64 }
 module.color.checked   = { 133, 153,   0, 64 }
+
+-- screen transition defaults
+module.transition = {
+    time = 1,
+    enter = "outBack",
+    exit = "inBack"
+}
 
 -- collate modules
 module.logic = { }

@@ -20,6 +20,9 @@
 
 local module = { }
 
+-- time to wait before allowing dialog close
+local closeAfterTime = .6
+
 function module:init(data)
 
     -- expect data to contain "title", "message" and optionally "shake bool".
@@ -81,7 +84,7 @@ function module:keypressed(key)
             game.states:pop()
             self.callback()
         end
-    elseif self.timepassed > 1 then
+    elseif self.timepassed > closeAfterTime then
         game.states:pop()
     end
 
@@ -89,7 +92,7 @@ end
 
 function module:mousepressed( x, y, button, istouch )
 
-    if self.timepassed > 1 then
+    if self.timepassed > closeAfterTime then
         game.states:pop()
     end
 
@@ -97,10 +100,9 @@ end
 
 function module:update(dt)
 
-    self.timepassed = self.timepassed + dt
-
     if self.shaking < 1 then
         self.fade = math.min(255, self.fade + 10)
+        self.timepassed = self.timepassed + dt
     end
 
     self.shaking = game.lib.lume.lerp(self.shaking, 0, 7*dt)

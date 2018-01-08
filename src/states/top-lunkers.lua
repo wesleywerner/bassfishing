@@ -32,7 +32,7 @@ function module:init(newLunkers)
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
-    self.transition = game.view.screentransition:new(3, "outBack")
+    self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
 
     -- measure font size
     self.fontHeight = love.graphics.newText(game.fonts.small, "BASS"):getHeight()
@@ -52,7 +52,7 @@ end
 
 function module:keypressed(key)
 
-    self.transition:close(1, "inBack")
+    self.transition:close(game.transition.time, game.transition.exit)
 
 end
 
@@ -62,7 +62,7 @@ end
 
 function module:mousepressed( x, y, button, istouch )
 
-    self.transition:close(1, "inBack")
+    self.transition:close(game.transition.time, game.transition.exit)
 
 end
 

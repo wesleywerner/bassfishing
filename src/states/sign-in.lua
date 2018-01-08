@@ -68,7 +68,7 @@ function module:init(data)
     self.fishimageX = (self.width - fishimgW) / 2
     self.fishimageY = (self.height - fishimgH) / 2
 
-    self.transition = game.view.screentransition:new(1, "outBack")
+    self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
 
     -- add a new angler option
     love.graphics.setFont(game.fonts.small)
@@ -172,7 +172,7 @@ end
 function module:keypressed(key)
 
     if key == "escape" then
-        self.transition:close(.5, "inBack")
+        self.transition:close(game.transition.time, game.transition.exit)
     elseif key == "left" then
         self:carouselLeft()
     elseif key == "right" then
@@ -185,17 +185,23 @@ end
 
 function module:carouselLeft()
 
-    selectedId = math.max(1, selectedId - 1)
-    previousCarouselX = carouselX
-    carouselScale = 0
+    local newid = math.max(1, selectedId - 1)
+    if newid ~= selectedId then
+        selectedId = newid
+        previousCarouselX = carouselX
+        carouselScale = 0
+    end
 
 end
 
 function module:carouselRight()
 
-    selectedId = math.min(#collection, selectedId + 1)
-    previousCarouselX = carouselX
-    carouselScale = 0
+    local newid = math.min(#collection, selectedId + 1)
+    if newid ~= selectedId then
+        selectedId = newid
+        previousCarouselX = carouselX
+        carouselScale = 0
+    end
 
 end
 
@@ -280,16 +286,21 @@ function module:draw()
     self.transition:apply("drop down")
 
     -- background
-    love.graphics.clear(game.color.base03)
+    love.graphics.clear(game.color.base3)
 
     -- fish image
     love.graphics.setColor(255, 255, 255, 192)
     love.graphics.draw(fishimage, self.fishimageX, self.fishimageY)
 
     -- title
-    love.graphics.setColor(game.color.yellow)
+    love.graphics.setColor(game.color.blue)
     love.graphics.setFont(game.fonts.large)
-    love.graphics.printf("angler sign-in", 0, 20, self.width, "center")
+    love.graphics.printf(game.title, 0, 10, self.width, "center")
+
+    -- sub title
+    love.graphics.setColor(game.color.yellow)
+    love.graphics.setFont(game.fonts.medium)
+    love.graphics.printf("angler sign-in", 0, 80, self.width, "center")
 
     -- draw sign-in button carousel
     love.graphics.push()
@@ -322,7 +333,7 @@ function module:signIn()
     game.logic.stats:load(anglername)
     game.logic.player.name = game.logic.stats.data.name
     self.anglerSelected = true
-    self.transition:close(1, "inBack")
+    self.transition:close(game.transition.time, game.transition.exit)
 
 end
 
