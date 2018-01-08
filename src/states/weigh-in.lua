@@ -71,23 +71,17 @@ end
 function module:draw()
 
     -- underlay screenshot
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(128, 128, 128)
     love.graphics.draw(self.screenshot)
 
     -- apply transform
     self.transition:apply("drop down")
 
+    -- background
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(game.border)
+
     local tour = game.logic.tournament
-
-    -- draw a frame
-    love.graphics.setColor(game.color.base2)
-    love.graphics.rectangle("fill", 0, 0, self.width, self.height)
-
-    -- border
-    love.graphics.setColor(game.color.base03)
-    love.graphics.setLineWidth(40)
-    love.graphics.rectangle("line", 0, 0, self.width, self.height)
-    love.graphics.setLineWidth(1)
 
     -- print title
     love.graphics.setColor(game.color.base01)

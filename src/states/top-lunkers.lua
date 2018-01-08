@@ -79,11 +79,15 @@ end
 function module:draw()
 
     -- underlay screenshot
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(128, 128, 128)
     love.graphics.draw(self.screenshot)
 
     -- apply transform
     self.transition:apply("drop down")
+
+    -- background
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(game.border)
 
     love.graphics.setColor(game.color.white)
     love.graphics.draw(self.image, 0, 0)
@@ -95,16 +99,6 @@ function module:prerender()
     -- prerender the list to canvas
     self.image = love.graphics.newCanvas(self.width, self.height)
     love.graphics.setCanvas(self.image)
-
-    -- background
-    love.graphics.setColor(game.color.base2)
-    love.graphics.rectangle("fill", 0, 0, self.width, self.height)
-
-    -- border
-    love.graphics.setColor(game.color.base03)
-    love.graphics.setLineWidth(40)
-    love.graphics.rectangle("line", 0, 0, self.width, self.height)
-    love.graphics.setLineWidth(1)
 
     -- font color
     love.graphics.setColor(game.color.base0)

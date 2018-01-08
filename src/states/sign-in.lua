@@ -278,6 +278,8 @@ end
 
 function module:draw()
 
+    love.graphics.clear(game.color.base01)
+
     -- save state
     love.graphics.push()
 
@@ -286,7 +288,7 @@ function module:draw()
     self.transition:apply("drop down")
 
     -- background
-    love.graphics.clear(game.color.base3)
+    love.graphics.draw(game.border)
 
     -- fish image
     love.graphics.setColor(255, 255, 255, 192)

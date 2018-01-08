@@ -44,10 +44,10 @@ function module:init(data)
         llst.textColor = game.color.blue
         llst.fillColor = game.color.blue
         llst.selectedColor = game.color.base3
-        llst.left = 10
+        llst.left = 40
         llst.top = 100
         llst.width = 300
-        llst.height = game.window.height / 2 --- self.lakelist.top
+        llst.height = game.window.height / 2
         llst:add("Buttermere")
         llst:add("Cabora Bassa Lake")
         llst:add("Lake Sagara")
@@ -141,15 +141,15 @@ function module:draw()
     end
 
     -- underlay screenshot
-    love.graphics.setColor(255, 255, 255, 128)
+    love.graphics.setColor(128, 128, 128)
     love.graphics.draw(self.screenshot)
 
     -- apply transform
     self.transition:apply("drop down")
 
-    -- menu background
-    love.graphics.setColor(game.color.base2)
-    love.graphics.rectangle("fill", 0, 0, game.window.width, game.window.height)
+    -- background
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(game.border)
 
     -- buttons
     self.buttons:draw()

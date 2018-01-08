@@ -443,6 +443,9 @@ function module:setChartData()
     -- clear the chart
     self.chart:clear()
 
+    -- skip charting without minimal data points
+    if #stats.tours < 2 then return end
+
     if chartType.key == "weigh-in" then
 
         -- total fish weighed-in per tournament

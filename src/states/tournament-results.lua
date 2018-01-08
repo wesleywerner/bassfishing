@@ -68,26 +68,20 @@ function module:draw()
     love.graphics.push()
 
     -- underlay screenshot
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(128, 128, 128)
     love.graphics.draw(self.screenshot)
 
     -- apply transform
     self.transition:apply("drop up")
 
+    -- background
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(game.border)
+
     local frameLeft = 0
     local frameTop = 0
     local frameWidth = self.width
     local frameHeight = self.height
-
-    -- draw a frame
-    love.graphics.setColor(game.color.base2)
-    love.graphics.rectangle("fill", frameLeft, frameTop, frameWidth, frameHeight)
-
-    -- border
-    love.graphics.setColor(game.color.base03)
-    love.graphics.setLineWidth(40)
-    love.graphics.rectangle("line", frameLeft, frameTop, frameWidth, frameHeight)
-    love.graphics.setLineWidth(1)
 
     -- print title
     love.graphics.setColor(game.color.base01)
