@@ -26,7 +26,7 @@ local module = {
     rods = {
         {
             name = "Pistol grip",
-            range = 3.5,
+            range = 3.7,
         },
 
         {
@@ -36,7 +36,7 @@ local module = {
 
         {
             name = "Pitching stick",
-            range = 3,
+            range = 3.3,
         },
 
         {
@@ -91,7 +91,7 @@ local module = {
 
     colors = {
         ["white"] = { 255, 255, 255 },
-        ["black"] = { 128, 128, 128 },
+        ["black"] = { 32, 32, 32 },
         ["blue"] = { 0, 72, 255 },
         ["brown"] = { 150, 75, 0 },
         ["green"] = { 141, 255, 0 },

@@ -20,6 +20,8 @@
 
 local tiles = {}
 
+-- the distance in meters a tile represents
+tiles.inmeters = 6
 tiles.size = 16
 tiles.center = tiles.size / 2
 tiles.image = love.graphics.newImage("res/tiles.png")

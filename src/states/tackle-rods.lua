@@ -54,27 +54,26 @@ function module:init(data)
     local fontHeight = math.floor(love.graphics.newText(self.listFont, "ABC"):getHeight() / 2)
 
     -- define clickable hotspots
-    if not self.hotspots then
+    self.hotspots = { }
 
-        self.hotspots = { }
+    local n = 1
+    for i, rod in ipairs(game.logic.tackle.rods) do
 
-        local n = 1
-        for i, rod in ipairs(game.logic.tackle.rods) do
+        local rodrange = game.lib.convert:distance(rod.range * game.view.tiles.inmeters)
 
-            table.insert(self.hotspots,
-                game.lib.hotspot:new{
-                    top = self.tackleTop + (self.linespacing * n),
-                    left = padding,
-                    width = self.width - padding * 2,
-                    height = self.linespacing,
-                    rod = rod,
-                    textY = (self.linespacing / 2) - fontHeight
-                    }
-            )
+        table.insert(self.hotspots,
+            game.lib.hotspot:new{
+                top = self.tackleTop + (self.linespacing * n),
+                left = padding,
+                width = self.width - padding * 2,
+                height = self.linespacing,
+                rod = rod,
+                textY = (self.linespacing / 2) - fontHeight,
+                text = string.format("%s, range %s", rod.name, rodrange),
+                }
+        )
 
-            n = n + 1
-
-        end
+        n = n + 1
 
     end
 
@@ -170,7 +169,7 @@ function module:draw()
 
         if hotspot.rod.name == self.playerRod or hotspot.focused then
             -- selected focus
-            love.graphics.setColor(game.color.magenta)
+            love.graphics.setColor(game.color.blue)
             love.graphics.rectangle("fill", hotspot.left, hotspot.top,
                 hotspot.width, hotspot.height)
             love.graphics.setColor(game.color.base3)
@@ -180,7 +179,7 @@ function module:draw()
         end
 
         -- print rod name
-        love.graphics.print(hotspot.rod.name, hotspot.left, hotspot.top + hotspot.textY)
+        love.graphics.print(hotspot.text, hotspot.left + 20, hotspot.top + hotspot.textY)
 
         -- print rod lure
         if hotspot.rod.lure then
