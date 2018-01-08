@@ -21,22 +21,15 @@
 
 local module = { }
 
+local panelHeight = 300
+local panelTop = 0
+
 function module:init(data)
-
-    -- expect data to contain "title", "message" and optionally "shake bool".
-
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
 
     -- save screen and use it as a menu background
     self.screenshot = data or love.graphics.newImage( love.graphics.newScreenshot() )
 
-    -- load background image
-    if not self.background then
-        self.background = love.graphics.newImage("res/tackle-lures.png")
-        self.backgroundY = self.height - self.background:getHeight()
-        self.exitAbove = self.backgroundY
-    end
+    panelTop = game.window.height - panelHeight
 
     -- load lure sprites
     if not self.lures then
@@ -102,24 +95,22 @@ function module:init(data)
     self.linespacing = 30
 
     -- padding from the top
-    self.topPadding = self.exitAbove + 20
+    self.topPadding = panelTop + 20
     self.bottomPadding = 20
-    self.leftPadding = 40
+    self.leftPadding = 20
+
+    -- padding for list text
+    self.textPadding = 10
 
     -- list widths adjust to contents
     self.categoryListWidth = 0
     self.lureListWidth = 0
 
     -- list height fits the panel
-    self.listHeight = self.height - self.topPadding - self.bottomPadding
+    self.listHeight = game.window.height - self.topPadding - self.bottomPadding
 
     -- the font used for lists
     self.listFont = game.fonts.small
-
-    -- pick the current lure color
-    if game.logic.player.rod and game.logic.player.rod.lure then
-        self.selectedColor = game.logic.player.rod.lure.color
-    end
 
     -- default color
     if not self.selectedColor then
@@ -143,6 +134,9 @@ function module:init(data)
 
         end
 
+        -- pad category items
+        self.categoryListWidth = self.categoryListWidth + (self.textPadding * 2)
+
         -- sort the list
         table.sort(self.categoryNames)
 
@@ -165,6 +159,9 @@ function module:init(data)
             end
 
         end
+
+        -- pad lure items
+        self.lureListWidth = self.lureListWidth + (self.textPadding * 2)
 
     end
 
@@ -204,7 +201,7 @@ function module:init(data)
                         self.selectedCategory = hotspot.category
                         self.lureList:scrollTo(hotspot.page)
                         -- auto select first lure in this category
-                        self:selectLure(self.lureNames[category][1])
+                        --self:selectLure(self.lureNames[category][1])
                         end
                     }
             )
@@ -219,7 +216,7 @@ function module:init(data)
         -- aperture
         self.lureList = game.lib.aperture:new{
             top = self.topPadding,
-            left = self.leftPadding * 2 + self.categoryListWidth,
+            left = self.categoryList.left + self.categoryListWidth,
             width = self.lureListWidth,
             height = self.listHeight,
             pages = #self.categoryList.hotspots,
@@ -262,7 +259,7 @@ function module:init(data)
         self.palette = game.lib.aperture:new{
             top = self.topPadding,
             -- right align palette on screen
-            left = self.width - self.lures.width - self.leftPadding,
+            left = game.window.width - self.lures.width - self.leftPadding,
             -- width of the lure image
             width = self.lures.width,
             height = self.listHeight,
@@ -282,7 +279,7 @@ function module:init(data)
                     height = self.paletteSize,
                     color = color,
                     callback = function(hotspot)
-                        self:setLure()
+                        self:setLure(hotspot.color)
                         end
                 }
             )
@@ -327,6 +324,19 @@ function module:init(data)
 
     end
 
+    -- re-select the current lure
+    if game.logic.player.rod and game.logic.player.rod.lure then
+        self.selectedCategory = game.logic.player.rod.lure.category
+        self:selectLure(game.logic.player.rod.lure.name)
+        -- scroll lure list to the matching category
+        for i, v in ipairs(self.categoryNames) do
+            if v == self.selectedCategory then
+                self.lureList:scrollTo(i)
+            end
+        end
+        self.selectedColor = game.logic.player.rod.lure.color
+    end
+
     -- if the player has no rod selected, show the rod selection
     if not game.logic.player.rod then
         game.states:push("tackle rods")
@@ -353,9 +363,10 @@ function module:mousemoved( x, y, dx, dy, istouch )
     self.palette:mousemoved( x, y, dx, dy, istouch )
 
     -- draw in hovered color
+    self.hoveredColor = nil
     for _, hotspot in ipairs(self.palette.hotspots) do
         if hotspot.focused then
-            self.selectedColor = hotspot.color
+            self.hoveredColor = hotspot.color
         end
     end
 
@@ -363,7 +374,7 @@ end
 
 function module:mousepressed( x, y, button, istouch )
 
-    if y < self.exitAbove then
+    if y < panelTop then
 
         self.transition:close(0.5, "outBack")
 
@@ -382,6 +393,21 @@ function module:mousereleased(x, y, button, istouch)
     self.categoryList:mousereleased(x, y, button, istouch)
     self.lureList:mousereleased(x, y, button, istouch)
     self.palette:mousereleased(x, y, button, istouch)
+
+end
+
+function module:wheelmoved(x, y)
+
+    if self.lureList.focused or self.categoryList.focused then
+        -- overwrite scroll on aperture if not focused
+        self.lureList.focused = true
+        if y < 0 then
+            self.lureList:scrollDown()
+        else
+            self.lureList:scrollUp()
+        end
+        self.selectedCategory = self.categoryList.hotspots[self.lureList.page].category
+    end
 
 end
 
@@ -421,45 +447,67 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    self.transition:apply("slide up", self.backgroundY)
+    self.transition:apply("slide up", panelHeight)
 
-    -- tackle background
-    love.graphics.setColor(game.color.white)
-    love.graphics.draw(self.background, 0, self.backgroundY)
+    -- fill
+    love.graphics.setColor(game.color.base2)
+    love.graphics.rectangle("fill", 0, panelTop, game.window.width, panelHeight)
+
+    -- border
+    love.graphics.setColor(game.color.base02)
+    love.graphics.setLineWidth(4)
+    love.graphics.rectangle("line", 0, panelTop, game.window.width, panelHeight)
+    love.graphics.setLineWidth(1)
 
     -- draw the list of lure categories
     love.graphics.setFont(self.listFont)
     self.categoryList:apply()
+    -- fill category list
+    love.graphics.setColor(game.color.blue)
+    love.graphics.rectangle("fill", 0, 0, self.categoryList.width, self.categoryList.height)
+    -- print items
     for _, hotspot in ipairs(self.categoryList.hotspots) do
         if hotspot.category == self.selectedCategory or hotspot.focused then
             -- selected focus
-            love.graphics.setColor(game.color.magenta)
-            love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
             love.graphics.setColor(game.color.base3)
+            love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
+            love.graphics.setColor(game.color.blue)
         else
             -- normal
-            love.graphics.setColor(game.color.base01)
+            love.graphics.setColor(game.color.base2)
         end
-        love.graphics.print(hotspot.category, hotspot.left, hotspot.top + hotspot.textY)
+        love.graphics.print(hotspot.category, hotspot.left + self.textPadding, hotspot.top + hotspot.textY)
     end
     self.categoryList:release()
 
     -- draw the list of lures
     love.graphics.setFont(self.listFont)
     self.lureList:apply()
-    for _, hotspot in ipairs(self.lureList.hotspots) do
+    for i, hotspot in ipairs(self.lureList.hotspots) do
+        -- alternate backgrounds
+        if i % 2 == 0 then
+            love.graphics.setColor(game.color.base3)
+            love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
+        end
         if hotspot.lure == self.selectedLure or hotspot.focused then
             -- selected focus
-            love.graphics.setColor(game.color.magenta)
+            love.graphics.setColor(game.color.blue)
             love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
             love.graphics.setColor(game.color.base3)
         else
             -- normal
             love.graphics.setColor(game.color.base01)
         end
-        love.graphics.print(hotspot.lure, hotspot.left, hotspot.top + hotspot.textY)
+        love.graphics.print(hotspot.lure, hotspot.left + self.textPadding, hotspot.top + hotspot.textY)
     end
     self.lureList:release()
+
+    -- list borders
+    love.graphics.setColor(game.color.blue)
+    love.graphics.rectangle("line", self.categoryList.left, self.categoryList.top,
+        self.categoryList.width, self.categoryList.height)
+    love.graphics.rectangle("line", self.lureList.left, self.lureList.top,
+        self.lureList.width, self.lureList.height)
 
     -- palette
     self.palette:apply()
@@ -480,7 +528,11 @@ function module:draw()
     -- lure images
     if self.lureImageQuad then
         self.imageList:apply()
-        love.graphics.setColor(game.logic.tackle.colors[self.selectedColor])
+        if self.hoveredColor then
+            love.graphics.setColor(game.logic.tackle.colors[self.hoveredColor])
+        else
+            love.graphics.setColor(game.logic.tackle.colors[self.selectedColor])
+        end
         love.graphics.draw(self.lures.image, self.lureImageQuad, 0, 0)
         self.imageList:release()
     end
@@ -490,10 +542,10 @@ function module:draw()
 
 end
 
-function module:setLure()
+function module:setLure(color)
 
     -- set the player lure
-    game.logic.player:setLure(self.selectedCategory, self.selectedLure, self.selectedColor)
+    game.logic.player:setLure(self.selectedCategory, self.selectedLure, color)
 
     -- begin the screen close animation
     module.transition:close(0.5, "outBack")
