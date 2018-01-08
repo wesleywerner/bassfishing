@@ -50,7 +50,7 @@ local selectedId = 1
 -- Animating carousel offsets
 local previousCarouselX = 0
 local carouselX = 0
-local carouselY = 200
+local carouselY = 380
 local carouselCenter = 300
 local carouselScale = 0
 
@@ -66,11 +66,11 @@ function module:init(data)
     -- center fish image
     local fishimgW, fishimgH = fishimage:getDimensions()
     self.fishimageX = (self.width - fishimgW) / 2
-    self.fishimageY = (self.height - fishimgH) / 2
+    self.fishimageY = 100
 
     self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
 
-    -- add a new angler option
+    -- new angler button
     love.graphics.setFont(game.fonts.small)
     self.newButton = game.lib.button:new{
         top = self.height - 60,
@@ -103,7 +103,7 @@ local function drawSigninButton(btn)
     love.graphics.push()
 
     if btn.Id == selectedId then
-        love.graphics.setColor(255, 255, 255, carouselScale * 255)
+        love.graphics.setColor(255, 255, 255, 128 + (carouselScale * 127))
     else
         love.graphics.setColor(255, 255, 255, 92)
     end
@@ -297,12 +297,12 @@ function module:draw()
     -- title
     love.graphics.setColor(game.color.blue)
     love.graphics.setFont(game.fonts.large)
-    love.graphics.printf(game.title, 0, 10, self.width, "center")
+    love.graphics.printf(game.title, 0, 20, self.width, "center")
 
     -- sub title
-    love.graphics.setColor(game.color.yellow)
-    love.graphics.setFont(game.fonts.medium)
-    love.graphics.printf("angler sign-in", 0, 80, self.width, "center")
+    --love.graphics.setColor(game.color.yellow)
+    --love.graphics.setFont(game.fonts.medium)
+    --love.graphics.printf("angler sign-in", 0, 80, self.width, "center")
 
     -- draw sign-in button carousel
     love.graphics.push()
