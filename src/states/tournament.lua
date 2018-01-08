@@ -54,7 +54,7 @@ function module:init(data)
 
     -- load the game border
     if not self.borderImage then
-        self.borderImage = love.graphics.newImage("res/game-border.png")
+        self.borderImage = love.graphics.newImage("res/tournament-border.png")
     end
 
     -- set up the buttons
