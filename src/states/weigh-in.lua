@@ -24,7 +24,7 @@ local module = { }
 function module:init(data)
 
     -- expect data to contain "title", "message" and optionally "shake bool".
-
+    -- TODO: replace self.width with game.window.width (and for height)
     self.width = love.graphics.getWidth()
     self.height = love.graphics.getHeight()
 

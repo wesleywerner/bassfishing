@@ -337,56 +337,6 @@ function module:setSwitch(btn, options)
 
 end
 
-function module:createTournamentButtons()
-
-    local collection = game.lib.widgetCollection:new()
-
-    game.view.ui:setButton(
-        collection:button("forecast", {
-            left = 678,
-            top = 46,
-            text = "Forecast",
-            callback = function(btn)
-                end
-        })
-    )
-
-    game.view.ui:setSwitch(
-        collection:button("motor", {
-            left = 640,
-            top = 92,
-            text = "#",
-            callback = function(btn)
-                game.logic.player:toggleTrollingMotor()
-                end
-        }), {"Outboard", "Trolling"})
-
-    game.view.ui:setButton(
-        collection:button("lures", {
-            left = 625,
-            top = 140,
-            text = "Lures",
-            callback = function(btn)
-                game.states:push("tackle lures")
-                end
-        })
-    )
-
-    game.view.ui:setButton(
-        collection:button("rods", {
-            left = 722,
-            top = 140,
-            text = "Rods",
-            callback = function(btn)
-                game.states:push("tackle rods")
-                end
-        })
-    )
-
-    return collection
-
-end
-
 function module:chart(width, height)
 
     local function drawGrid(chart, width, height)

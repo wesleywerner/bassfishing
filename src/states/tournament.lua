@@ -25,6 +25,8 @@ local buttons = nil
 
 function module:init(data)
 
+    love.graphics.origin()
+
     -- prepare the lake
     game.logic.genie:populateLakeWithFishAndBoats(game.lake)
     game.logic.boat:prepare(game.logic.player)
@@ -56,7 +58,53 @@ function module:init(data)
     end
 
     -- set up the buttons
-    buttons = game.view.ui:createTournamentButtons()
+    if not buttons then
+
+        buttons =  game.lib.widgetCollection:new()
+
+        game.view.ui:setButton(
+            buttons:button("forecast", {
+                left = 678,
+                top = 46,
+                text = "Forecast",
+                callback = function(btn)
+                    end
+            })
+        )
+
+        game.view.ui:setSwitch(
+            buttons:button("motor", {
+                left = 640,
+                top = 92,
+                text = "motor",
+                callback = function(btn)
+                    game.logic.player:toggleTrollingMotor()
+                    end
+            }), {"Outboard", "Trolling"})
+
+        game.view.ui:setButton(
+            buttons:button("lures", {
+                left = 625,
+                top = 140,
+                text = "Lures",
+                callback = function(btn)
+                    game.states:push("tackle lures")
+                    end
+            })
+        )
+
+        game.view.ui:setButton(
+            buttons:button("rods", {
+                left = 722,
+                top = 140,
+                text = "Rods",
+                callback = function(btn)
+                    game.states:push("tackle rods")
+                    end
+            })
+        )
+
+    end
 
     -- fill the fish finder with data
     game.view.fishfinder:update()

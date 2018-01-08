@@ -124,8 +124,12 @@ module.lib.convert = require("libs.conversion")
 -- fonts
 module.fonts = { }
 module.fonts.tiny = love.graphics.newFont("res/MechanicalBd.otf", 14)
+module.fonts.tinyheight = module.fonts.tiny:getHeight()
 module.fonts.small = love.graphics.newFont("res/MechanicalBd.otf", 18)
+module.fonts.smallheight = module.fonts.small:getHeight()
 module.fonts.medium = love.graphics.newFont("res/MechanicalBd.otf", 24)
+module.fonts.mediumheight = module.fonts.medium:getHeight()
 module.fonts.large = love.graphics.newFont("res/MechanicalBdOutObl.otf", 48)
+module.fonts.largeheight = module.fonts.large:getHeight()
 
 return module

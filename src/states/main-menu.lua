@@ -545,7 +545,7 @@ function module:makeButtons()
             top = top,
             text = "Tournament",
             callback = function(btn)
-                -- TODO: go to lake selection state
+                game.states:push("tournament selection")
                 end
         }), width
     )
