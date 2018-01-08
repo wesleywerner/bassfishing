@@ -27,6 +27,15 @@ function module:init(data)
 
     love.graphics.origin()
 
+    -- generate a random lake (for testing this state without lake selection)
+    if not game.lake then
+        data = { practice = false }
+        local seed = 42
+        game.lake = game.logic.genie:generate(game.defaultMapWidth,
+        game.defaultMapHeight, seed,
+        game.defaultMapDensity, game.defaultMapIterations)
+    end
+
     -- prepare the lake
     game.logic.genie:populateLakeWithFishAndBoats(game.lake)
     game.logic.boat:prepare(game.logic.player)
@@ -59,51 +68,7 @@ function module:init(data)
 
     -- set up the buttons
     if not buttons then
-
-        buttons =  game.lib.widgetCollection:new()
-
-        game.view.ui:setButton(
-            buttons:button("forecast", {
-                left = 678,
-                top = 46,
-                text = "Forecast",
-                callback = function(btn)
-                    end
-            })
-        )
-
-        game.view.ui:setSwitch(
-            buttons:button("motor", {
-                left = 640,
-                top = 92,
-                text = "motor",
-                callback = function(btn)
-                    game.logic.player:toggleTrollingMotor()
-                    end
-            }), {"Outboard", "Trolling"})
-
-        game.view.ui:setButton(
-            buttons:button("lures", {
-                left = 625,
-                top = 140,
-                text = "Lures",
-                callback = function(btn)
-                    game.states:push("tackle lures")
-                    end
-            })
-        )
-
-        game.view.ui:setButton(
-            buttons:button("rods", {
-                left = 722,
-                top = 140,
-                text = "Rods",
-                callback = function(btn)
-                    game.states:push("tackle rods")
-                    end
-            })
-        )
-
+        self:makeButtons()
     end
 
     -- fill the fish finder with data
@@ -156,7 +121,7 @@ function module:keypressed(key)
 
     -- debug shortcuts
     if game.debug then
-        if key == "tab" then
+        if key == "f1" then
             drawDebug = not drawDebug
         elseif key == "f10" then
             game.states:push("lakegen development")
@@ -288,11 +253,13 @@ function module:draw()
         love.graphics.pop()
     end
 
+    -- weather icon
     love.graphics.push()
-    love.graphics.translate(622, 36)
-    game.view.weather:draw()
+    love.graphics.translate(680, 32)
+    game.view.weather:drawIcon()
     love.graphics.pop()
 
+    -- boat speed / rod details status text
     if game.logic.player.speed > 0 and not game.logic.player.trolling then
         love.graphics.push()
         love.graphics.translate(10, 570)
@@ -305,25 +272,26 @@ function module:draw()
         love.graphics.pop()
     end
 
+    -- live well
     love.graphics.push()
     love.graphics.translate(620, 188)
     game.view.livewell:draw()
     love.graphics.pop()
 
-    -- draw buttons
-
-    -- draw mini map
+    -- mini map
     love.graphics.push()
     love.graphics.translate(634, 371)
     love.graphics.scale(1.8, 1.8)
     love.graphics.draw(self.minimap)
-    -- player position
+
+    -- player position on the mini map
     love.graphics.scale(1, 1)
     love.graphics.translate(-1, -1)
     love.graphics.setColor(game.color.white)
     love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 2, 2)
     love.graphics.pop()
-    -- border
+
+    -- mini map border
     love.graphics.setColor(game.color.blue)
     love.graphics.rectangle("line", 634, 371, 150, 56)
 
@@ -346,5 +314,74 @@ function module:exitTournament()
 
 end
 
+function module:makeButtons()
+
+    local width = 130
+    local spacing = 40
+    local left = 640
+    local top = 90
+    love.graphics.setFont(game.fonts.small)
+    buttons = game.lib.widgetCollection:new()
+
+    game.view.ui:setButton(
+        buttons:button("forecast", {
+            left = left,
+            top = top,
+            text = "Forecast",
+            callback = function(btn)
+                -- TODO: forecast state
+                end
+        }), width
+    )
+
+    top = top + spacing
+    game.view.ui:setSwitch(
+        buttons:button("motor", {
+            left = left,
+            top = top,
+            text = "motor",
+            callback = function(btn)
+                game.logic.player:toggleTrollingMotor()
+                end
+        }), {"Outboard", "Trolling"}, width
+    )
+
+    top = top + spacing
+    game.view.ui:setButton(
+        buttons:button("lures", {
+            left = left,
+            top = top,
+            text = "Lures",
+            callback = function(btn)
+                game.states:push("tackle lures")
+                end
+        }), width
+    )
+
+    top = top + spacing
+    game.view.ui:setButton(
+        buttons:button("rods", {
+            left = left,
+            top = top,
+            text = "Rods",
+            callback = function(btn)
+                game.states:push("tackle rods")
+                end
+        }), width
+    )
+
+    top = top + spacing
+    game.view.ui:setButton(
+        buttons:button("livewell", {
+            left = left,
+            top = top,
+            text = "Live well",
+            callback = function(btn)
+                -- TODO: live well state
+                end
+        }), width
+    )
+
+end
 
 return module

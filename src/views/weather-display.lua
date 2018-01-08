@@ -20,7 +20,7 @@
 
 local module = { }
 
-function module:draw()
+function module:drawIcon()
 
     -- TODO: hover over tips (a cold front is approaching etc)
 
@@ -69,7 +69,7 @@ function module:draw()
         icon = self.icons.overcast
     end
 
-    love.graphics.draw(self.icons.image, icon, 0, 0, 0, .9, .9)
+    love.graphics.draw(self.icons.image, icon) --, 0, 0, 0, .9, .9)
 
     --love.graphics.pop()
 

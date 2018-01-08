@@ -186,12 +186,12 @@ function module.drawSwitch(btn)
     love.graphics.setStencilTest("greater", 0)
 
     -- print option 1 text
-    love.graphics.print(btn.options[1],
-        (btn.width * lerpX), btn.textY)
+    local offset = (btn.width * lerpX)
+    love.graphics.printf(btn.options[1], offset, btn.textY, btn.width, "center")
 
     -- print option 2 text
-    love.graphics.print(btn.options[2],
-        - (btn.width * (1 - lerpX)), btn.textY)
+    local offset = - (btn.width * (1 - lerpX))
+    love.graphics.printf(btn.options[2], offset, btn.textY, btn.width, "center")
 
     -- remove print limit
     love.graphics.setStencilTest()
@@ -251,7 +251,7 @@ function module:setButton(btn, width)
 end
 
 --- Convert a button to a switch.
-function module:setSwitch(btn, options)
+function module:setSwitch(btn, options, width)
 
     -- reset draw color
     love.graphics.setColor(255, 255, 255)
@@ -265,16 +265,17 @@ function module:setSwitch(btn, options)
     -- center text
     btn.textY = math.floor((btn.height / 2) - (textheight / 2))
 
-    -- measure options and resize the button
-    for _, option in ipairs(options) do
-
-        local ow, oh = love.graphics.newText(love.graphics.getFont(), option):getDimensions()
-
-        -- use the larger of the options
-        if ow > btn.width then
-            btn.width = ow --+ math.ceil(ow * .2)
+    if width then
+        btn.width = width
+    else
+        -- measure options and resize the button
+        for n, option in ipairs(options) do
+            local ow, oh = love.graphics.newText(love.graphics.getFont(), option):getDimensions()
+            -- use the larger of the options
+            if ow > btn.width then
+                btn.width = ow
+            end
         end
-
     end
 
     -- custom switch code:
