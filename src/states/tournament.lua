@@ -22,6 +22,7 @@ local module = { }
 local scale = 2
 local drawDebug = false
 local buttons = nil
+local maphotspot = nil
 
 function module:init(data)
 
@@ -143,6 +144,7 @@ function module:mousemoved(x, y, dx, dy, istouch)
 
     -- move over buttons
     buttons:mousemoved(x, y, dx, dy, istouch)
+    maphotspot:mousemoved(x, y, dx, dy, istouch)
 
     -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
@@ -158,6 +160,7 @@ function module:mousepressed(x, y, button, istouch)
 
     -- press on buttons
     buttons:mousepressed(x, y, button, istouch)
+    maphotspot:mousepressed(x, y, button, istouch)
 
     -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
@@ -173,6 +176,7 @@ function module:mousereleased(x, y, button, istouch)
 
     -- release over buttons
     buttons:mousereleased(x, y, button, istouch)
+    maphotspot:mousereleased(x, y, button, istouch)
 
 end
 
@@ -381,6 +385,17 @@ function module:makeButtons()
                 end
         }), width
     )
+
+    -- create hotspots (buttons without interface)
+    maphotspot = game.lib.hotspot:new{
+        left = 634,
+        top = 371,
+        width = 150,
+        height = 56,
+        callback = function()
+            game.states:push("map")
+            end
+    }
 
 end
 
