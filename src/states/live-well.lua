@@ -25,6 +25,12 @@ local module = { }
 -- alias
 local livewell = nil
 
+-- moving fish
+local swimmingfish = {
+    dt = 0,
+    lasts = 0
+}
+
 function module:init(data)
 
     -- alias
@@ -102,6 +108,11 @@ function module:update(dt)
         game.states:pop()
     end
 
+    -- update the swimming fish animation
+    if not self.details then
+        swimmingfish.dt = swimmingfish.dt + dt * 0.5
+    end
+
 end
 
 function module:draw()
@@ -144,7 +155,17 @@ function module:draw()
         end
     else
         love.graphics.printf("No fish in live well. keep on fishin'!", 0, 0, self.width, "center")
-        love.graphics.draw(game.view.tiles.image, game.view.tiles.fish["large"], self.width / 2, self.height / 2)
+        local s = math.sin(swimmingfish.dt)
+        -- flip horizontally
+        local sx = (s > swimmingfish.lasts) and 1 or -1
+        -- narrow the scale near the edge ranges, giving a "turn around" effect
+        if s < -.98 or s > .98 then sx = sx * .4 end
+        -- store new sine value for next time
+        swimmingfish.lasts = s
+        -- position the fish
+        local x = (self.width / 2) + ((self.width / 3) * s)
+        -- swim
+        love.graphics.draw(game.view.tiles.image, game.view.tiles.fish["large"], x, self.height / 2, 0, sx, 1, 16, 16)
     end
     love.graphics.pop()
 
