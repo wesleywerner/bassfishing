@@ -32,15 +32,6 @@ function module:init(data)
         livewell = game.logic.livewell
     end
 
-    -- debug: land some fish
-    --if #livewell.contents == 0 then
-    for n=1, 5 do
-        local fish = game.lake.fish[1]
-        game.logic.livewell:add(fish)
-        game.logic.player:pullFishFromWater(fish)
-    end
-    --end
-
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage(love.graphics.newScreenshot())
 
