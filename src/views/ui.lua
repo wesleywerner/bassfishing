@@ -367,7 +367,7 @@ function module:chart(width, height)
 
     local function drawLabels(chart, labels)
 
-        love.graphics.setColor(game.color.base01)
+        love.graphics.setColor(game.color.base0)
         love.graphics.setFont(game.fonts.tiny)
 
         for _, label in ipairs(labels) do
@@ -379,12 +379,14 @@ function module:chart(width, height)
                     --math.floor(label.x), math.floor(label.y + 12))
             else
                 -- draw label point
-                love.graphics.line(chart.width, label.y, chart.width + 20, label.y)
+                --love.graphics.line(chart.width, label.y, chart.width + 20, label.y)
 
                 local text = label.text
 
                 if chart.formatWeight then
-                    text = game.lib.convert:weight(label.text, true)
+                    text = game.lib.convert:weight(label.text, false)
+                else
+                    text = math.ceil(text)
                 end
 
                 love.graphics.print(text, math.floor(4 + chart.width),
