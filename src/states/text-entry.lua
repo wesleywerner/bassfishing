@@ -47,7 +47,7 @@ function module:init(data)
     self.callback = data.callback
     self.title = data.title
     self.text = data.text or ""
-    self.alphabet = "abcdefghijklmnopqrstuvwxyz"
+    self.alphabet = "abcdefghijklmnopqrstuvwxyz-'"
 
     self.frameLeft = game.window.width * 0.1
     self.frameTop = game.window.height * 0.2
@@ -93,8 +93,11 @@ function module:keypressed(key)
             self.text = string.sub(self.text, 1, byteoffset - 1)
         end
     elseif self.alphabet:find(key) and self.text:len() < 24 then
-        -- TODO: proper case input
+        -- add character
         self.text = self.text..key
+        -- proper case input
+        self.text = self.text:lower():gsub("(%l)(%w*)", function(a,b) return
+        string.upper(a)..b end)
     elseif key == "space" and self.text:len() < 24 then
         self.text = self.text.." "
     end
