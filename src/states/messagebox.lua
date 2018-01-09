@@ -42,15 +42,13 @@ function module:init(data)
     self.callback = data.callback
 
     -- predraw the messages on a canvas
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
     self.canvas = love.graphics.newCanvas( )
     love.graphics.setCanvas( self.canvas )
 
-    local frameLeft = self.width * 0.1
-    local frameTop = self.height * 0.2
-    local frameWidth = self.width * 0.8
-    local frameHeight = self.height * 0.4
+    local frameLeft = game.window.width * 0.1
+    local frameTop = game.window.height * 0.2
+    local frameWidth = game.window.width * 0.8
+    local frameHeight = game.window.height * 0.4
 
     -- draw a frame
     love.graphics.setColor(0, 0, 0, 164)

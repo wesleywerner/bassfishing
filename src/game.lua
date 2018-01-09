@@ -32,7 +32,6 @@ module.dprint = function(...) if module.debug then print(...) end end
 module.window = { }
 module.window.width = 800
 module.window.height = 600
--- TODO: use window sizes in all modules
 
 -- re-usable screen border
 module.border = love.graphics.newImage("res/screen-border.png")

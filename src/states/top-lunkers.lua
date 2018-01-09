@@ -26,9 +26,6 @@ function module:init(newLunkers)
     -- save the list of new lunkers
     self.newLunkers = newLunkers or { }
 
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
-
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
@@ -98,7 +95,7 @@ end
 function module:prerender()
 
     -- prerender the list to canvas
-    self.image = love.graphics.newCanvas(self.width, self.height)
+    self.image = love.graphics.newCanvas(game.window.width, game.window.height)
     love.graphics.setCanvas(self.image)
 
     -- font color
@@ -106,9 +103,9 @@ function module:prerender()
 
     -- title
     love.graphics.setFont(game.fonts.large)
-    love.graphics.printf("top lunkers", 0, 20, self.width, "center")
+    love.graphics.printf("top lunkers", 0, 20, game.window.width, "center")
     love.graphics.setFont(game.fonts.medium)
-    love.graphics.printf("of all time", 0, 80, self.width, "center")
+    love.graphics.printf("of all time", 0, 80, game.window.width, "center")
 
     -- records
     love.graphics.setFont(game.fonts.small)
@@ -139,7 +136,7 @@ function module:prerender()
         love.graphics.print(game.lib.convert:weight(record.weight), self.columns[3], py)
         love.graphics.print(record.name, self.columns[4], py)
         love.graphics.printf(record.lake, self.columns[5], py,
-            self.width - self.columns[5] - 60, "right")
+            game.window.width - self.columns[5] - 60, "right")
 
     end
 
@@ -151,7 +148,7 @@ function module:prerender()
 
         love.graphics.printf(
             "Your catch made it into the top lunker records! With great decorum the officials add your name to the wall.",
-            60, 300, self.width - 120, "center")
+            60, 300, game.window.width - 120, "center")
 
     end
 

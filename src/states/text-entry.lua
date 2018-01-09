@@ -49,12 +49,10 @@ function module:init(data)
     self.text = data.text or ""
     self.alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
-    self.frameLeft = self.width * 0.1
-    self.frameTop = self.height * 0.2
-    self.frameWidth = self.width * 0.8
-    self.frameHeight = self.height * 0.4
+    self.frameLeft = game.window.width * 0.1
+    self.frameTop = game.window.height * 0.2
+    self.frameWidth = game.window.width * 0.8
+    self.frameHeight = game.window.height * 0.4
     self.textLeft = self.frameLeft + 100
     self.textTop = self.frameTop + 100
     self.titleLeft = self.frameLeft + 40
@@ -95,6 +93,7 @@ function module:keypressed(key)
             self.text = string.sub(self.text, 1, byteoffset - 1)
         end
     elseif self.alphabet:find(key) and self.text:len() < 24 then
+        -- TODO: proper case input
         self.text = self.text..key
     elseif key == "space" and self.text:len() < 24 then
         self.text = self.text.." "

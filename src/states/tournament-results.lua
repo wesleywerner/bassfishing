@@ -23,11 +23,6 @@ local module = { }
 
 function module:init(data)
 
-    -- expect data to contain "title", "message" and optionally "shake bool".
-
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
-
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
@@ -81,8 +76,8 @@ function module:draw()
 
     local frameLeft = 0
     local frameTop = 0
-    local frameWidth = self.width
-    local frameHeight = self.height
+    local frameWidth = game.window.width
+    local frameHeight = game.window.height
 
     -- print title
     love.graphics.setColor(game.color.base01)
@@ -109,7 +104,8 @@ function module:draw()
             love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(game.lib.convert:weight(angler.totalWeight), 0, py, self.width - 60, "right")
+            love.graphics.printf(game.lib.convert:weight(angler.totalWeight),
+            0, py, game.window.width - 60, "right")
 
         end
 

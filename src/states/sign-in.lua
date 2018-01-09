@@ -60,12 +60,9 @@ local carouselScale = 0
 -- Additional data passed to the the state during push.
 function module:init(data)
 
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
-
     -- center fish image
     local fishimgW, fishimgH = fishimage:getDimensions()
-    self.fishimageX = (self.width - fishimgW) / 2
+    self.fishimageX = (game.window.width - fishimgW) / 2
     self.fishimageY = 100
 
     self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
@@ -73,8 +70,8 @@ function module:init(data)
     -- new angler button
     love.graphics.setFont(game.fonts.small)
     self.newButton = game.lib.button:new{
-        top = self.height - 60,
-        left = self.width - 160,
+        top = game.window.height - 60,
+        left = game.window.width - 160,
         text = "New Angler",
         callback = function()
             game.states:push("text entry", {
@@ -296,12 +293,12 @@ function module:draw()
     -- title
     love.graphics.setColor(game.color.blue)
     love.graphics.setFont(game.fonts.large)
-    love.graphics.printf(game.title, 0, 20, self.width, "center")
+    love.graphics.printf(game.title, 0, 20, game.window.width, "center")
 
     -- sub title
     --love.graphics.setColor(game.color.yellow)
     --love.graphics.setFont(game.fonts.medium)
-    --love.graphics.printf("angler sign-in", 0, 80, self.width, "center")
+    --love.graphics.printf("angler sign-in", 0, 80, game.window.width, "center")
 
     -- draw sign-in button carousel
     love.graphics.push()

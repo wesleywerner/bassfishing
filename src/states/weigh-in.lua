@@ -23,11 +23,6 @@ local module = { }
 
 function module:init(data)
 
-    -- expect data to contain "title", "message" and optionally "shake bool".
-    -- TODO: replace self.width with game.window.width (and for height)
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
-
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
@@ -88,14 +83,14 @@ function module:draw()
     love.graphics.setColor(game.color.base01)
     love.graphics.setFont(game.fonts.large)
     love.graphics.printf(string.format("weigh in day %d", game.logic.tournament.day),
-        0, 30, self.width, "center")
+        0, 30, game.window.width, "center")
 
     love.graphics.setFont(game.fonts.medium)
 
     -- the player missed the weigh-in
     if not game.logic.player.nearJetty then
         love.graphics.setColor(game.color.red)
-        love.graphics.printf("You missed the weigh-in!", 0, 90, self.width, "center")
+        love.graphics.printf("You missed the weigh-in!", 0, 90, game.window.width, "center")
     end
 
     love.graphics.setFont(game.fonts.small)
@@ -119,7 +114,8 @@ function module:draw()
             love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(game.lib.convert:weight(angler.dailyWeight), 0, py, self.width - 60, "right")
+            love.graphics.printf(game.lib.convert:weight(angler.dailyWeight),
+            0, py, game.window.width - 60, "right")
 
         end
 
@@ -130,13 +126,14 @@ function module:draw()
     love.graphics.printf(
         string.format("The lunker of the day goes to:\n%s with a catch of %s!",
         tour.lunkerOfTheDay.name, game.lib.convert:weight(tour.lunkerOfTheDay.weight)),
-        0, self.height - 140, self.width, "center")
+        0, game.window.height - 140, game.window.width, "center")
 
     -- print last day message
     if game.logic.tournament.day == 3 then
 
         love.graphics.setColor(game.color.red)
-        love.graphics.printf("Tournament standings are up next...", 0, self.height - 40, self.width, "center")
+        love.graphics.printf("Tournament standings are up next...", 0,
+        game.window.height - 40, game.window.width, "center")
 
     end
 
