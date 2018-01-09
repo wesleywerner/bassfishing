@@ -20,58 +20,61 @@
 
 local module = { }
 
+-- alias to the weather logic
+local weather = nil
+
+-- remember the time the icon was last refreshed
+local forecastTime = nil
+
+-- current forecast icon
+local forecastIcon = nil
+
+-- size of the icon
+local iconSize = 60
+
 function module:drawIcon()
 
-    -- TODO: hover over tips (a cold front is approaching etc)
-
-    local weather = game.logic.weather
-    --love.graphics.push()
-    --love.graphics.setFont(game.fonts.medium)
-    --love.graphics.setColor(game.color.base1)
-
-    ---- print temp
-    --love.graphics.draw(self.icons.image, self.icons.smallthermometer, 0, 86)
-    --love.graphics.print(game.lib.convert:temp(weather.airTemperature), 40, 86)
-
-    ---- print cloud cover
-    --love.graphics.draw(self.icons.image, self.icons.smallcloud, 0, 116)
-    --love.graphics.print(string.format("%d%%", weather.cloudcover), 40, 116)
-
-    ---- print wind
-    --love.graphics.draw(self.icons.image, self.icons.smallwind, 0, 146)
-    --love.graphics.print(string.format("%s %s", game.lib.convert:speed(weather.windSpeed), weather.windDirection), 40, 146)
-
-    -- the weather icon priority is:
-    -- approaching cold fronts
-    -- very hot
-    -- rainy
-    -- cloudy
-    -- windy
-    -- overcast
-    love.graphics.setColor(game.color.base1)
-    local icon = self.icons.clear
-
-    if weather.approachingfront then
-        icon = self.icons.cloudygusts
-    elseif weather.coldfront then
-        icon = self.icons.coldfront
-    elseif weather.isHot then
-        icon = self.icons.hot
-    elseif weather.rain then
-        icon = self.icons.rainy
-    elseif weather.cloudcover > 30 and weather.windSpeed > 20 then
-        icon = self.icons.cloudygusts
-    elseif weather.cloudcover > 30 then
-        icon = self.icons.cloudy
-    elseif weather.windSpeed > 20 then
-        icon = self.icons.windy
-    elseif weather.cloudcover > 10 then
-        icon = self.icons.overcast
+    -- alias weather
+    if not weather then
+        weather = game.logic.weather
     end
 
-    love.graphics.draw(self.icons.image, icon) --, 0, 0, 0, .9, .9)
+    -- refresh the icon
+    if forecastTime ~= weather.time or not forecastIcon then
 
-    --love.graphics.pop()
+        -- record the time we updated the icon
+        forecastTime = weather.time
+
+        -- the weather icon priority is:
+        -- approaching cold fronts
+        -- very hot
+        -- rainy
+        -- cloudy
+        -- windy
+        -- overcast
+        forecastIcon = self.icons.clear
+
+        if weather.approachingfront then
+            forecastIcon = self.icons.cloudygusts
+        elseif weather.coldfront then
+            forecastIcon = self.icons.coldfront
+        elseif weather.isHot then
+            forecastIcon = self.icons.hot
+        elseif weather.rain then
+            forecastIcon = self.icons.rainy
+        elseif weather.cloudcover > 30 and weather.windSpeed > 20 then
+            forecastIcon = self.icons.cloudygusts
+        elseif weather.cloudcover > 30 then
+            forecastIcon = self.icons.cloudy
+        elseif weather.windSpeed > 20 then
+            forecastIcon = self.icons.windy
+        elseif weather.cloudcover > 10 then
+            forecastIcon = self.icons.overcast
+        end
+
+    end
+
+    love.graphics.draw(self.icons.image, forecastIcon)
 
 end
 
@@ -83,34 +86,52 @@ if not module.icons then
     local w, h = module.icons.w, module.icons.h
 
     -- hot days
-    module.icons.hot = love.graphics.newQuad(1, 1, 60, 60, w, h)
+    module.icons.hot = love.graphics.newQuad(1, 1, iconSize, iconSize, w, h)
 
     -- windy days
-    module.icons.windy = love.graphics.newQuad(62, 1, 60, 60, w, h)
+    module.icons.windy = love.graphics.newQuad(62, 1, iconSize, iconSize, w, h)
 
     -- lighty overcast
-    module.icons.overcast = love.graphics.newQuad(123, 1, 60, 60, w, h)
+    module.icons.overcast = love.graphics.newQuad(123, 1, iconSize, iconSize, w, h)
 
     -- clear
-    module.icons.clear = love.graphics.newQuad(184, 1, 60, 60, w, h)
+    module.icons.clear = love.graphics.newQuad(184, 1, iconSize, iconSize, w, h)
 
     -- rain
-    module.icons.rainy = love.graphics.newQuad(245, 1, 60, 60, w, h)
+    module.icons.rainy = love.graphics.newQuad(245, 1, iconSize, iconSize, w, h)
 
     -- cloudy and windy
-    module.icons.cloudygusts = love.graphics.newQuad(306, 1, 60, 60, w, h)
+    module.icons.cloudygusts = love.graphics.newQuad(306, 1, iconSize, iconSize, w, h)
 
     -- heavy clouds
-    module.icons.cloudy = love.graphics.newQuad(367, 1, 60, 60, w, h)
+    module.icons.cloudy = love.graphics.newQuad(367, 1, iconSize, iconSize, w, h)
 
     -- cold front
-    module.icons.coldfront = love.graphics.newQuad(428, 1, 60, 60, w, h)
+    module.icons.coldfront = love.graphics.newQuad(428, 1, iconSize, iconSize, w, h)
 
     -- small icons
     module.icons.smallthermometer = love.graphics.newQuad(489, 1, 30, 30, w, h)
     module.icons.smallcloud = love.graphics.newQuad(520, 1, 30, 30, w, h)
     module.icons.smallwind = love.graphics.newQuad(551, 1, 30, 30, w, h)
     module.icons.smallclock = love.graphics.newQuad(582, 1, 30, 30, w, h)
+
+end
+
+function module:drawThermometer()
+
+    love.graphics.draw(self.icons.image, self.icons.smallthermometer, 0, 0)
+
+end
+
+function module:drawCloud()
+
+    love.graphics.draw(self.icons.image, self.icons.smallcloud, 0, 0)
+
+end
+
+function module:drawWind()
+
+    love.graphics.draw(self.icons.image, self.icons.smallwind, 0, 0)
 
 end
 

@@ -29,7 +29,7 @@ function module:init(data)
 
     -- generate a random lake (for testing this state without lake selection)
     if not game.lake then
-        data = { practice = false }
+        data = { practice = true }
         local seed = 42
         game.lake = game.logic.genie:generate(game.defaultMapWidth,
         game.defaultMapHeight, seed,
@@ -123,12 +123,13 @@ function module:keypressed(key)
     if game.debug then
         if key == "f1" then
             drawDebug = not drawDebug
+            game.logic.tournament:takeTime(15)
         elseif key == "f10" then
             game.states:push("lakegen development")
         elseif key == "f9" then
             game.logic.tournament:endOfDay()
-        elseif key == "f1" then
-            game.logic.tournament:takeTime(15)
+        elseif key == "f3" then
+            game.logic.weather:change()
         end
     end
 
@@ -256,6 +257,7 @@ function module:draw()
     -- weather icon
     love.graphics.push()
     love.graphics.translate(680, 32)
+    love.graphics.setColor(game.color.base2)
     game.view.weather:drawIcon()
     love.graphics.pop()
 
@@ -318,7 +320,7 @@ function module:makeButtons()
 
     local width = 130
     local spacing = 40
-    local left = 640
+    local left = 643
     local top = 90
     love.graphics.setFont(game.fonts.small)
     buttons = game.lib.widgetCollection:new()
@@ -329,7 +331,7 @@ function module:makeButtons()
             top = top,
             text = "Forecast",
             callback = function(btn)
-                -- TODO: forecast state
+                game.states:push("weather forecast")
                 end
         }), width
     )
