@@ -58,7 +58,10 @@ local module = {
     postfrontal = false,
 
     -- the human readable forecast
-    forecast = nil
+    forecast = nil,
+
+    -- the time the weather last changed (useful to detect new weather)
+    time = nil
 
 }
 
@@ -82,6 +85,9 @@ function module:change()
     local directions = { "N", "NE", "NW", "S", "SE", "SW", "E", "W" }
 
     self.forecast = ""
+
+    -- record time of change
+    self.time = os.time()
 
     -- air temperature considered hot
     hotLimit = 26
