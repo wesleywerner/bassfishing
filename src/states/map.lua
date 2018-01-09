@@ -67,7 +67,8 @@ end
 function module:draw()
 
     -- underlay screenshot
-    love.graphics.setColor(80, 80, 80)
+    local fade = 255 - (128 * self.transition.scale)
+    love.graphics.setColor(fade, fade, fade)
     love.graphics.draw(self.screenshot)
 
     self.transition:apply("zoom")

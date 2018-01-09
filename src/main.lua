@@ -62,6 +62,7 @@ function love.load()
     game.states:add("top lunkers", require("states.top-lunkers"))
     game.states:add("text entry", require("states.text-entry"))
     game.states:add("weather forecast", require("states.weather-forecast"))
+    game.states:add("live well", require("states.live-well"))
 
     game.logic.toplunkers:load()
 

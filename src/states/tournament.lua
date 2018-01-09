@@ -115,6 +115,10 @@ function module:keypressed(key)
         game.states:push("top lunkers")
     elseif key == "t" then
         buttons:get("motor"):callback()
+    elseif key == "f" then
+        game.states:push("weather forecast")
+    elseif key == "v" then
+        game.states:push("live well")
     else
         buttons:keypressed(key)
     end
@@ -274,12 +278,6 @@ function module:draw()
         love.graphics.pop()
     end
 
-    -- live well
-    love.graphics.push()
-    love.graphics.translate(620, 188)
-    game.view.livewell:draw()
-    love.graphics.pop()
-
     -- mini map
     love.graphics.push()
     love.graphics.translate(634, 371)
@@ -379,7 +377,7 @@ function module:makeButtons()
             top = top,
             text = "Live well",
             callback = function(btn)
-                -- TODO: live well state
+                game.states:push("live well")
                 end
         }), width
     )

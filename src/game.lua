@@ -64,6 +64,10 @@ module.color.cyan      = {  42, 161, 152 }
 module.color.green     = { 133, 153,   0 }
 module.color.hilite    = {  38, 139, 210, 64 }
 module.color.checked   = { 133, 153,   0, 64 }
+module.color.lightbackground = module.color.base2
+module.color.darkbackground = module.color.base02
+module.color.lighttext = module.color.base1
+module.color.darktext = module.color.base00
 
 -- screen transition defaults
 module.transition = {
@@ -105,7 +109,6 @@ module.view.player = require("views.player")
 module.view.competitors = require("views.competitors")
 module.view.fish = require("views.fish")
 module.view.weather = require("views.weather-display")
-module.view.livewell = require("views.livewell")
 module.view.clock = require("views.clock")
 module.view.screentransition = require("views.screen-transition")
 module.view.ui = require("views.ui")
