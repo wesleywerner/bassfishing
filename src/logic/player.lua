@@ -89,9 +89,6 @@ function module:forward()
         self:spookNearbyFish()
     end
 
-    -- clear the cast aim
-    self.castOffset = nil
-
     game.logic.tournament:turn()
 
     return true
@@ -119,9 +116,6 @@ function module:reverse()
     if not self.trolling then
         self:spookNearbyFish()
     end
-
-    -- clear the cast aim
-    self.castOffset = nil
 
     game.logic.tournament:turn()
 
@@ -167,6 +161,9 @@ function module:cast()
 
     -- still reeling in the line
     if self.castLine then return end
+
+    -- retake aim in case boat is moving
+    self:aimCast(self.castOffset.screenX, self.castOffset.screenY)
 
     -- you hooked your partner's hat!
     local distance = math.floor(game.lib.trig:distance(self.screenX, self.screenY, self.castOffset.screenX, self.castOffset.screenY))
@@ -240,7 +237,9 @@ function module:update(dt)
     -- reel in cast line
     if self.castLine then
 
-        self.castLine.fade = self.castLine.fade - dt * 3
+        -- the reel-in speed
+        self.castLine.fade = self.castLine.fade - dt * 3.5
+
         if self.castLine.fade < 0 then
 
             -- there is a fish on the line!
