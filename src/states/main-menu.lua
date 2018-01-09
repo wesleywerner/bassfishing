@@ -92,12 +92,15 @@ function module:init(data)
     self.selectedChartId = 1
     self:setChartData()
 
+    -- screen transition
+    self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
+
 end
 
 function module:keypressed(key)
 
     if key == "escape" then
-        game.states:pop()
+        self.transition:close(game.transition.time, game.transition.exit)
     elseif key == "left" then
         self:cycleChart(-1)
     elseif key == "right" then
@@ -139,12 +142,21 @@ end
 
 function module:update(dt)
 
+    self.transition:update(math.min(0.02, dt))
+
+    if self.transition.isClosed then
+        game.states:pop()
+    end
+
     self.buttons:update(dt)
     self.chart:update(dt)
 
 end
 
 function module:draw()
+
+    -- apply transform
+    self.transition:apply("zoom")
 
     -- background
     love.graphics.setColor(255, 255, 255)
