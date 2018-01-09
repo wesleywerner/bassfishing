@@ -132,7 +132,7 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    self.transition:apply("center zoom")
+    self.transition:apply("zoom")
 
     -- draw a frame
     love.graphics.setColor(game.color.base2)

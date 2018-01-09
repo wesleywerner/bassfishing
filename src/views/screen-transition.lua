@@ -59,10 +59,9 @@ local module = { }
 
 -- list of screen effects
 local effects = {
-    ["center zoom"] = 1,
+    ["zoom"] = 1,
     ["slide up"] = 2,
-    ["drop down"] = 3,
-    ["drop up"] = 4
+    ["drop down"] = 3
 }
 
 local transition_mt = { }
@@ -111,10 +110,6 @@ function transition_mt:apply(effect, param)
     elseif effno == 3 then
 
         love.graphics.translate(0, - self.height + (self.height * self.scale))
-
-    elseif effno == 4 then
-
-        love.graphics.translate(0, self.height - (self.height * self.scale))
 
     end
 

@@ -284,7 +284,6 @@ function module:draw()
     love.graphics.push()
 
     -- apply transform
-    -- "center zoom", "slide up", "drop down", "drop up"
     self.transition:apply("drop down")
 
     -- background

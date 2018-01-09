@@ -146,8 +146,7 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    -- "center zoom", "slide up", "drop down", "drop up"
-    self.transition:apply("center zoom")
+    self.transition:apply("zoom")
 
     -- box fill
     love.graphics.setColor(game.color.white)

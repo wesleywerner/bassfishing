@@ -33,7 +33,7 @@ function module:init()
     -- render the map
     self.mapimage = game.view.maprender:renderMini(true)
 
-    self.transition = game.view.screentransition:new(game.transition.time / 2, game.transition.enter)
+    self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
 
     self.flasher = 0
 
@@ -42,13 +42,13 @@ end
 
 function module:keypressed(key)
 
-    self.transition:close(game.transition.time / 2, game.transition.exit)
+    self.transition:close(game.transition.time, game.transition.exit)
 
 end
 
 function module:mousepressed( x, y, button, istouch )
 
-    self.transition:close(game.transition.time / 2, game.transition.exit)
+    self.transition:close(game.transition.time, game.transition.exit)
 
 end
 
@@ -70,7 +70,7 @@ function module:draw()
     love.graphics.setColor(80, 80, 80)
     love.graphics.draw(self.screenshot)
 
-    self.transition:apply("center zoom")
+    self.transition:apply("zoom")
 
     -- scale the mini map to fit the screen
     love.graphics.push()

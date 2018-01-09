@@ -72,7 +72,7 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    self.transition:apply("drop up")
+    self.transition:apply("drop down")
 
     -- background
     love.graphics.setColor(255, 255, 255)
