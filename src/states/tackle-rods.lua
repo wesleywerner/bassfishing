@@ -21,22 +21,21 @@
 
 local module = { }
 
+local panelHeight = 300
+local panelTop = 0
+
 function module:init(data)
-
-    -- expect data to contain "title", "message" and optionally "shake bool".
-
-    self.width = love.graphics.getWidth()
-    self.height = love.graphics.getHeight()
 
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
-    -- load background image
-    if not self.background then
-        self.background = love.graphics.newImage("res/tackle-rods.png")
-        self.backgroundY = self.height - self.background:getHeight()
-        self.exitAbove = self.backgroundY
-        self.tackleTop = self.backgroundY + 60
+    panelTop = game.window.height - panelHeight
+
+    -- load rod image
+    if not self.rodimage then
+        self.rodimage = love.graphics.newImage("res/fishing-rod.png")
+
+        self.rodimageLeft = (game.window.width - self.rodimage:getWidth()) / 2
     end
 
     self.transition = game.view.screentransition:new(0.5, "inCubic")
@@ -63,9 +62,9 @@ function module:init(data)
 
         table.insert(self.hotspots,
             game.lib.hotspot:new{
-                top = self.tackleTop + (self.linespacing * n),
+                top = panelTop + self.rodimage:getHeight() + (self.linespacing * n),
                 left = padding,
-                width = self.width - padding * 2,
+                width = game.window.width - padding * 2,
                 height = self.linespacing,
                 rod = rod,
                 textY = (self.linespacing / 2) - fontHeight,
@@ -103,7 +102,7 @@ end
 
 function module:mousepressed( x, y, button, istouch )
 
-    if y < self.exitAbove then
+    if y < panelTop then
 
         self.transition:close(0.5, "outBack")
 
@@ -157,11 +156,21 @@ function module:draw()
     love.graphics.draw(self.screenshot)
 
     -- apply transform
-    self.transition:apply("slide up", self.backgroundY)
+    self.transition:apply("slide up", panelHeight)
 
-    -- tackle background
+    -- fill
+    love.graphics.setColor(game.color.base2)
+    love.graphics.rectangle("fill", 0, panelTop, game.window.width, panelHeight)
+
+    -- border
+    love.graphics.setColor(game.color.base02)
+    love.graphics.setLineWidth(4)
+    love.graphics.rectangle("line", 0, panelTop, game.window.width, panelHeight)
+    love.graphics.setLineWidth(1)
+
+    -- rod image
     love.graphics.setColor(game.color.white)
-    love.graphics.draw(self.background, 0, self.backgroundY)
+    love.graphics.draw(self.rodimage, self.rodimageLeft, panelTop + 10)
 
     -- list rods
     love.graphics.setFont(self.listFont)

@@ -486,10 +486,10 @@ function module:draw()
     self.lureList:apply()
     for i, hotspot in ipairs(self.lureList.hotspots) do
         -- alternate backgrounds
-        if i % 2 == 0 then
-            love.graphics.setColor(game.color.base3)
-            love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
-        end
+        --if i % 2 == 0 then
+            --love.graphics.setColor(game.color.base3)
+            --love.graphics.rectangle("fill", 0, hotspot.top, hotspot.width, hotspot.height)
+        --end
         if hotspot.lure == self.selectedLure or hotspot.focused then
             -- selected focus
             love.graphics.setColor(game.color.blue)
