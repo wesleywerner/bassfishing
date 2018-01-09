@@ -278,7 +278,7 @@ end
 
 function module:draw()
 
-    love.graphics.clear(game.color.base01)
+    --love.graphics.clear(game.color.base01)
 
     -- save state
     love.graphics.push()

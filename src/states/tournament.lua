@@ -345,6 +345,7 @@ function module:makeButtons()
             top = top,
             text = "motor",
             callback = function(btn)
+                -- TODO: take time switching motors
                 game.logic.player:toggleTrollingMotor()
                 end
         }), {"Outboard", "Trolling"}, width

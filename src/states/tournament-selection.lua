@@ -141,7 +141,8 @@ function module:draw()
     end
 
     -- underlay screenshot
-    love.graphics.setColor(128, 128, 128)
+    local fade = 255 - (128 * self.transition.scale)
+    love.graphics.setColor(fade, fade, fade)
     love.graphics.draw(self.screenshot)
 
     -- apply transform
