@@ -89,10 +89,6 @@ function module:draw()
     love.graphics.setFont(game.fonts.large)
     love.graphics.printf("Tournament Results", frameLeft, frameTop + 30, frameWidth, "center")
 
-    -- sort standings by total weight
-    table.sort(game.logic.tournament.standings,
-        function(a, b) return a.totalWeight > b.totalWeight end)
-
     -- list standings by total weight
     local position = 1
     love.graphics.setFont(game.fonts.small)

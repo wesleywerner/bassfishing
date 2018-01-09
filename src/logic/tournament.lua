@@ -211,12 +211,8 @@ function module:endOfDay()
                     -- store fish data for statistics
                     table.insert(self.fishStatistics, {
                         weight=fish.weight,
-                        lure="TODO"
+                        lure="TODO" -- TODO: record fish lure
                     })
-
-                    print(string.format("record fish lure: %s", "TODO"))
-
-                    -- TODO: move tournament-results standing sorting to end of this function
 
                     angler.dailyWeight = angler.dailyWeight + fish.weight
                     angler.totalWeight = angler.totalWeight + angler.dailyWeight
@@ -254,7 +250,7 @@ function module:endOfDay()
 
     end
 
-    -- sort the list
+    -- sort the daily weight list
     table.sort(self.standings, function(a, b) return a.dailyWeight > b.dailyWeight end)
 
     -- empty the live well
@@ -279,8 +275,21 @@ function module:endOfDay()
     -- (this state is displayed after weigh in)
     if game.logic.tournament.day == 3 then
 
+        -- sort standings by total weight
+        table.sort(self.standings, function(a, b)
+        return a.totalWeight > b.totalWeight end)
+
+        -- find the player standing
+        local playerstanding = 0
+        for i, angler in ipairs(game.logic.tournament.standings) do
+            if angler.player then
+                playerstanding = i
+            end
+        end
+
         -- add all fish caught during the tournament to statistics
-        game.logic.stats:record(self.fishStatistics, player.lake, 0, game.logic.player.castsCount)
+        game.logic.stats:record(self.fishStatistics, player.lake,
+        playerstanding, game.logic.player.castsCount)
 
         -- show the tournament results
         game.states:push("tournament results")
