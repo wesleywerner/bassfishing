@@ -30,7 +30,7 @@ function module:init(data)
 
     -- generate a random lake (for testing this state without lake selection)
     if not game.lake then
-        data = { practice = true }
+        data = { practice = false }
         local seed = 42
         game.lake = game.logic.genie:generate(game.defaultMapWidth,
         game.defaultMapHeight, seed,
@@ -345,7 +345,8 @@ function module:makeButtons()
             top = top,
             text = "motor",
             callback = function(btn)
-                -- TODO: take time switching motors
+                -- take time switching motors
+                game.logic.tournament:takeTime(1)
                 game.logic.player:toggleTrollingMotor()
                 end
         }), {"Outboard", "Trolling"}, width
