@@ -62,7 +62,8 @@ local effects = {
     ["zoom"] = 1,
     ["slide up"] = 2,
     ["drop down"] = 3,
-    ["spin"] = 4
+    ["spin"] = 4,
+    ["shake"] = 5
 }
 
 local transition_mt = { }
@@ -115,6 +116,11 @@ function transition_mt:apply(effect, param)
     elseif effno == 4 then
 
         love.graphics.rotate(math.rad(180 - self.scale * 180))
+
+    elseif effno == 5 then
+
+        local shakeamount = 60 - (60 * self.scale)
+        love.graphics.translate((math.random()-.5) * shakeamount, (math.random()-.5) * shakeamount)
 
     end
 
