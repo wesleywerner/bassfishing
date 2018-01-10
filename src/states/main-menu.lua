@@ -422,7 +422,7 @@ function module:makeButtons()
             top = top,
             text = "Options",
             callback = function(btn)
-                -- TODO: go to options state
+                game.states:push("options")
                 end
         }), width
     )

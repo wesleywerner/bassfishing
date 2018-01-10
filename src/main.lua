@@ -63,8 +63,13 @@ function love.load()
     game.states:add("text entry", require("states.text-entry"))
     game.states:add("weather forecast", require("states.weather-forecast"))
     game.states:add("live well", require("states.live-well"))
+    game.states:add("options", require("states.options"))
 
     game.logic.toplunkers:load()
+
+    -- load and apply saved options
+    game.logic.options:load()
+    game.lib.convert.metric = game.logic.options.data.metric
 
 end
 

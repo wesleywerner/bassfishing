@@ -98,6 +98,7 @@ module.logic.toplunkers = require("logic.top-lunkers")
 module.logic.pickle = require("logic.pickle")
 module.logic.anglers = require("logic.anglers")
 module.logic.stats = require("logic.stats")
+module.logic.options = require("logic.options")
 
 -- view modules
 module.view.messages = require("views.messages")

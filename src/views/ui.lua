@@ -291,19 +291,26 @@ function module:setSwitch(btn, options, width)
         btn.callbackBase = btn.callback
     end
 
+    btn.setOption = function(btn, newvalue)
+        btn.value = newvalue
+        if btn.value == 1 then
+            btn.a = 1
+            btn.b = 0
+            btn.dt = 0
+        else
+            btn.a = 0
+            btn.b = 1
+            btn.dt = 0
+        end
+    end
+
     -- overwrite callback to flip the switch
     btn.callback = function(btn)
             -- flip the switch value and "a"/"b" position values
             if btn.value == 1 then
-                btn.value = 2
-                btn.a = 0
-                btn.b = 1
-                btn.dt = 0
+                btn:setOption(2)
             else
-                btn.value = 1
-                btn.a = 1
-                btn.b = 0
-                btn.dt = 0
+                btn:setOption(1)
             end
 
             -- fire button callback
