@@ -25,7 +25,7 @@ local closeAfterTime = .6
 
 function module:init(data)
 
-    -- expect data to contain "title", "message" and optionally "shake bool".
+    -- expect data to contain "title", "message" and optionally "shake" bool.
 
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
@@ -35,11 +35,11 @@ function module:init(data)
 
     self.timepassed = 0
     self.fade = 0
-    self.shaking = data.shake and 60 or 0
 
     -- this is a YN prompt message
     self.prompt = data.prompt
     self.callback = data.callback
+    self.shake = data.shake
 
     -- predraw the messages on a canvas
     self.canvas = love.graphics.newCanvas( )
@@ -73,6 +73,9 @@ function module:init(data)
 
     love.graphics.setCanvas()
 
+    -- screen transition
+    self.transition = game.view.screentransition:new(game.transition.time / 2, game.transition.enter)
+
 end
 
 function module:keypressed(key)
@@ -98,12 +101,20 @@ end
 
 function module:update(dt)
 
-    if self.shaking < 1 then
+    self.transition:update(math.min(0.02, dt))
+
+    -- when opening animation completes, fade the message into view
+    if self.transition.isOpen then
         self.fade = math.min(255, self.fade + 10)
         self.timepassed = self.timepassed + dt
     end
 
-    self.shaking = game.lib.lume.lerp(self.shaking, 0, 7*dt)
+    if self.transition.isClosed then
+        -- release screenshot
+        self.screenshot = nil
+        -- exit this state
+        game.states:pop()
+    end
 
 end
 
@@ -111,15 +122,45 @@ function module:draw()
 
     -- shake effect
     love.graphics.push()
-    if self.shaking > 1 then
-        love.graphics.translate((math.random()-.5) * self.shaking, (math.random()-.5) * self.shaking)
+
+    if self.shake then
+        if not self.transition.closing then
+
+            -- shake for opening
+            self.transition:apply("shake")
+
+            -- underlay screenshot after applying effect (this shakes everything)
+            love.graphics.setColor(game.color.white)
+            love.graphics.draw(self.screenshot)
+
+        else
+
+            -- underlay screenshot before applying effect
+            love.graphics.setColor(game.color.white)
+            love.graphics.draw(self.screenshot)
+
+            -- zoom for closing
+            self.transition:apply("zoom")
+
+        end
+
+        -- fade the message into view (only after opening animation is done)
+        love.graphics.setColor(255, 255, 255, self.fade)
+
+    else
+
+        -- underlay screenshot
+        love.graphics.setColor(game.color.white)
+        love.graphics.draw(self.screenshot)
+
+        -- zoom for non-shaking messages
+        self.transition:apply("zoom")
+
+        -- draw message without any fade
+        love.graphics.setColor(game.color.white)
+
     end
 
-    -- underlay screenshot
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(self.screenshot)
-
-    love.graphics.setColor(255, 255, 255, self.fade)
     love.graphics.draw(self.canvas)
 
     love.graphics.pop()
