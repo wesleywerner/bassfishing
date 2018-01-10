@@ -119,6 +119,9 @@ function module:update(dt)
     if self.transition.isClosed then
         -- disable key repeat
         love.keyboard.setKeyRepeat(false)
+        -- release screenshot
+        self.screenshot = nil
+        -- exit this state
         game.states:pop()
     end
 

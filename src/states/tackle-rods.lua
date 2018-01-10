@@ -133,7 +133,10 @@ function module:update(dt)
     -- exit this state when the transition is closed
     if self.transition.isClosed then
 
-        -- remove this state
+        -- release screenshot
+        self.screenshot = nil
+
+        -- exit this state
         game.states:pop()
 
         -- if the rod has no lure, show lure selection as a courtesy

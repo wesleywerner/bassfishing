@@ -432,6 +432,9 @@ function module:update(dt)
 
     -- exit this state if mainn transition is closed
     if self.transition.isClosed then
+        -- release screenshot
+        self.screenshot = nil
+        -- exit this state
         game.states:pop()
     end
 

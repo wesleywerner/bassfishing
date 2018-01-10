@@ -57,7 +57,11 @@ function module:update(dt)
     self.transition:update(math.min(0.02, dt))
 
     if self.transition.isClosed then
+        -- release screenshot
+        self.screenshot = nil
+        -- forward the tournament day
         game.logic.tournament:nextDay()
+        -- exit this state
         game.states:pop()
     end
 

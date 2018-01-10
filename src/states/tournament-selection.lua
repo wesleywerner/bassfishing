@@ -125,7 +125,11 @@ function module:update(dt)
     self.transition:update(math.min(0.02, dt))
 
     if self.transition.isClosed then
+        -- release screenshot
+        self.screenshot = nil
+        -- exit this state
         game.states:pop()
+        -- switch to tournament state (otherwise exit the game)
         if self.startTournament then
             game.states:push("tournament", { practice = false })
         end
