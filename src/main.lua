@@ -71,11 +71,16 @@ function love.load()
     game.logic.options:load()
     game.lib.convert.metric = game.logic.options.data.metric
 
+    game.music:play("menu")
+
 end
 
 function love.update(dt)
 
     game.states:update(dt)
+
+    -- TODO: if game.options.music then ...
+    game.music:update(dt)
 
 end
 

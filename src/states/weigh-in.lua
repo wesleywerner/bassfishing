@@ -21,6 +21,9 @@
 
 local module = { }
 
+-- alias tournament logic
+local tour = nil
+
 function module:init(data)
 
     -- save screen and use it as a menu background
@@ -31,6 +34,11 @@ function module:init(data)
     if not game.logic.player.nearJetty then
         game.dprint("The player missed the weigh-in!")
     end
+
+    tour = game.logic.tournament
+
+    -- sort the daily weight list
+    table.sort(tour.standings, function(a, b) return a.dailyWeight > b.dailyWeight end)
 
 end
 
@@ -80,8 +88,6 @@ function module:draw()
     -- background
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(game.border)
-
-    local tour = game.logic.tournament
 
     -- print title
     love.graphics.setColor(game.color.base01)

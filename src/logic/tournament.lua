@@ -215,7 +215,6 @@ function module:endOfDay()
                     })
 
                     angler.dailyWeight = angler.dailyWeight + fish.weight
-                    angler.totalWeight = angler.totalWeight + angler.dailyWeight
                     self:recordDailyLunker(angler, fish)
 
                     -- record in the top lunkers (returns false if no record is entered)
@@ -235,23 +234,21 @@ function module:endOfDay()
 
             -- share out the remaining fish between competitors
             for n=1, fishper do
-
                 local fish = table.remove(game.lake.fish)
                 angler.dailyWeight = angler.dailyWeight + fish.weight
-                angler.totalWeight = angler.totalWeight + angler.dailyWeight
                 self:recordDailyLunker(angler, fish)
-
             end
 
         end
 
-        game.dprint(string.format("angler: %s, daily: %.2f, total: %.2f",
-            angler.name, angler.dailyWeight, angler.totalWeight or 0))
-
     end
 
-    -- sort the daily weight list
-    table.sort(self.standings, function(a, b) return a.dailyWeight > b.dailyWeight end)
+    -- add up total weights
+    for _, angler in ipairs(self.standings) do
+        angler.totalWeight = angler.totalWeight + angler.dailyWeight
+        game.dprint(string.format("angler: %s, daily: %.2f, total: %.2f",
+            angler.name, angler.dailyWeight, angler.totalWeight))
+    end
 
     -- empty the live well
     game.logic.livewell:empty()
@@ -262,10 +259,8 @@ function module:endOfDay()
     -- push the the top lunkers state
     -- (this state is displayed last, it is a state stack, remember?)
     if #playerLunkers > 0 then
-
         -- save the top lunker list
         game.logic.toplunkers:save()
-
         game.dprint(string.format("You made %d top lunkers!", #playerLunkers))
         game.logic.toplunkers:printLunkerList()
         game.states:push("top lunkers", playerLunkers)
@@ -281,7 +276,7 @@ function module:endOfDay()
 
         -- find the player standing
         local playerstanding = 0
-        for i, angler in ipairs(game.logic.tournament.standings) do
+        for i, angler in ipairs(self.standings) do
             if angler.player then
                 playerstanding = i
             end

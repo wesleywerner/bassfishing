@@ -83,6 +83,9 @@ module.lib = { }
 -- game states
 module.states = require("logic.states")
 
+-- game music
+module.music = require("music.music")
+
 -- logic modules
 --module.logic.array2d = require("logic.array2d")
 module.logic.genie = require("logic.lakegenerator")

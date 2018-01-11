@@ -21,12 +21,23 @@
 
 local module = { }
 
+-- alias tournament logic
+local tour = nil
+
 function module:init(data)
 
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
     self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
+
+    game.music:play("tournament end")
+
+    tour = game.logic.tournament
+
+    -- sort standings by total weight
+    table.sort(tour.standings, function(a, b)
+    return a.totalWeight > b.totalWeight end)
 
 end
 
@@ -61,7 +72,6 @@ end
 
 function module:draw()
 
-
     -- save state
     love.graphics.push()
 
@@ -90,7 +100,7 @@ function module:draw()
     -- list standings by total weight
     local position = 1
     love.graphics.setFont(game.fonts.small)
-    for i, angler in ipairs(game.logic.tournament.standings) do
+    for i, angler in ipairs(tour.standings) do
 
         if (i <= 10) or (i > 10 and angler.player) then
 

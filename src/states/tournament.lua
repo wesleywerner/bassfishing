@@ -86,11 +86,13 @@ function module:init(data)
         game.logic.tournament:start()
     end
 
+    game.music:play("tournament")
+
 end
 
 function module:keypressed(key)
     if key == "escape" then
-        self:exitTournament()
+        self:promptExitTournament()
     elseif key == "left" or key == "kp4" or key == "a" then
         game.logic.player:left()
         game.view.fishfinder:update()
@@ -186,7 +188,7 @@ function module:update(dt)
 
         -- check if the tournament is finished
         if game.logic.tournament.day == 4 then
-            game.states:pop()
+            self:exitState()
         end
 
         -- check if the day is over
@@ -300,16 +302,23 @@ function module:draw()
 
 end
 
-function module:exitTournament()
+function module:exitState()
+
+    game.music:play("menu")
+    game.states:pop()
+
+end
+
+function module:promptExitTournament()
 
     if self.practice then
-        game.states:pop()
+        self:exitState()
     else
         local data = {
             message = "Are you sure you want to exit the tournament? [Y/N]",
             prompt = true,
             callback = function()
-                game.states:pop()
+                self:exitState()
                 end
         }
         game.states:push("messagebox", data)
