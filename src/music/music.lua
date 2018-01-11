@@ -147,6 +147,9 @@ function music:play(playlistname)
 
     end
 
+    -- exit here if music is turned off
+    if not game.settings.music then return end
+
     -- if nothing is playing switch to playlist immediately
     if not isPlaying() then
         --fading = false
@@ -172,6 +175,9 @@ end
 
 --- Update music state.
 function music:update(dt)
+
+    -- exit here if music is turned off
+    if not game.settings.music then return end
 
     if isPlaying() then
 

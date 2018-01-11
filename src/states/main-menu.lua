@@ -376,7 +376,7 @@ function module:makeButtons()
             top = top,
             text = "Tournament",
             callback = function(btn)
-                game.states:push("tournament selection")
+                game.states:push("tournament selection", { callback=self.refreshStatsCallback })
                 end
         }), width
     )
@@ -422,7 +422,7 @@ function module:makeButtons()
             top = top,
             text = "Options",
             callback = function(btn)
-                game.states:push("options")
+                game.states:push("options", { callback=self.refreshStatsCallback })
                 end
         }), width
     )
@@ -459,6 +459,7 @@ end
 
 function module:cycleChart(dir)
 
+    game.sound:play("focus")
     self.selectedChartId = self.selectedChartId + dir
 
     if self.selectedChartId > #chartTypes then
@@ -468,6 +469,17 @@ function module:cycleChart(dir)
     end
 
     self:setChartData()
+
+end
+
+--- Callback fired after options state exits.
+function module.refreshStatsCallback()
+
+    -- refresh stats text to apply units of measure
+    module.statsText = module:makeStatsText()
+
+    -- refresh chart
+    module:setChartData()
 
 end
 

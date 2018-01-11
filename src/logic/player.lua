@@ -234,6 +234,42 @@ function module:update(dt)
     -- work out boat cruising speed and distance to the goal
     game.logic.boat:calculateSpeed(self, dt)
 
+    if not self.trolling and self.speed > 0 then
+        -- boat speeds:
+        -- > 3 is full throttle
+        -- > 2 is speeding
+        -- > 1 is cruising
+        -- > 0.1 is slow
+        -- 0.1 is idling
+
+        -- the motor pitch:
+        -- 1 is normal
+        -- 0.5 is one octave lower
+        -- 2 is one octave higher
+
+        game.sound:play("outboard", true)
+
+        if self.speed > 3 then
+            -- full throttle
+            game.sound:pitch("outboard", 1.5)
+        elseif self.speed > 2 then
+            -- speeding
+            game.sound:pitch("outboard", 1.25)
+        elseif self.speed > 1 then
+            -- cruising
+            game.sound:pitch("outboard", 1)
+        elseif self.speed > 0.1 then
+            -- going slow
+            game.sound:pitch("outboard", 0.75)
+        elseif self.speed == 0.1 then
+            -- idling
+            game.sound:pitch("outboard", 0.5)
+        end
+
+    else
+        game.sound:stop("outboard")
+    end
+
     -- reel in cast line
     if self.castLine then
 

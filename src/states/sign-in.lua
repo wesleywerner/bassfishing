@@ -187,6 +187,7 @@ function module:carouselLeft()
         selectedId = newid
         previousCarouselX = carouselX
         carouselScale = 0
+        game.sound:play("focus")
     end
 
 end
@@ -198,6 +199,7 @@ function module:carouselRight()
         selectedId = newid
         previousCarouselX = carouselX
         carouselScale = 0
+        game.sound:play("focus")
     end
 
 end
@@ -328,6 +330,7 @@ end
 function module:signIn()
 
     if #collection == 0 then return end
+    game.sound:play("select")
     local anglername = collection[selectedId].name
     game.dprint(string.format("\nselected angler %q", anglername))
     game.logic.stats:load(anglername)

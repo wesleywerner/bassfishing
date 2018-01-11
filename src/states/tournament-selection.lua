@@ -23,6 +23,9 @@ local module = { }
 
 function module:init(data)
 
+    -- save the main menu callback to refresh player stats when we exit the tournament
+    self.mainMenuCallback = data.callback
+
     -- flag if the tournament should start upon state close
     self.startTournament = false
 
@@ -73,9 +76,11 @@ function module:keypressed(key)
     elseif key == "up" then
         self.lakelist:selectPrev()
         self:newMap(self:seedFromString(self.lakelist:selectedItem()))
+        game.sound:play("focus")
     elseif key == "down" then
         self.lakelist:selectNext()
         self:newMap(self:seedFromString(self.lakelist:selectedItem()))
+        game.sound:play("focus")
     else
         self.buttons:keypressed(key)
     end
@@ -100,6 +105,7 @@ function module:mousereleased(x, y, button, istouch)
 
     if self.lakelist:selectPoint(x - self.lakelist.left, y - self.lakelist.top) then
         self:newMap(self:seedFromString(self.lakelist:selectedItem()))
+        game.sound:play("focus")
     end
 
 end
@@ -113,6 +119,7 @@ function module:wheelmoved(x, y)
     end
 
     self:newMap(self:seedFromString(self.lakelist:selectedItem()))
+    game.sound:play("focus")
 
 end
 
@@ -131,7 +138,7 @@ function module:update(dt)
         game.states:pop()
         -- switch to tournament state (otherwise exit the game)
         if self.startTournament then
-            game.states:push("tournament", { practice = false })
+            game.states:push("tournament", { practice = false, callback=self.mainMenuCallback })
         end
     end
 

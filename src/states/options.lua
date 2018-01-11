@@ -28,6 +28,9 @@ local triggerinput = ""
 
 function module:init(data)
 
+    -- save callback when we exit this state
+    self.callback = data.callback
+
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage(love.graphics.newScreenshot())
 
@@ -105,6 +108,10 @@ function module:update(dt)
         self.screenshot = nil
         -- exit this state
         game.states:pop()
+        -- fire callback
+        if type(self.callback) == "function" then
+            self.callback()
+        end
     end
 
     -- update buttons
@@ -162,16 +169,17 @@ function module:makeButtons()
     love.graphics.setFont(game.fonts.small)
     buttons = game.lib.widgetCollection:new()
 
+    -- units of measure
     top = top + spacing
     game.view.ui:setSwitch(
         buttons:button("measurement", {
             left = left,
             top = top,
-            text = "motor",
+            text = "measure",
             label = "Units of measure",
             callback = function(btn)
                 game.lib.convert.metric = not game.lib.convert.metric
-                game.logic.options.data.metric = game.lib.convert.metric
+                game.settings.metric = game.lib.convert.metric
                 game.dprint(string.format("set measurement option metric %s", tostring(game.lib.convert.metric)))
                 end
         }), {"Metric", "Imperial"}
@@ -180,6 +188,54 @@ function module:makeButtons()
     -- set the value for measurement switch (it defaults to metric at first)
     if not game.lib.convert.metric then
         buttons:get("measurement"):setOption(2)
+    end
+
+    -- music
+    top = top + spacing
+    game.view.ui:setSwitch(
+        buttons:button("music", {
+            left = left,
+            top = top,
+            text = "xxxxxx",
+            label = "Background music",
+            callback = function(btn)
+                game.settings.music = not game.settings.music
+                game.dprint(string.format("set music %s", tostring(game.settings.music)))
+                if game.settings.music then
+                    game.music:play()
+                else
+                    game.music:stop()
+                end
+            end
+        }), {"On", "Off"}
+    )
+
+    -- set music switch (it defaults to on)
+    if not game.settings.music then
+        buttons:get("music"):setOption(2)
+    end
+
+    -- sounds
+    top = top + spacing
+    game.view.ui:setSwitch(
+        buttons:button("sounds", {
+            left = left,
+            top = top,
+            text = "xxxxxx",
+            label = "Sound effects",
+            callback = function(btn)
+                game.settings.sounds = not game.settings.sounds
+                game.dprint(string.format("set sounds %s", tostring(game.settings.sounds)))
+                if game.settings.sounds then
+                    game.sound:play("focus")
+                end
+            end
+        }), {"On", "Off"}
+    )
+
+    -- set sounds switch (it defaults to on)
+    if not game.settings.sounds then
+        buttons:get("sounds"):setOption(2)
     end
 
     -- Done button

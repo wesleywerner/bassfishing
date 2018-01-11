@@ -73,12 +73,17 @@ end
 function module:keypressed(key)
 
     if key == "escape" then
+
         self.transition:close(game.transition.time / 2, game.transition.exit)
+
     elseif key == "return" then
+
+        game.sound:play("select")
         if type(self.callback) == "function" then
             self.callback(self.text)
         end
         self.transition:close(game.transition.time / 2, game.transition.exit)
+
     elseif key == "backspace" then
 
         local utf8 = require("utf8")
@@ -92,14 +97,25 @@ function module:keypressed(key)
             -- so we couldn't do string.sub(text, 1, -2).
             self.text = string.sub(self.text, 1, byteoffset - 1)
         end
+
+        game.sound:play("key")
+
     elseif self.alphabet:find(key) and self.text:len() < 24 then
+
         -- add character
         self.text = self.text..key
+
         -- proper case input
         self.text = self.text:lower():gsub("(%l)(%w*)", function(a,b) return
         string.upper(a)..b end)
+
+        game.sound:play("key")
+
     elseif key == "space" and self.text:len() < 24 then
+
         self.text = self.text.." "
+        game.sound:play("key")
+
     end
 
 end

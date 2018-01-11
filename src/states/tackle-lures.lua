@@ -198,6 +198,7 @@ function module:init(data)
                     category = category,
                     page = page,
                     callback = function(hotspot)
+                        game.sound:play("focus")
                         self.selectedCategory = hotspot.category
                         self.lureList:scrollTo(hotspot.page)
                         -- auto select first lure in this category
@@ -241,6 +242,7 @@ function module:init(data)
                         textY = (self.linespacing / 2) - fontHeight,
                         lure = lure,
                         callback = function(hotspot)
+                            game.sound:play("focus")
                             self:selectLure(hotspot.lure)
                             end
                         }
@@ -279,6 +281,7 @@ function module:init(data)
                     height = self.paletteSize,
                     color = color,
                     callback = function(hotspot)
+                        game.sound:play("select")
                         self:setLure(hotspot.color)
                         end
                 }
@@ -406,7 +409,17 @@ function module:wheelmoved(x, y)
         else
             self.lureList:scrollUp()
         end
-        self.selectedCategory = self.categoryList.hotspots[self.lureList.page].category
+
+        -- get the category for this lure page
+        local pagecategory = self.categoryList.hotspots[self.lureList.page].category
+
+        -- focus sound if category changed
+        if pagecategory ~= self.selectedCategory then
+            game.sound:play("focus")
+        end
+
+        self.selectedCategory = pagecategory
+
     end
 
 end

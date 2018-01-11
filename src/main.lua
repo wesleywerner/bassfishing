@@ -78,8 +78,6 @@ end
 function love.update(dt)
 
     game.states:update(dt)
-
-    -- TODO: if game.options.music then ...
     game.music:update(dt)
 
 end

@@ -248,6 +248,20 @@ function module:setButton(btn, width)
     end
     love.graphics.setCanvas()
 
+    -- swap out the callback
+    if btn.callback then
+        btn.callbackBase = btn.callback
+    end
+
+    -- overwrite callback to flip the switch
+    btn.callback = function(btn)
+        game.sound:play("select")
+        -- fire button callback
+        if btn.callbackBase then
+            btn.callbackBase(btn)
+        end
+    end
+
 end
 
 --- Convert a button to a switch.
@@ -306,6 +320,9 @@ function module:setSwitch(btn, options, width)
 
     -- overwrite callback to flip the switch
     btn.callback = function(btn)
+
+            game.sound:play("focus")
+
             -- flip the switch value and "a"/"b" position values
             if btn.value == 1 then
                 btn:setOption(2)

@@ -115,13 +115,13 @@ function module:printBoatSpeed()
     love.graphics.setColor(game.color.base2)
 
     if game.logic.player.speed > 3 then
-        love.graphics.print("cruising fastest")
+        love.graphics.print("full throttle")
     elseif game.logic.player.speed > 2 then
-        love.graphics.print("cruising fast")
+        love.graphics.print("speeding")
     elseif game.logic.player.speed > 1 then
-        love.graphics.print("cruising faster")
-    elseif game.logic.player.speed > 0.1 then
         love.graphics.print("cruising")
+    elseif game.logic.player.speed > 0.1 then
+        love.graphics.print("going slow")
     elseif game.logic.player.speed == 0.1 then
         love.graphics.print("idling")
     end

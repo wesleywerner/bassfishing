@@ -114,6 +114,8 @@ function module:mousepressed( x, y, button, istouch )
 
         if hotspot.focused then
 
+            game.sound:play("select")
+
             -- set the player cast range and rod name
             game.logic.player:setRod(hotspot.rod)
 

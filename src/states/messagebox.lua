@@ -41,6 +41,13 @@ function module:init(data)
     self.callback = data.callback
     self.shake = data.shake
 
+    -- sound effects
+    if self.prompt then
+        game.sound:play("prompt")
+    elseif self.shake then
+        game.sound:play("crash")
+    end
+
     -- predraw the messages on a canvas
     self.canvas = love.graphics.newCanvas( )
     love.graphics.setCanvas( self.canvas )
