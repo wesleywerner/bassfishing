@@ -27,7 +27,7 @@ local panelTop = 0
 function module:init(data)
 
     -- save screen and use it as a menu background
-    self.screenshot = data or love.graphics.newImage( love.graphics.newScreenshot() )
+    self.screenshot = data.screenshot or love.graphics.newImage(love.graphics.newScreenshot())
 
     panelTop = game.window.height - panelHeight
 
