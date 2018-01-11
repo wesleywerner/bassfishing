@@ -38,6 +38,9 @@ function module:load()
 
     self.data = game.logic.pickle:read("options", default)
 
+    -- alias settings
+    game.settings = self.data
+
     -- upgrade data as needed
     --if not self.data.version == "1" then
         --self.data.version = game.version
