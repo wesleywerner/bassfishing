@@ -194,19 +194,6 @@ function module:makeButtons()
         })
     )
 
-    --top = top + spacing
-    --game.view.ui:setButton(
-        --buttons:button("lures", {
-            --left = left,
-            --top = top,
-            --text = "Lures",
-            --callback = function(btn)
-                --game.states:push("tackle lures")
-                --end
-        --}), width
-    --)
-
-
 end
 
 function module:makeDebugButton()
@@ -225,6 +212,11 @@ function module:makeDebugButton()
                     end
             }), {"Off", "On"}
         )
+
+        -- flip switch if already in debug mode
+        if game.debug then
+            buttons:get("debug"):setOption(2)
+        end
 
     end
 
