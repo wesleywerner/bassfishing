@@ -29,16 +29,19 @@ module.data = nil
 
 function module:load()
 
-    self.data = game.logic.pickle:read("options")
+    local default = {
+            version = "1",
+            metric = true,
+            music = true,
+            sounds = true
+        }
+
+    self.data = game.logic.pickle:read("options", default)
 
     -- upgrade data as needed
-    if not self.data.version then
-        self.data.version = game.version
-    end
-
-    if not self.data then
-        self.data = { }
-    end
+    --if not self.data.version == "1" then
+        --self.data.version = game.version
+    --end
 
 end
 
