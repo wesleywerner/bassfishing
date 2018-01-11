@@ -22,6 +22,9 @@
 
 local module = { }
 local buttons = nil
+local alphabet = "abcdefghijklmnopqrstuvwxyz"
+local debugtrigger = "ilovebass"
+local triggerinput = ""
 
 function module:init(data)
 
@@ -42,6 +45,30 @@ function module:keypressed(key)
         self.transition:close(game.transition.time, game.transition.exit)
     else
         buttons:keypressed(key)
+    end
+
+    -- listen for debug trigger
+    if alphabet:find(key) then
+
+        -- returns true if input matches start of trigger
+        local function testmatch()
+            return string.sub(debugtrigger, 1, string.len(triggerinput)) == triggerinput
+        end
+
+        -- add to trigger input when it matches
+        if testmatch() then
+
+            triggerinput = triggerinput..key
+
+            if triggerinput == debugtrigger then
+                self:makeDebugButton()
+            end
+
+        else
+            -- reset when no match
+            triggerinput = key
+        end
+
     end
 
 end
@@ -126,7 +153,9 @@ end
 
 function module:makeButtons()
 
-    --local width = 130
+    -- buttons already created
+    if buttons then return end
+
     local spacing = 40
     local left = 300
     local top = 100
@@ -177,6 +206,27 @@ function module:makeButtons()
         --}), width
     --)
 
+
+end
+
+function module:makeDebugButton()
+
+    if not buttons:get("debug") then
+
+        game.view.ui:setSwitch(
+            buttons:button("debug", {
+                left = 200,
+                top = game.window.height - 60,
+                text = "debug",
+                label = "Debug mode",
+                callback = function(btn)
+                    game.debug = not game.debug
+                    game.dprint("debug mode enabled")
+                    end
+            }), {"Off", "On"}
+        )
+
+    end
 
 end
 

@@ -20,7 +20,6 @@
 
 local module = { }
 local scale = 2
-local drawDebug = false
 local buttons = nil
 local maphotspot = nil
 
@@ -127,7 +126,6 @@ function module:keypressed(key)
     -- debug shortcuts
     if game.debug then
         if key == "f1" then
-            drawDebug = not drawDebug
             game.logic.tournament:takeTime(15)
         elseif key == "f10" then
             game.states:push("lakegen development")
@@ -210,7 +208,8 @@ function module:update(dt)
     -- update buttons
     buttons:update(dt)
 
-    if drawDebug then game.logic.fish:update(dt) end
+    -- update fish movement animations
+    if game.debug then game.logic.fish:update(dt) end
 
     game.lib.camera:center(game.logic.player.screenX * scale, game.logic.player.screenY * scale)
     game.lib.camera:update(dt)
@@ -231,8 +230,8 @@ function module:draw()
     love.graphics.scale(scale, scale)
     love.graphics.draw(game.view.maprender.image)
 
-    -- fish (debugging)
-    if drawDebug then game.view.fish:draw() end
+    -- draw fish (debugging)
+    if game.debug then game.view.fish:draw() end
 
     -- draw other boats
     game.view.competitors:draw()
