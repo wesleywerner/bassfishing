@@ -73,7 +73,7 @@ function module:push(name, data)
     --    return
     --end
 
-    table.insert(self.stack, { name=name, object=self.list[name], data=data })
+    table.insert(self.stack, { name=name, object=self.list[name], data=data or {} })
     self:initCurrent()
 
 end
