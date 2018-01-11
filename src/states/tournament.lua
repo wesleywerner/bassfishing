@@ -25,6 +25,9 @@ local maphotspot = nil
 
 function module:init(data)
 
+    -- save callback when we exit this state
+    self.callback = data.callback
+
     love.graphics.origin()
 
     -- generate a random lake (for testing this state without lake selection)
@@ -287,12 +290,12 @@ function module:draw()
     love.graphics.push()
     love.graphics.translate(634, 371)
     love.graphics.scale(1.8, 1.8)
+    love.graphics.setColor(game.color.white)
     love.graphics.draw(self.minimap)
 
     -- player position on the mini map
     love.graphics.scale(1, 1)
     love.graphics.translate(-1, -1)
-    love.graphics.setColor(game.color.white)
     love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 2, 2)
     love.graphics.pop()
 
@@ -306,6 +309,12 @@ function module:exitState()
 
     game.music:play("menu")
     game.states:pop()
+
+    -- fire the callback to refresh player stats
+    -- (received from the main menu state via lake selection)
+    if type(self.callback) == "function" then
+        self.callback()
+    end
 
 end
 
