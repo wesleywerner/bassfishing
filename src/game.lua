@@ -25,7 +25,7 @@ module.version = "1"
 module.title = "Bass Lover"
 
 -- enable debug printing
-module.debug = true
+module.debug = false
 module.dprint = function(...) if module.debug then print(...) end end
 
 -- global defaults

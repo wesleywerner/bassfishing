@@ -132,8 +132,6 @@ function module:updateStatistics()
         tour.position = tour.position or 0
         tour.lake = tour.lake or "NONE"
 
-        print(tour.casts, "casts")
-
         -- reset totals
         tour.weight = 0
 

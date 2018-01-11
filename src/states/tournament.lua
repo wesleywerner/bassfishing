@@ -412,6 +412,7 @@ function module:makeButtons()
         width = 150,
         height = 56,
         callback = function()
+            game.sound:play("select")
             game.states:push("map")
             end
     }
