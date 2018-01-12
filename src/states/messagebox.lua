@@ -41,6 +41,9 @@ function module:init(data)
     self.callback = data.callback
     self.shake = data.shake
 
+    -- pause the outboard sound while the message is showing
+    game.sound:stop("outboard")
+
     -- sound effects
     if self.prompt then
         game.sound:play("prompt")

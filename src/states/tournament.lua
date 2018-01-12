@@ -337,6 +337,7 @@ end
 
 function module:exitState()
 
+    game.sound:stop("outboard")
     game.music:play("menu")
     game.states:pop()
 
