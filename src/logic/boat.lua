@@ -85,10 +85,19 @@ function module:launchBoat(boat)
     }
 
     for _, test in ipairs(tests) do
+        -- test for open water
         if game.lake.contour[test.x][test.y] == 0 then
-           boat.x = test.x
-           boat.y = test.y
+            -- test for obstacles
+            local obstacle = self:getObstacle(test.x, test.y, boat)
+            if not obstacle then
+                boat.x = test.x
+                boat.y = test.y
+            end
         end
+    end
+
+    if not boat.x or not boat.y then
+        error("player boat has no x/y")
     end
 
     -- clear the boat screen position so it can be launched at the correct place
@@ -233,7 +242,7 @@ function module:move(boat, dir)
     boat.x, boat.y = self:getNextPosition(boat, dir)
 
     -- get any obstacles at the new position
-    boat.stuck = self:getObstacle(boat)
+    boat.stuck = self:getObstacle(boat.x, boat.y, boat)
 
 end
 
@@ -257,10 +266,9 @@ end
 
 
 --- Returns an obstacle at a map position including jetties and land.
-function module:getObstacle(boat)
+function module:getObstacle(x, y, ignoreboat)
 
     local lake = game.lake
-    local x, y = boat.x, boat.y
 
     for _, obstacle in ipairs(lake.obstacles) do
         if obstacle.x == x and obstacle.y == y then
@@ -289,7 +297,7 @@ function module:getObstacle(boat)
 
     -- include other boats except the current
     for _, craft in ipairs(lake.boats) do
-        if craft.x == x and craft.y == y and craft ~= boat then
+        if craft.x == x and craft.y == y and craft ~= ignoreboat then
             return craft
         end
     end
