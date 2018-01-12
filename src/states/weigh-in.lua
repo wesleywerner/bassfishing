@@ -24,6 +24,9 @@ local module = { }
 -- alias tournament logic
 local tour = nil
 
+-- store the daily standings
+local standings = nil
+
 function module:init(data)
 
     -- save screen and use it as a menu background
@@ -37,8 +40,18 @@ function module:init(data)
 
     tour = game.logic.tournament
 
+    -- copy tournament standings
+    standings = { }
+    for i, angler in ipairs(tour.standings) do
+        table.insert(standings, {
+        name=angler.name,
+        dailyWeight=angler.dailyWeight,
+        formattedWeight=game.lib.convert:weight(angler.dailyWeight),
+        player=angler.player} )
+    end
+
     -- sort the daily weight list
-    table.sort(tour.standings, function(a, b) return a.dailyWeight > b.dailyWeight end)
+    table.sort(standings, function(a, b) return a.dailyWeight > b.dailyWeight end)
 
 end
 
@@ -107,7 +120,7 @@ function module:draw()
 
     -- list standings
     local position = 1
-    for i, angler in ipairs(tour.standings) do
+    for i, angler in ipairs(standings) do
 
         if (i <= 10) or (i > 10 and angler.player) then
 
@@ -124,7 +137,7 @@ function module:draw()
             love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(game.lib.convert:weight(angler.dailyWeight),
+            love.graphics.printf(angler.formattedWeight,
             0, py, game.window.width - 60, "right")
 
         end

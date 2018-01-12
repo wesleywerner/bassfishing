@@ -21,8 +21,8 @@
 
 local module = { }
 
--- alias tournament logic
-local tour = nil
+-- store the tournament standings
+local standings = nil
 
 function module:init(data)
 
@@ -33,11 +33,18 @@ function module:init(data)
 
     game.music:play("tournament end")
 
-    tour = game.logic.tournament
+    -- copy tournament standings
+    standings = { }
+    for i, angler in ipairs(game.logic.tournament.standings) do
+        table.insert(standings, {
+        name=angler.name,
+        totalWeight=angler.totalWeight,
+        formattedWeight=game.lib.convert:weight(angler.totalWeight),
+        player=angler.player} )
+    end
 
     -- sort standings by total weight
-    table.sort(tour.standings, function(a, b)
-    return a.totalWeight > b.totalWeight end)
+    table.sort(standings, function(a, b) return a.totalWeight > b.totalWeight end)
 
 end
 
@@ -100,7 +107,7 @@ function module:draw()
     -- list standings by total weight
     local position = 1
     love.graphics.setFont(game.fonts.small)
-    for i, angler in ipairs(tour.standings) do
+    for i, angler in ipairs(standings) do
 
         if (i <= 10) or (i > 10 and angler.player) then
 
@@ -117,8 +124,8 @@ function module:draw()
             love.graphics.print(string.format("%d. %s", i, angler.name), 100, py)
 
             -- weight
-            love.graphics.printf(game.lib.convert:weight(angler.totalWeight),
-            0, py, game.window.width - 60, "right")
+            love.graphics.printf(angler.formattedWeight, 0, py,
+            game.window.width - 60, "right")
 
         end
 

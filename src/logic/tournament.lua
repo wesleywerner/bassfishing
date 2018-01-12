@@ -268,11 +268,11 @@ function module:endOfDay()
             end
         end
 
-        -- add all fish caught during the tournament to statistics
+        -- record tournament statistics
         game.logic.stats:record(self.fishStatistics, player.lake,
         playerstanding, game.logic.player.castsCount)
 
-        -- show the tournament results
+        -- queue the tournament results state
         game.states:push("tournament results")
 
     end
