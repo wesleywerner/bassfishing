@@ -46,6 +46,12 @@ function love.load()
     love.window.setMode(game.window.width, game.window.height)
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
 
+    game.logic.toplunkers:load()
+
+    -- load and apply saved options
+    game.logic.options:load()
+    game.lib.convert.metric = game.logic.options.data.metric
+
     game.logic.anglers:load()
     --game.states:add("tournament", require("states.tournament"))
     game.states:add("sign-in", require("states.sign-in"))
@@ -65,11 +71,6 @@ function love.load()
     game.states:add("live well", require("states.live-well"))
     game.states:add("options", require("states.options"))
 
-    game.logic.toplunkers:load()
-
-    -- load and apply saved options
-    game.logic.options:load()
-    game.lib.convert.metric = game.logic.options.data.metric
 
     game.music:play("menu")
 

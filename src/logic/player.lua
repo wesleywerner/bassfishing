@@ -220,9 +220,11 @@ function module:landFish(fish)
         game.logic.fish:releaseFishIntoLake(release, self.x, self.y)
     end
 
-    local message = string.format("You landed a %s fish of %.2f kg\n\n%s", fish.size, fish.weight, lwmessage)
+    local message = string.format("%s fish landed\n%s",
+    game.lib.convert:weight(fish.weight), lwmessage)
 
-    game.states:push("messagebox", { title="FISH ON", message=message, shake=false } )
+    --game.states:push("messagebox", { title="FISH ON", message=message, shake=false } )
+    game.view.notify:add(message)
 
 end
 
@@ -348,6 +350,7 @@ end
 --- Reset the player cast aiming and launch distance
 function module:resetDay()
 
+    self.speed = 0
     self.castLine = nil
     self.castOffset = nil
     self.distanceFromJetty = 1

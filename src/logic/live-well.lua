@@ -60,11 +60,11 @@ function module:add(fish)
             fish.hilite = 1
             table.insert( self.contents, fish )
 
-            message = "You release a smaller fish from your live well and add this fish."
+            message = "You release a smaller fish to keep this one."
 
         else
             release = fish
-            message = "All the fish in your live well are larger than this fish.\nYou release it."
+            message = "You have bigger fish, you release it."
         end
 
     end

@@ -25,7 +25,7 @@ module.version = "1"
 module.title = "Bass Lover"
 
 -- enable debug printing
-module.debug = false
+module.debug = true
 module.dprint = function(...) if module.debug then print(...) end end
 
 -- global defaults
@@ -67,6 +67,9 @@ module.color.lightbackground = module.color.base2
 module.color.darkbackground = module.color.base02
 module.color.lighttext = module.color.base1
 module.color.darktext = module.color.base00
+module.color.notifybackground = { 7, 54, 66, 192 }
+module.color.notifyurgentbackground = { 220, 50, 47, 192 }
+module.color.notifytext = { 253, 246, 227, 230 }
 
 -- screen transition defaults
 module.transition = {
@@ -116,6 +119,7 @@ module.view.weather = require("views.weather-display")
 module.view.clock = require("views.clock")
 module.view.screentransition = require("views.screen-transition")
 module.view.ui = require("views.ui")
+module.view.notify = require("views.notification")
 
 -- libraries
 module.lib.camera = require("libs.harness.camera")

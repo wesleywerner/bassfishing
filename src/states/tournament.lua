@@ -138,6 +138,9 @@ function module:keypressed(key)
             game.logic.tournament:endOfDay()
         elseif key == "f3" then
             game.logic.weather:change()
+        elseif key == "space" then
+            game.view.notify:add(string.format("%s this is a test notifications",
+            os.date("%c", os.time())), math.random() < 0.1)
         end
     end
 
@@ -195,6 +198,8 @@ function module:update(dt)
 
     game.logic.competitors:update(dt)
 
+    game.logic.player:update(dt)
+
     if not self.practice then
 
         -- check if the tournament is finished
@@ -204,19 +209,21 @@ function module:update(dt)
 
         -- check if the day is over
         if game.logic.tournament.time == 0 then
+            game.view.notify:clear()
+            game.sound:stop("outboard")
             game.logic.tournament:endOfDay()
         end
 
-        -- if near the jetty and less than 30 minutes remain, end the day
+        -- if near the jetty end the day
         if game.logic.tournament.displayedWarning
-            and game.logic.player.nearJetty
-            and game.logic.player.speed == 0 then
+        and game.logic.player.nearJetty
+        and game.logic.player.speed == 0 then
+            game.view.notify:clear()
+            game.sound:stop("outboard")
             game.logic.tournament:endOfDay()
         end
 
     end
-
-    game.logic.player:update(dt)
 
     -- update buttons
     buttons:update(dt)
@@ -226,6 +233,9 @@ function module:update(dt)
 
     game.lib.camera:center(game.logic.player.screenX * scale, game.logic.player.screenY * scale)
     game.lib.camera:update(dt)
+
+    -- update notifications
+    game.view.notify:update(dt)
 
 end
 
@@ -253,6 +263,9 @@ function module:draw()
     game.view.player:draw()
 
     game.lib.camera:relax()
+
+    -- draw notifications
+    game.view.notify:draw()
 
     -- draw game border
     love.graphics.setColor(255, 255, 255)

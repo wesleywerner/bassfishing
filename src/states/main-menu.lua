@@ -407,7 +407,7 @@ function module:makeButtons()
                 game.lake = game.logic.genie:generate(game.defaultMapWidth,
                 game.defaultMapHeight, seed,
                 game.defaultMapDensity, game.defaultMapIterations)
-                game.states:push("tournament", { tutorial = true })
+                game.states:push("tournament", { tutorial = true, practice = true })
                 -- refresh chart
                 self:setChartData()
                 end

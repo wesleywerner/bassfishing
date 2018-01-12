@@ -49,7 +49,7 @@ module.time = 0
 module.timef = "00:00:00"
 
 -- Warn the player when this much time is left
-module.timeWarning = 60 * 30    -- 30 mins
+module.timeWarning = 60 * 60    -- 60 mins
 
 -- Track if the warning has shown for this day
 module.displayedWarning = false
@@ -152,22 +152,8 @@ function module:takeTime(minutes)
     self.timef = os.date("!%H:%M", self.time)
 
     if self.time <= self.timeWarning and not self.displayedWarning then
-
-        -- prevent showing the warning on top of another message.
-        -- if this is the case, we will show the warning on next turn
-        if game.states:current() ~= "messagebox" then
-
-            self.displayedWarning = true
-
-            local opts = {
-                title = "warning",
-                message = "Only 30 minutes left before weigh-in!"
-            }
-
-            game.states:push("messagebox", opts)
-
-        end
-
+        self.displayedWarning = true
+        game.view.notify:add("60 minutes before weigh-in!", true)
     end
 
 end
