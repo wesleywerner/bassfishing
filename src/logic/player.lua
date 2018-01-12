@@ -226,6 +226,8 @@ function module:landFish(fish)
     --game.states:push("messagebox", { title="FISH ON", message=message, shake=false } )
     game.view.notify:add(message)
 
+    game.sound:play("fish on")
+
 end
 
 function module:update(dt)

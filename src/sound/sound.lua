@@ -28,7 +28,8 @@ local soundlist = {
     ["prompt"] = { file="sound/ui-prompt.ogg" },
     ["crash"] = { file="sound/crash.ogg" },
     ["outboard"] = { file="sound/outboard.ogg" },
-    ["key"] = { file="sound/ui-key.ogg" }
+    ["key"] = { file="sound/ui-key.ogg" },
+    ["fish on"] = { file="sound/fishon PowerUp18.ogg" }
 }
 
 function sound:play(key, looping)
