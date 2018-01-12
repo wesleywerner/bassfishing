@@ -245,6 +245,11 @@ function module:update(dt)
     -- work out boat cruising speed and distance to the goal
     game.logic.boat:calculateSpeed(self, dt)
 
+    -- retake aim in case boat is moving
+    if self.speed > 0.1 then
+        self:aimCast(self.castOffset.screenX, self.castOffset.screenY)
+    end
+
     if not self.trolling and self.speed > 0 then
         -- boat speeds:
         -- > 3 is full throttle
