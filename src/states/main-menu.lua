@@ -397,19 +397,17 @@ function module:makeButtons()
     -- Tutorial
     top = top + height
     game.view.ui:setButton(
-        collection:button("tutorial", {
+        collection:button("practice", {
             left = left,
             top = top,
-            text = "Tutorial",
+            text = "Practice",
             callback = function(btn)
                 local seed = os.time()
                 game.dprint(string.format("generating practice map with seed %d", seed))
                 game.lake = game.logic.genie:generate(game.defaultMapWidth,
                 game.defaultMapHeight, seed,
                 game.defaultMapDensity, game.defaultMapIterations)
-                game.states:push("tournament", { tutorial = true, practice = true })
-                -- refresh chart
-                self:setChartData()
+                game.states:push("tournament", { practice = true })
                 end
         }), width
     )
