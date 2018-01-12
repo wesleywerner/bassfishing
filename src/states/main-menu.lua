@@ -312,9 +312,11 @@ function module:setChartData()
 
             -- find the heaviest catch in this tournament
             local lunker = 0
+            local lunkerlure = ""
             for _, fish in ipairs(tour.fish) do
                 if fish.weight > lunker then
                     lunker = fish.weight
+                    lunkerlure = fish.lure
                 end
             end
 
@@ -325,7 +327,7 @@ function module:setChartData()
             local tourdate = os.date("%d %b %Y", tour.date)
             local weight = game.lib.convert:weight(lunker)
             local tiptext = love.graphics.newText(game.fonts.tiny)
-            tiptext:add(string.format("%s\n%s", tourdate, weight, 0, 0))
+            tiptext:add(string.format("%s\n%s\n%s", tourdate, weight, lunkerlure))
             self.chart.tips[n] = tiptext
 
         end

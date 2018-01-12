@@ -197,7 +197,7 @@ function module:endOfDay()
                     -- store fish data for statistics
                     table.insert(self.fishStatistics, {
                         weight=fish.weight,
-                        lure="TODO" -- TODO: record fish lure
+                        lure=fish.lure
                     })
 
                     angler.dailyWeight = angler.dailyWeight + fish.weight

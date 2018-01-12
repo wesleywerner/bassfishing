@@ -204,6 +204,11 @@ function module:cast()
     -- see if the fish wants to strike
     local fish = game.logic.fish:attemptStrike(self.castOffset.x, self.castOffset.y, self.rod.lure)
 
+    -- record the lure used
+    if fish then
+        fish.lure = string.format("%s %s", self.rod.lure.color, self.rod.lure.name)
+    end
+
     -- set the cast line
     self.castLine = {
         x = self.castOffset.x,
