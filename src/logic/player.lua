@@ -142,8 +142,7 @@ function module:aimPastRange(x, y)
 
     local distance = game.lib.trig:distance(self.x, self.y, x, y)
 
-    -- allow grace boundary
-    return distance > self.rod.range + 1.5
+    return distance > self.rod.range
 
 end
 
@@ -462,7 +461,9 @@ end
 --- Move towards a given map point using path finding
 function module:moveTowardsPoint(x, y)
 
-    print(string.format("find path from %d/%d to %d/%d", self.x, self.y, x, y))
+    -- wait until the boat angle has normalized
+    if self.angle < 0 or self.angle > 360 then return end
+    if self.angle % 45 ~= 0 then return end
 
     -- path finding callback to return true if a position is open to walk
     local getMapPositionOpen = function(x, y)
@@ -479,13 +480,29 @@ function module:moveTowardsPoint(x, y)
         -- first point is where we are now. take the second
         local goal = path[2]
 
-        print(string.format("path has %d points, next is %d/%d", #path, goal.x, goal.y))
-
         -- angle the boat towards the first point.
         -- if the angle is good, move the boat.
-        local angle = 180 - math.deg(game.lib.trig:angle(self.x, self.y, goal.x, goal.y))
+        local goalAngle = math.deg(game.lib.trig:angle(goal.x, goal.y, self.x, self.y))
 
-        print(string.format("angle to point %.1f, our boat is %.1f", angle, self.angle))
+        goalAngle = goalAngle % 360
+        if goalAngle < 0 then goalAngle = goalAngle + 360 end
+
+        --print(string.format("angle to point %.1f, our boat is %.1f", goalAngle, self.angle))
+
+        -- move or turn the boat
+        if self.angle == goalAngle then
+            self:forward()
+        elseif goalAngle > 180 and self.angle < 135 then
+            -- shortcut through 360
+            self:left()
+        elseif goalAngle < 135 and self.angle > 225 then
+            -- shortcut through 360
+            self:right()
+        elseif goalAngle < self.angle then
+            self:left()
+        elseif goalAngle > self.angle then
+            self:right()
+        end
 
     end
 

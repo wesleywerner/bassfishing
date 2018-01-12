@@ -129,6 +129,18 @@ function module:update(boat, dt)
     boat.angleFrame = boat.angleFrame + dt * 2
     boat.angle = game.lib.lume.lerp(boat.angleFrom, boat.angleTo, boat.angleFrame)
 
+    -- normalize boat angle
+    -- (eliminates negative angles, or those over 360)
+    if boat.angle == boat.angleTo then
+        if boat.angle == 360 then
+            boat.angle = 0
+            boat.angleTo = 0
+        elseif boat.angle == -45 then
+            boat.angle = 315
+            boat.angleTo = 315
+        end
+    end
+
 end
 
 --- Turn the boat
