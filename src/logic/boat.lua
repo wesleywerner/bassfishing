@@ -324,7 +324,7 @@ function module:calculateSpeed(boat, dt)
     -- if the boat is idling use a timer to cut the engine off
     if currentSpeed == 0 and boat.speed == idleSpeed then
 
-        boat.engineCutoff = (boat.engineCutoff or 5) - (dt)
+        boat.engineCutoff = (boat.engineCutoff or 2) - (dt)
         if boat.engineCutoff < 0 then
             boat.speed = 0
             boat.engineCutoff = nil
