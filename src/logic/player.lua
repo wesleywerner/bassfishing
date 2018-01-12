@@ -142,7 +142,7 @@ function module:aimPastRange(x, y)
 
     local distance = game.lib.trig:distance(self.x, self.y, x, y)
 
-    return distance > self.rod.range
+    return distance > self.rod.range + 1
 
 end
 
@@ -467,7 +467,29 @@ function module:moveTowardsPoint(x, y)
 
     -- path finding callback to return true if a position is open to walk
     local getMapPositionOpen = function(x, y)
+
+        local isopen = true
+
+        for _, obstacle in ipairs(game.lake.obstacles) do
+            if obstacle.x == x and obstacle.y == y then
+                isopen = false
+            end
+        end
+
+        if not isopen then return false end
+
+        -- include jetties
+        for _, jetty in ipairs(game.lake.jetties) do
+            if jetty.x == x and jetty.y == y then
+                isopen = false
+            end
+        end
+
+        if not isopen then return false end
+
+        -- test the land contour
         return game.lake.contour[x][y] == 0
+
     end
 
     -- get a path to this point
