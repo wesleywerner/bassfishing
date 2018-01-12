@@ -96,22 +96,23 @@ function module:render()
             end
         end
 
-        love.graphics.setColor(255, 255, 255)
-
         local plantid = lake.plants[x][y]
         if plantid > 0 then
             local plantidx = math.max(1, plantid % #tiles.plants)
+            love.graphics.setColor(255, 255, 255, 128)
             love.graphics.draw(tiles.image, tiles.plants[plantidx], drawx, drawy)
         end
 
         local treeid = lake.trees[x][y]
         if treeid > 0 then
+            love.graphics.setColor(255, 255, 255)
             local treeidx = math.max(1, treeid % #tiles.trees)
             love.graphics.draw(tiles.image, tiles.trees[treeidx], drawx, drawy)
         end
 
         local house = lake.buildings[x][y] > 0
         if house then
+            love.graphics.setColor(255, 255, 255)
             local id = math.random(1, #tiles.buildings)
             love.graphics.draw(tiles.image, tiles.buildings[id], drawx, drawy)
         end
