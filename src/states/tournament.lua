@@ -149,6 +149,14 @@ function module:mousemoved(x, y, dx, dy, istouch)
     buttons:mousemoved(x, y, dx, dy, istouch)
     maphotspot:mousemoved(x, y, dx, dy, istouch)
 
+    -- set status text to a button tip
+    statustext = nil
+    for _, btn in pairs(buttons.controls) do
+        if btn.focused then
+            statustext = btn.hint
+        end
+    end
+
     -- translate the point relative to the camera frame
     x, y = game.lib.camera:pointToFrame(x, y)
 
@@ -273,13 +281,22 @@ function module:draw()
     game.view.weather:drawIcon()
     love.graphics.pop()
 
-    -- boat speed / rod details status text
-    if game.logic.player.speed > 0 and not game.logic.player.trolling then
+    -- print status line
+    if statustext then
+        love.graphics.push()
+        love.graphics.translate(10, 570)
+        love.graphics.setFont(game.fonts.small)
+        love.graphics.setColor(game.color.white)
+        love.graphics.print(statustext)
+        love.graphics.pop()
+    elseif game.logic.player.speed > 0 and not game.logic.player.trolling then
+        -- boat speed
         love.graphics.push()
         love.graphics.translate(10, 570)
         game.view.player.printBoatSpeed()
         love.graphics.pop()
     else
+        -- rod and lure selection
         love.graphics.push()
         love.graphics.translate(20, 570)
         game.view.player:drawRodDetails()
@@ -349,6 +366,7 @@ function module:makeButtons()
             left = left,
             top = top,
             text = "Forecast",
+            hint = "Weather forecast (f)",
             callback = function(btn)
                 game.states:push("weather forecast")
                 end
@@ -361,6 +379,7 @@ function module:makeButtons()
             left = left,
             top = top,
             text = "motor",
+            hint = "Switch between outboard and trolling (t)",
             callback = function(btn)
                 -- take time switching motors
                 game.logic.tournament:takeTime(1)
@@ -375,6 +394,7 @@ function module:makeButtons()
             left = left,
             top = top,
             text = "Lures",
+            hint = "Pick a lure (l)",
             callback = function(btn)
                 game.states:push("tackle lures")
                 end
@@ -387,6 +407,7 @@ function module:makeButtons()
             left = left,
             top = top,
             text = "Rods",
+            hint = "Pick a rod (r)",
             callback = function(btn)
                 game.states:push("tackle rods")
                 end
@@ -398,6 +419,7 @@ function module:makeButtons()
         buttons:button("livewell", {
             left = left,
             top = top,
+            hint = "Look inside your live well (v)",
             text = "Live well",
             callback = function(btn)
                 game.states:push("live well")
@@ -411,6 +433,7 @@ function module:makeButtons()
         top = 371,
         width = 150,
         height = 56,
+        hint = "Look at the map (m)",
         callback = function()
             game.sound:play("select")
             game.states:push("map")
