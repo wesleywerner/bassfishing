@@ -191,6 +191,13 @@ function module:cast()
     -- take time
     game.logic.tournament:turn()
 
+    game.sound:play("cast")
+
+    -- randomly play plop sound
+    if math.random() > 0.98 then
+        game.sound:play("plop")
+    end
+
 end
 
 --- Remove a fish from the water

@@ -29,7 +29,9 @@ local soundlist = {
     ["crash"] = { file="sound/crash.ogg" },
     ["outboard"] = { file="sound/outboard.ogg" },
     ["key"] = { file="sound/ui-key.ogg" },
-    ["fish on"] = { file="sound/fishon PowerUp18.ogg" }
+    ["fish on"] = { file="sound/fishon PowerUp18.ogg" },
+    ["cast"] = { file="sound/bamboo-swing-a14.ogg", volume=0.25 },
+    ["plop"] = { file="sound/small-water-plops.ogg", volume=0.5 }
 }
 
 function sound:play(key, looping)
@@ -55,6 +57,10 @@ function sound:play(key, looping)
         end
 
         sfx.cache = love.audio.newSource(sfx.file, "static")
+
+        if sfx.volume then
+            sfx.cache:setVolume(sfx.volume)
+        end
 
     end
 
