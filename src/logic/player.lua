@@ -131,6 +131,22 @@ function module:getDistanceFromJetty()
 
 end
 
+--- Returns if the cursor is aimed outside the cast range
+function module:aimPastRange(x, y)
+
+    -- yes if no cast offset is set
+    if not self.castOffset then return true end
+
+    -- yes if no rod is selected
+    if not self.rod then return true end
+
+    local distance = game.lib.trig:distance(self.x, self.y, x, y)
+
+    -- allow grace boundary
+    return distance > self.rod.range + 1.5
+
+end
+
 function module:aimCast( x, y )
 
     if not self.screenX then return end
@@ -246,7 +262,7 @@ function module:update(dt)
     game.logic.boat:calculateSpeed(self, dt)
 
     -- retake aim in case boat is moving
-    if self.speed > 0.1 then
+    if self.castOffset and self.speed > 0.1 then
         self:aimCast(self.castOffset.screenX, self.castOffset.screenY)
     end
 
@@ -442,5 +458,38 @@ function module:spookNearbyFish(optionalRange)
     end
 
 end
+
+--- Move towards a given map point using path finding
+function module:moveTowardsPoint(x, y)
+
+    print(string.format("find path from %d/%d to %d/%d", self.x, self.y, x, y))
+
+    -- path finding callback to return true if a position is open to walk
+    local getMapPositionOpen = function(x, y)
+        return game.lake.contour[x][y] == 0
+    end
+
+    -- get a path to this point
+    local start = { x = self.x, y = self.y }
+    local goal = { x = x, y = y }
+    local path = game.lib.luastar:find(game.lake.width, game.lake.height, start, goal, getMapPositionOpen, false)
+
+    if path and #path > 1 then
+
+        -- first point is where we are now. take the second
+        local goal = path[2]
+
+        print(string.format("path has %d points, next is %d/%d", #path, goal.x, goal.y))
+
+        -- angle the boat towards the first point.
+        -- if the angle is good, move the boat.
+        local angle = 180 - math.deg(game.lib.trig:angle(self.x, self.y, goal.x, goal.y))
+
+        print(string.format("angle to point %.1f, our boat is %.1f", angle, self.angle))
+
+    end
+
+end
+
 
 return module
