@@ -149,7 +149,7 @@ function module:draw()
     love.graphics.setColor(game.color.darktext)
     for _, btn in pairs(buttons.controls) do
         if btn.label then
-            love.graphics.print(btn.label, 40, btn.top)
+            love.graphics.printf(btn.label, 40, btn.top, 340, "left")
         end
     end
 
@@ -164,7 +164,7 @@ function module:makeButtons()
     if buttons then return end
 
     local spacing = 40
-    local left = 300
+    local left = 400
     local top = 100
     love.graphics.setFont(game.fonts.small)
     buttons = game.lib.widgetCollection:new()
@@ -236,6 +236,28 @@ function module:makeButtons()
     -- set sounds switch (it defaults to on)
     if not game.settings.sounds then
         buttons:get("sounds"):setOption(2)
+    end
+
+    -- clickmovement
+    top = top + spacing
+    game.view.ui:setSwitch(
+        buttons:button("clickmovement", {
+            left = left,
+            top = top,
+            text = "xxxxxx",
+            --label = "Click to move boat",
+            label = "Click outside cast range to move boat with the mouse",
+            callback = function(btn)
+                game.settings.clickmovement = not game.settings.clickmovement
+                game.dprint(string.format("set clickmovement %s",
+                tostring(game.settings.clickmovement)))
+            end
+        }), {"No", "Yes"}
+    )
+
+    -- set clickmovement switch (it defaults to false)
+    if game.settings.clickmovement then
+        buttons:get("clickmovement"):setOption(2)
     end
 
     -- Done button

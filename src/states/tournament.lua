@@ -183,18 +183,26 @@ function module:mousepressed(x, y, button, istouch)
 
         game.view.fishfinder:update()
 
-        -- account for the camera scale
-        x = math.floor(x / scale)
-        y = math.floor(y / scale)
+        -- use click-movement
+        if game.settings.clickmovement then
 
-        -- convert screen to map coordinates
-        x = 1 + math.floor(x / game.view.tiles.size)
-        y = 1 + math.floor(y / game.view.tiles.size)
+            -- account for the camera scale
+            x = math.floor(x / scale)
+            y = math.floor(y / scale)
 
-        -- test if the position is past cast range
-        if game.logic.player:aimPastRange(x, y) then
-            game.logic.player:moveTowardsPoint(x, y)
+            -- convert screen to map coordinates
+            x = 1 + math.floor(x / game.view.tiles.size)
+            y = 1 + math.floor(y / game.view.tiles.size)
+
+            -- test if the position is past cast range
+            if game.logic.player:aimPastRange(x, y) then
+                game.logic.player:moveTowardsPoint(x, y)
+            else
+                game.logic.player:cast()
+            end
+
         else
+            -- cast regardless where the click is
             game.logic.player:cast()
         end
 

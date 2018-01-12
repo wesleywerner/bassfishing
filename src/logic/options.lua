@@ -33,7 +33,8 @@ function module:load()
             version = "1",
             metric = true,
             music = true,
-            sounds = true
+            sounds = true,
+            clickmovement = false
         }
 
     self.data = game.logic.pickle:read("options", default)
