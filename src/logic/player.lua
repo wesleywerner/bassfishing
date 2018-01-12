@@ -29,6 +29,10 @@ local module = {
     -- flag when the trolling motor is in use
     trolling = false,
 
+    -- the factor (in tiles) to multiply outboard speed to get the
+    -- range to scare away fish
+    outboardNoiseFactor = 2,
+
     -- casting offset
     castOffset = nil,
 
@@ -55,7 +59,7 @@ local module = {
 function module:left()
     if not self.stuck then
         game.logic.boat:turn(self, -45)
-        game.logic.tournament:turn()
+        game.logic.tournament:turn(0.5)
     end
 end
 
@@ -63,7 +67,7 @@ end
 function module:right()
     if not self.stuck then
         game.logic.boat:turn(self, 45)
-        game.logic.tournament:turn()
+        game.logic.tournament:turn(0.5)
     end
 end
 
@@ -89,7 +93,13 @@ function module:forward()
         self:spookNearbyFish()
     end
 
-    game.logic.tournament:turn()
+    -- the outboard motor uses less time the faster you go.
+    -- ensure we always use a minimum speed of 1.
+    if self.trolling then
+        game.logic.tournament:turn()
+    else
+        game.logic.tournament:turn(1 / math.max(1, self.speed) )
+    end
 
     return true
 
@@ -432,6 +442,11 @@ end
 
 function module:toggleTrollingMotor()
 
+    if not self.trolling and self.speed > 0 then
+        game.view.notify:add("Your outboard must stop before you can switch to trolling")
+        return false
+    end
+
     self.trolling = not self.trolling
 
     if self.trolling then
@@ -442,12 +457,14 @@ function module:toggleTrollingMotor()
         game.dprint("\nOutboard motor is now used")
     end
 
+    return true
+
 end
 
 function module:spookNearbyFish(optionalRange)
 
     -- range of noise in map coordinates
-    local noiseRange = (optionalRange or math.max(1, self.speed)) * 1
+    local noiseRange = (optionalRange or math.max(1, self.speed)) * self.outboardNoiseFactor
 
     -- find fish in this range
     local nearfish = game.logic.fish:findFishInRange(self.x, self.y, noiseRange)

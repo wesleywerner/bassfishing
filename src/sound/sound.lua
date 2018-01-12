@@ -27,7 +27,7 @@ local soundlist = {
     ["select"] = { file="sound/ui-select.ogg" },
     ["prompt"] = { file="sound/ui-prompt.ogg" },
     ["crash"] = { file="sound/crash.ogg" },
-    ["outboard"] = { file="sound/outboard.ogg" },
+    ["outboard"] = { file="sound/outboard.ogg", volume=0.75 },
     ["key"] = { file="sound/ui-key.ogg" },
     ["fish on"] = { file="sound/fishon PowerUp18.ogg" },
     ["cast"] = { file="sound/bamboo-swing-a14.ogg", volume=0.25 },

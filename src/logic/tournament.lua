@@ -135,11 +135,11 @@ function module:nextDay()
 end
 
 --- Move the competitors, fish and clock.
-function module:turn()
+function module:turn(optionalMinutes)
 
     game.logic.fish:move()
     game.logic.competitors:move()
-    self:takeTime(1)
+    self:takeTime(optionalMinutes or 1)
 
 end
 

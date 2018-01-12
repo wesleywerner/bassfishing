@@ -421,8 +421,13 @@ function module:makeButtons()
             callback = function(btn)
                 -- take time switching motors
                 game.logic.tournament:takeTime(1)
-                game.logic.player:toggleTrollingMotor()
+                -- if switching to trolling failed, undo the switch
+                local expectTrolling = not game.logic.player.trolling
+                local switchedMotor = game.logic.player:toggleTrollingMotor()
+                if expectTrolling and not switchedMotor then
+                    btn:setOption(1)
                 end
+            end
         }), {"Outboard", "Trolling"}, width
     )
 

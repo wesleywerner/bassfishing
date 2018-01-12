@@ -76,7 +76,7 @@ function module:draw()
     -- debug: outboard noise range
     if game.debug and not player.trolling and player.screenX then
 
-        local noiseRange = math.max(1, player.speed) * 1
+        local noiseRange = math.max(1, player.speed) * player.outboardNoiseFactor
         love.graphics.setColor(255, 0, 0, 16)
         love.graphics.circle("fill", player.screenX, player.screenY, noiseRange * game.view.tiles.size)
 
