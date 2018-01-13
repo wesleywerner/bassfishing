@@ -89,27 +89,19 @@ function module:printDetails()
 
 end
 
-function module:record(livewell, lake, position, casts)
+function module:record(data)
 
-    -- build tour statistics
-    local tour = {
-        date=os.time(),
-        lake=lake,
-        position = position,
-        casts = casts,
-        fish = { }
-    }
-
-    -- add live well statistics
-    for _, fish in ipairs(livewell) do
-        table.insert(tour.fish, fish)
+    if not self.data then
+        print("Warning: Statistics data is empty. Cannot record stats.")
+        return false
     end
 
+    -- add date
+    data.date = os.time()
+
     -- record this tour
-    table.insert(self.data.tours, tour)
-
+    table.insert(self.data.tours, data)
     self:updateStatistics()
-
     self:save()
 
 end
@@ -128,9 +120,10 @@ function module:updateStatistics()
     for _, tour in ipairs(self.data.tours) do
 
         -- default tour values
-        tour.casts = tour.casts or 1
-        tour.position = tour.position or 0
+        tour.casts = tour.casts or 0
+        tour.standing = tour.standing or 0
         tour.lake = tour.lake or "NONE"
+        tour.days = tour.days or 3
 
         -- reset totals
         tour.weight = 0

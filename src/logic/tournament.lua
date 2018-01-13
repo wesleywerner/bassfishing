@@ -63,9 +63,8 @@ module.standings = nil
 -- Records the largest fish weighed each day
 module.lunkerOfTheDay = nil
 
--- Keeps a list of all fish weighed by the player over the tournament
-module.fishStatistics = nil
-
+-- Stores all fish weighed by the player during the tournament
+module.caughtFish = nil
 
 --- Start the tournament.
 -- Sets up the time, weather, lake.
@@ -76,7 +75,7 @@ function module:start()
     self.day = 0
 
     -- clear the list of fish caught by the player
-    self.fishStatistics = { }
+    self.caughtFish = { }
 
     -- generate the list of angler standings
     -- assume each boat has two anglers
@@ -202,10 +201,10 @@ function module:endOfDay()
                 -- weigh the fish in the live well
                 for _, fish in ipairs(game.logic.livewell.contents) do
 
-                    -- store fish data for statistics
-                    table.insert(self.fishStatistics, {
-                        weight=fish.weight,
-                        lure=fish.lure
+                    -- remember fish caught during this tournament
+                    table.insert(self.caughtFish, {
+                        weight = fish.weight,
+                        lure = fish.lure
                     })
 
                     angler.dailyWeight = angler.dailyWeight + fish.weight
@@ -262,7 +261,7 @@ function module:endOfDay()
 
     -- push the tournament results state
     -- (this state is displayed after weigh in)
-    if game.logic.tournament.day == self.tournamentDays then
+    if self.day == self.tournamentDays then
 
         -- sort standings by total weight
         table.sort(self.standings, function(a, b)
@@ -277,8 +276,13 @@ function module:endOfDay()
         end
 
         -- record tournament statistics
-        game.logic.stats:record(self.fishStatistics, player.lake,
-        playerstanding, game.logic.player.castsCount)
+        game.logic.stats:record({
+            fish = self.caughtFish,
+            lake = player.lake,
+            standing = playerstanding,
+            casts = game.logic.player.castsCount,
+            days = self.tournamentDays
+        })
 
         -- queue the tournament results state
         game.states:push("tournament results")
