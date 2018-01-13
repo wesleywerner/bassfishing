@@ -158,7 +158,7 @@ function module:takeTime(minutes)
 
     if self.time <= self.timeWarning and not self.displayedWarning then
         self.displayedWarning = true
-        game.view.notify:add("60 minutes before weigh-in!", true)
+        game.view.notify:add("60 minutes before weigh-in!", { urgent=true })
     end
 
 end

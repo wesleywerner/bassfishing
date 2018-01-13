@@ -36,6 +36,9 @@ local betweenPadding = 10
 -- left padding
 local leftPadding = 20
 
+-- optional icon size
+local iconsize = 32
+
 -- notification size
 local boxwidth = 240
 
@@ -81,20 +84,27 @@ local function recalculateTweens()
 
 end
 
-function notify:add(text, urgent)
+function notify:add(text, options)
 
-    -- calculate the text height
+    -- default options
+    options = options or { }
+
+    -- width increases if there is an icon
+    local textLeft = options.icon and iconsize or 0
+    local itemwidth = boxwidth + textLeft
+
+    -- add the notification text
     local textitem = love.graphics.newText(game.fonts.small)
-    textitem:addf(text, boxwidth, "center")
+    textitem:addf(text, boxwidth, "center", textLeft)
 
     local notification = {
         text = textitem,
-        urgent = urgent,
+        options = options,
         x = leftPadding,
         y = startPosition,
-        width = boxwidth,
+        width = itemwidth,
         height = textitem:getHeight(),
-        timeout = defaultTimeout * (urgent and 5 or 1)
+        timeout = defaultTimeout * (options.urgent and 5 or 1)
     }
 
     table.insert(stack, notification)
@@ -153,15 +163,27 @@ function notify:draw()
     love.graphics.push()
 
     for n, noti in ipairs(stack) do
-        if noti.urgent then
+
+        -- fill
+        if noti.options.urgent then
             love.graphics.setColor(game.color.notifyurgentbackground)
         else
             love.graphics.setColor(game.color.notifybackground)
         end
-        love.graphics.rectangle("fill", noti.x, noti.y, boxwidth, noti.height)
+        love.graphics.rectangle("fill", noti.x, noti.y, noti.width, noti.height)
+
+        -- border
         love.graphics.setColor(game.color.notifytext)
-        love.graphics.rectangle("line", noti.x, noti.y, boxwidth, noti.height)
+        love.graphics.rectangle("line", noti.x, noti.y, noti.width, noti.height)
+
+        -- content
         love.graphics.draw(noti.text, noti.x, noti.y)
+
+        -- icon
+        if noti.options.icon then
+            love.graphics.draw(game.view.tiles.image, noti.options.icon, noti.x, noti.y)
+        end
+
     end
 
     -- restore state

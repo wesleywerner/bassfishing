@@ -284,8 +284,7 @@ function module:landFish(fish)
     local message = string.format("%s fish landed\n%s",
     game.lib.convert:weight(fish.weight), lwmessage)
 
-    --game.states:push("messagebox", { title="FISH ON", message=message, shake=false } )
-    game.view.notify:add(message)
+    game.view.notify:add(message, { icon=game.view.tiles.fish.large })
 
     game.sound:play("fish on")
 
