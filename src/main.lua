@@ -53,10 +53,10 @@ function love.load()
     game.lib.convert.metric = game.logic.options.data.metric
 
     game.logic.anglers:load()
-    game.states:add("tournament", require("states.tournament"))
+    --game.states:add("tournament", require("states.tournament"))
     game.states:add("sign-in", require("states.sign-in"))
     game.states:add("main menu", require("states.main-menu"))
-    --game.states:add("tournament", require("states.tournament"))
+    game.states:add("tournament", require("states.tournament"))
     game.states:add("tournament selection", require("states.tournament-selection"))
     game.states:add("messagebox", require("states.messagebox"))
     game.states:add("lakegen development", require("states.lakegen-development"))

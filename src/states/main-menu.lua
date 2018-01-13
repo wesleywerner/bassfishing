@@ -22,8 +22,9 @@
 local module = { }
 
 -- statistics chart position and size
-local chartX, chartY = 50, 300
 local chartWidth, chartHeight = 445, 215
+local chartX = (game.window.width - chartWidth) / 2
+local chartY = 180
 
 -- list of available charts
 local chartTypes = {
@@ -196,7 +197,7 @@ function module:draw()
     love.graphics.translate(0, -24)
     love.graphics.setColor(game.color.cyan)
     love.graphics.setFont(game.fonts.small)
-    love.graphics.printf(chartTypes[self.selectedChartId].text, 0, 0, chartWidth, "right")
+    love.graphics.printf(chartTypes[self.selectedChartId].text, 0, 0, chartWidth, "center")
     love.graphics.pop()
 
 end
@@ -429,9 +430,9 @@ end
 
 function module:makeButtons()
 
-    local top = 300
-    local left = 600
-    local width, height = 150, 40
+    local width, height = 150, 36
+    local top = game.window.height - 60
+    local left = 40
     local collection = game.lib.widgetCollection:new()
 
     -- Tournament mode
@@ -446,21 +447,22 @@ function module:makeButtons()
         }), width
     )
 
-    -- Education mode
-    top = top + height
-    game.view.ui:setButton(
-        collection:button("educational", {
-            left = left,
-            top = top,
-            text = "Educational",
-            callback = function(btn)
-                -- TODO: go to educational state + map generator
-                end
-        }), width
-    )
+    ---- Education mode
+    --top = top + height
+    --game.view.ui:setButton(
+        --collection:button("educational", {
+            --left = left,
+            --top = top,
+            --text = "Educational",
+            --callback = function(btn)
+                ---- TODO: go to educational state + map generator
+                --end
+        --}), width
+    --)
 
     -- Tutorial
-    top = top + height
+    --top = top + height
+    left = left + width + 40
     game.view.ui:setButton(
         collection:button("practice", {
             left = left,
@@ -478,7 +480,8 @@ function module:makeButtons()
     )
 
     -- Game options
-    top = top + height
+    --top = top + height
+    left = left + width + 40
     game.view.ui:setButton(
         collection:button("options", {
             left = left,
@@ -491,7 +494,8 @@ function module:makeButtons()
     )
 
     -- Top lunkers
-    top = top + height
+    --top = top + height
+    left = left + width + 40
     game.view.ui:setButton(
         collection:button("records", {
             left = left,
@@ -503,18 +507,18 @@ function module:makeButtons()
         }), width
     )
 
-    -- About game
-    top = top + height
-    game.view.ui:setButton(
-        collection:button("about", {
-            left = left,
-            top = top,
-            text = "About",
-            callback = function(btn)
-                -- TODO: go to about state
-                end
-        }), width
-    )
+    ---- About game
+    --top = top + height
+    --game.view.ui:setButton(
+        --collection:button("about", {
+            --left = left,
+            --top = top,
+            --text = "About",
+            --callback = function(btn)
+                ---- TODO: go to about state
+                --end
+        --}), width
+    --)
 
     return collection
 
