@@ -41,8 +41,11 @@ function module:init(data)
         game.defaultMapDensity, game.defaultMapIterations)
     end
 
-    -- prepare the lake
+    -- randomize fish spawning
+    math.randomseed(os.time())
     game.logic.genie:populateLakeWithFishAndBoats(game.lake)
+
+    -- prepare and launch player boat
     game.logic.boat:prepare(game.logic.player)
     game.logic.boat:launchBoat(game.logic.player)
 
