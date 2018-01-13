@@ -244,10 +244,6 @@ function module:makeStatsText()
         {
             label="Heaviest ever caught:",
             value=game.lib.convert:weight(stats.total.heaviest)
-        },
-        {
-            label="Most effective lure:",
-            value="chartreuse straight rapala"
         }
     }
 

@@ -159,7 +159,7 @@ function module:draw()
             love.graphics.printf(detail.weight, detail.left, detail.top, detail.width, "right")
         end
     else
-        love.graphics.printf("No fish in live well. keep on fishin'!", 0, 0, self.width, "center")
+        love.graphics.printf("No fish in live well\nkeep on fishin'!", 0, 0, self.width, "center")
         local s = math.sin(swimmingfish.dt)
         -- flip horizontally
         local sx = (s > swimmingfish.lasts) and 1 or -1
