@@ -5,13 +5,19 @@ Creation-Date: 2017-12-19T19:54:58+02:00
 ====== BASS LOVER ======
 Bass lover is a fun fishing game where you enter a 3 day fishing tournament to catch the biggest fish. The game is strategic based as opposed to action based: time passes with turns, and success is determined by weather conditions, your lure selection and sometimes a little luck.
 
-{{./screenshot_001.png}}
+{{./game.png}}
 
 ===== download =====
 Get the latest version from [[https://github.com/wesleywerner/basslover/releases|GitHub]]
 
 ===== fishing guide =====
 To learn how to use your boat, fish finder and tips on finding that big fish, see the [[manual]].
+
+===== changes =====
+
+**Version 2 (01/2018)**
+
+* todo
 
 ===== license =====
 Copyright 2017 Wesley Werner

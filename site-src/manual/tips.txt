@@ -8,17 +8,13 @@ Creation-Date: 2017-12-20T09:58:24+02:00
 Many factors are in play when trying to land the big one, some are obvious while others require trial and error.
 
 ===== weather =====
-The weather changes every day during the tournament so it is wise to pay attention to the current conditions. 
+The weather changes every day, pay attention to the current conditions. 
 
-When at least half the sky is covered in clouds and accompanied by strong winds (around 18kph or more), it is indicative of an approaching cold front. 
-
-{{.\approaching-front.png}}
+When at least half the sky is covered in clouds and accompanied by strong winds, it is indicative of an approaching cold front. 
 
 This is a great time to fish. The wave action caused by the winds oxygenates the water and provides extra food. This is when bass go on a feeding frenzy.
 
 The next day is another story as the cold front hits. Bass are most comfortable when the water is between 18 and 24 C. As the water chills, their metabolism slows down and they get sluggish, this is when bass are less likely to strike.
-
-{{.\cold-front.png}}
 
 A cold front usually passes within a day, but it can last for longer. Unfortunately those are the breaks.
 
@@ -29,12 +25,12 @@ When bass are not feeding, they rest in deep water usually around underwater str
 
 The bass will occasionally travel from the sanctuary to some other area nearby, usually into somewhat shallower water containing logs or aquatic plants. This is when they are in a highly active feeding state.
 
-Work areas around plants, rocks or logs near the underwater structure, and you could land the bass when they come out to feed.
+Work areas around plants, rocks or logs near the underwater structure, and you could land the bass when they come out to feed. Use your [[manual:fishfinder|fish finder]] to find underwater structures.
 
 ===== bass feeding habits =====
 Bass are extremely curious and many get hooked early in life. But they soon become wary of certain lure types or colors. A largemouth bass soon learns that lures, especially those it sees most often, can get it into trouble. As a bass gets bigger, it gets tougher to fool. On the other hand, when a bass meets a lure it does not recognize, curiosity can tempt a strike.
 
-Switch to a different rod (one with a different lure type and color) when working an area, to increase your chance of attracting wary fish.
+Switch lures when working an area, this increases your chance of attracting fish that have specific lure preferences.
 
 ===== noise =====
 Noisy activities are to be avoided because they frighten the bass. When frightened, the bass become uneasy and either quickly leave the area or cease feeding. Running aground or into other obstacles is a very noisy activity. Similarly, cruising at a fast speed with your outboard is also noisy. Slow down when nearing a fishing area and switch to your trolling motor for a quieter approach.

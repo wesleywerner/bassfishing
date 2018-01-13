@@ -3,32 +3,27 @@ Wiki-Format: zim 0.4
 Creation-Date: 2017-12-19T22:42:55+02:00
 
 ====== tackle ======
-You have half a dozen rods and a tackle box of multifarious colored lures - a compliment usually found in dreams or games. So use it wisely!
+You have half a dozen rods and a tackle box full of lures.
 
-* Use the "rods" button on-screen or press the R key to select a rod
-* Use the "lures" button on-screen or press the L key to set a lure
-
-{{.\rod-and-lure-buttons.png}}
+* Click the "Rods" button or press the R key to select a rod
+* Click the "Lures" button or press the L key to set a lure
 
 ===== rods =====
 {{.\rod-selection.png}}
 
-If you select a rod that does not have a lure, you will open your tackle box and pick a lure. Your rods have varying cast ranges, and once a rod has a lure set you can quickly switch to it without retying a lure.
-
-{{.\cast-range-shorter.png}} 
-
-{{.\cast-range-longer.png}}
-
+Your rods have varying cast ranges, and once a rod has a lure set you can quickly switch between rods without retying a lure.
 
 ===== lures =====
-If you don't have a rod selected, you will be asked to pick one first. Pick a lure type and color.
+Lures are categorized by action: crankbaits, spinnerbaits, surface baits and worms. Scroll the list with the mouse wheel, click the lure you want and click the lure color.
+
+If you don't have a rod selected when you open your tackle box, you will be asked to pick one first.
 
 {{.\lure-selection.png}}
 
 ===== casting =====
 Use your mouse cursor to aim, and click the mouse button to cast.
 
-Casting into aquatic vegetation or around rocks and logs is a good bet. Aiming for land, however, is not. Your lure can snag and you will lose it, costing you time while tying a new one.
+Casting into aquatic vegetation or around rocks and logs is a good bet. Aiming for land is not. Your lure can snag and you will lose it, costing you time while tying a new one.
 
 {{.\cast-action.png}}
 
