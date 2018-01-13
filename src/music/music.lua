@@ -33,12 +33,12 @@ local playlists = {
         { looping=true, file="music/Racing-Menu.ogg" },
     },
     ["tournament"] = {
-        { repeats=2, file="music/Underground-Stream.ogg" },
-        { repeats=3, file="music/Strange-Nature.ogg" },
-        { repeats=3, file="music/Random-Processes_Looping.ogg" },
+        { repeats=1, file="music/Underground-Stream.ogg" },
+        { repeats=1, file="music/Strange-Nature.ogg" },
+        { repeats=1, file="music/Random-Processes_Looping.ogg" },
         { repeats=1, file="music/Life-in-a-Drop.ogg" },
-        { repeats=2, file="music/Plankton-Triumphs.ogg" },
-        { repeats=2, file="music/Underwater-World.ogg" }
+        { repeats=1, file="music/Plankton-Triumphs.ogg" },
+        { repeats=1, file="music/Underwater-World.ogg" }
     },
     ["tournament end"] = {
         { looping=true, file="music/Guitar-Mayhem-3.ogg" }
@@ -91,6 +91,15 @@ local function isPlaying()
 
 end
 
+--- shuffle a playlist
+local function shuffle(table)
+  for i = #table, 2, -1 do
+    local j = math.random(1, i)
+    table[i], table[j] = table[j], table[i]
+  end
+  return t
+end
+
 --- Stop music
 function music:stop()
 
@@ -134,6 +143,9 @@ function music:play(playlistname)
             error(string.format("No playlist named %q", playlistname))
         end
 
+        -- shuffle the tracks
+        shuffle(playlists[playlistname])
+
         -- use this playlist immediately
         if not currentList then
             currentList = playlistname
@@ -155,6 +167,7 @@ function music:play(playlistname)
         --fading = false
         game.dprint(string.format("starting %q track %d", currentList, currentTrack))
         local track = playlists[currentList][currentTrack]
+        print(string.format("playing track %q", track.file))
         source = love.audio.newSource(track.file, "stream")
         -- start off low volume
         source:setVolume(0.1)
@@ -234,7 +247,7 @@ function music:update(dt)
         local track = playlists[currentList][currentTrack]
 
         -- test if we need to repeat this track again
-        if repeatcount >= track.repeats then
+        if repeatcount >= (track.repeats or 1) then
 
             -- move to next track
             currentTrack = currentTrack + 1
