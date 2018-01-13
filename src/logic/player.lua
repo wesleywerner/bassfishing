@@ -176,7 +176,7 @@ function module:aimPastRange(x, y)
 
     local distance = game.lib.trig:distance(self.x, self.y, x, y)
 
-    return distance > self.rod.range + 1
+    return distance > self.rod.range
 
 end
 
