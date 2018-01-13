@@ -64,7 +64,7 @@ function module:init(data)
         game.lake.height * game.view.tiles.size * scale)
 
     -- set camera lens size
-    game.lib.camera:frame(6, 6, 613, 588)
+    game.lib.camera:frame(6, 6, 613, 569)
 
     -- center the camera
     game.lib.camera:instant(-game.lake.width * game.view.tiles.size / 2, -game.lake.height * game.view.tiles.size / 2)
@@ -273,8 +273,8 @@ end
 function module:printStatus(text)
 
     love.graphics.setFont(game.fonts.small)
-    love.graphics.setColor(game.color.white)
-    love.graphics.printf(text, 20, 570, game.lib.camera.frameWidth, "center")
+    love.graphics.setColor(game.color.base0)
+    love.graphics.printf(text, 20, 579, game.lib.camera.frameWidth, "center")
 
 end
 
