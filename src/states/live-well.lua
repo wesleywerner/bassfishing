@@ -42,9 +42,10 @@ function module:init(data)
     self.screenshot = love.graphics.newImage(love.graphics.newScreenshot())
 
     -- size of the box (in percentage of screen size)
-    local boxsize = 0.4
-    self.width = boxsize * game.window.width
-    self.height = boxsize * game.window.height
+    local boxwidth = 0.4
+    local boxheight = 0.3
+    self.width = boxwidth * game.window.width
+    self.height = boxheight * game.window.height
     self.left = (game.window.width - self.width) / 2
     self.top = (game.window.height - self.height) / 2
 
@@ -60,7 +61,7 @@ function module:init(data)
             table.insert(self.details, {
                 iconLeft = 20,
                 left = 100,
-                top = (i - 1) * game.fonts.mediumheight,
+                top = (i - 1) * game.fonts.smallheight,
                 width = 210,
                 quad = game.view.tiles.fish[fish.size],
                 size = fish.size,
@@ -150,10 +151,11 @@ function module:draw()
     love.graphics.push()
     love.graphics.translate(self.left, self.top + 40)
     love.graphics.setColor(game.color.white)
+    love.graphics.setFont(game.fonts.small)
     if self.details then
         for _, detail in ipairs(self.details) do
             love.graphics.draw(game.view.tiles.image, detail.quad, detail.iconLeft, detail.top)
-            love.graphics.print(detail.size, detail.left, detail.top)
+            --love.graphics.print(detail.size, detail.left, detail.top)
             love.graphics.printf(detail.weight, detail.left, detail.top, detail.width, "right")
         end
     else
