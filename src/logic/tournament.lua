@@ -24,6 +24,9 @@ local module = { }
 -- The tournament day
 module.day = 0
 
+-- The number of days the tournament lasts
+module.tournamentDays = 3
+
 --- The tournament clock
 -- os.time(number-of-seconds) returns the number of seconds since the epoch.
 -- Providing os.time('!*t', number-of-seconds) gives a table (*t)
@@ -122,7 +125,7 @@ function module:nextDay()
     self.time = 60 * 60 * 6     -- 6 hours
     self.timef = os.date("!%H:%M", self.time)
 
-    -- reset the 30 minute remain warning flag
+    -- reset the weigh-in alert
     self.displayedWarning = false
 
     -- reset player
@@ -259,7 +262,7 @@ function module:endOfDay()
 
     -- push the tournament results state
     -- (this state is displayed after weigh in)
-    if game.logic.tournament.day == 3 then
+    if game.logic.tournament.day == self.tournamentDays then
 
         -- sort standings by total weight
         table.sort(self.standings, function(a, b)
@@ -287,5 +290,18 @@ function module:endOfDay()
 
 end
 
+--- Gets if the tournament is over.
+function module:isOver()
+
+    return self.day > self.tournamentDays
+
+end
+
+--- Gets if the daily time has run out.
+function module:outOfTime()
+
+    return self.time == 0
+
+end
 
 return module

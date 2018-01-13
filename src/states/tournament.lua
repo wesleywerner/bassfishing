@@ -32,7 +32,7 @@ function module:init(data)
 
     -- generate a random lake (for testing this state without lake selection)
     if not game.lake then
-        data = { practice = true }
+        data = { practice = false }
         local seed = 158
         -- 149 left/right points
         -- 158 top/bottom points
@@ -146,8 +146,11 @@ function module:keypressed(key)
             -- force map render
             game.lake.rendered = nil
         elseif key == "space" then
-            game.view.notify:add(string.format("%s this is a test notifications",
-            os.date("%c", os.time())), math.random() < 0.1)
+            local opts = {
+                urgent = false,
+                icon = game.view.tiles.fish.large
+            }
+            game.view.notify:add("this is a test noti fication text", opts)
         end
     end
 
@@ -234,12 +237,12 @@ function module:update(dt)
     if not self.practice then
 
         -- check if the tournament is finished
-        if game.logic.tournament.day == 4 then
+        if game.logic.tournament:isOver() then
             self:exitState()
         end
 
         -- check if the day is over
-        if game.logic.tournament.time == 0 then
+        if game.logic.tournament:outOfTime() then
             game.view.notify:clear()
             game.sound:stop("outboard")
             game.logic.tournament:endOfDay()
