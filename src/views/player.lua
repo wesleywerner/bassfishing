@@ -34,7 +34,7 @@ function module:draw()
     if player.castOffset then
 
         -- cast crosshair
-        love.graphics.setColor(0, 255, 255)
+        love.graphics.setColor(game.color.yellow)
         love.graphics.circle("line", player.castOffset.screenX,
             player.castOffset.screenY, 4)
 
