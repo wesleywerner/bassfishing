@@ -152,12 +152,10 @@ function module:draw()
         0, game.window.height - 140, game.window.width, "center")
 
     -- print last day message
-    if game.logic.tournament.day == 3 then
-
+    if game.logic.tournament:lastDay() then
         love.graphics.setColor(game.color.red)
         love.graphics.printf("Tournament standings are up next...", 0,
         game.window.height - 40, game.window.width, "center")
-
     end
 
 end

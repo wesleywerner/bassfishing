@@ -301,6 +301,13 @@ function module:isOver()
 
 end
 
+--- Gets if the tournament is on the last day.
+function module:lastDay()
+
+    return self.day == self.tournamentDays
+
+end
+
 --- Gets if the daily time has run out.
 function module:outOfTime()
 
