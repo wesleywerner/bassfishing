@@ -102,6 +102,7 @@ tiles.obstacles.rocks = {
   love.graphics.newQuad(288, 48, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(304, 48, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(320, 48, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(336, 48, 16, 16, tiles.w, tiles.h),
 }
 
 tiles.obstacles.logs = {
@@ -109,6 +110,8 @@ tiles.obstacles.logs = {
   love.graphics.newQuad(304, 64, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(320, 64, 16, 16, tiles.w, tiles.h),
   love.graphics.newQuad(336, 64, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(352, 64, 16, 16, tiles.w, tiles.h),
+  love.graphics.newQuad(368, 64, 16, 16, tiles.w, tiles.h),
 }
 
 tiles.boats = {
