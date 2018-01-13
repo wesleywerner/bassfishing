@@ -28,8 +28,12 @@ local chartWidth, chartHeight = 445, 215
 -- list of available charts
 local chartTypes = {
     {
-        key="weigh-in",
-        text="total weighed-in"
+        key="3 day totals",
+        text="3-day tournament results"
+    },
+    {
+        key="1 day totals",
+        text="1-day tournament results"
     },
     {
         key="heaviest",
@@ -175,16 +179,6 @@ function module:draw()
     -- buttons
     self.buttons:draw()
 
-    -- chart
-    love.graphics.push()
-    love.graphics.translate(chartX, chartY)
-    self.chart:draw()
-    love.graphics.translate(0, -24)
-    love.graphics.setColor(game.color.cyan)
-    love.graphics.setFont(game.fonts.small)
-    love.graphics.printf(chartTypes[self.selectedChartId].text, 0, 0, chartWidth, "right")
-    love.graphics.pop()
-
     -- chart selection indicators
     love.graphics.push()
     love.graphics.translate(chartDotCenter, chartY + chartHeight + chartDotSpacing)
@@ -193,6 +187,16 @@ function module:draw()
         local mode = (n == self.selectedChartId) and "fill" or "line"
         love.graphics.circle(mode, ((n - 1) * chartDotSpacing), 0, chartDotRadius)
     end
+    love.graphics.pop()
+
+    -- chart
+    love.graphics.push()
+    love.graphics.translate(chartX, chartY)
+    self.chart:draw()
+    love.graphics.translate(0, -24)
+    love.graphics.setColor(game.color.cyan)
+    love.graphics.setFont(game.fonts.small)
+    love.graphics.printf(chartTypes[self.selectedChartId].text, 0, 0, chartWidth, "right")
     love.graphics.pop()
 
 end
@@ -274,7 +278,21 @@ function module:setChartData()
     -- skip charting without minimal data points
     if #stats.tours < 2 then return end
 
-    if chartType.key == "weigh-in" then
+    local function ordinal_number(n)
+        if n == 11 or n == 12 or n == 13 then
+            return n .. "th"
+        else
+            local ordinal = {"st", "nd", "rd"}
+            local digit = tonumber(string.sub(n, -1))
+            if digit > 0 and digit < 4 then
+                return n .. ordinal[digit]
+            else
+                return n .. "th"
+            end
+        end
+    end
+
+    if chartType.key == "3 day totals" then
 
         -- total fish weighed-in per tournament
         local points = { }
@@ -283,21 +301,66 @@ function module:setChartData()
         -- format chart labels with weight conversion
         self.chart.formatWeight = true
 
+        local number = 0
         for n, tour in ipairs(stats.tours) do
 
-            -- insert the data points
-            table.insert(points, { a=n, b=tour.weight })
+            if tour.days == 3 then
 
-            -- pre-create each point tooltip
-            local tourdate = os.date("%d %b %Y", tour.date)
-            local weight = game.lib.convert:weight(tour.weight)
-            local tiptext = love.graphics.newText(game.fonts.tiny)
-            tiptext:add(string.format("%s\n%s", tourdate, weight, 0, 0))
-            self.chart.tips[n] = tiptext
+                number = number + 1
+
+                -- insert the data points
+                table.insert(points, { a=number, b=tour.weight })
+
+                -- pre-create each point tooltip
+                local tourdate = os.date("%d %b %Y", tour.date)
+                local weight = game.lib.convert:weight(tour.weight)
+                local tiptext = love.graphics.newText(game.fonts.tiny)
+
+                tiptext:add(string.format("%s\n%s weighed in\n%s place",
+                tourdate, weight, ordinal_number(tour.standing)))
+
+                self.chart.tips[number] = tiptext
+
+            end
 
         end
 
-        self.chart:data(points, "weigh-in")
+        self.chart:data(points, "3 day totals")
+
+    elseif chartType.key == "1 day totals" then
+
+        -- total fish weighed-in per tournament
+        local points = { }
+        self.chart.tips = { }
+
+        -- format chart labels with weight conversion
+        self.chart.formatWeight = true
+
+        local number = 0
+        for n, tour in ipairs(stats.tours) do
+
+            if tour.days == 1 then
+
+                number = number + 1
+
+                -- insert the data points
+                table.insert(points, { a=number, b=tour.weight })
+
+                -- pre-create each point tooltip
+                local tourdate = os.date("%d %b %Y", tour.date)
+                local weight = game.lib.convert:weight(tour.weight)
+                local tiptext = love.graphics.newText(game.fonts.tiny)
+
+                tiptext:add(string.format("%s\n%s weighed in\n%s place",
+                tourdate, weight, ordinal_number(tour.standing)))
+
+                self.chart.tips[number] = tiptext
+
+            end
+
+        end
+
+        self.chart:data(points, "1 day totals")
 
     elseif chartType.key == "heaviest" then
 
