@@ -270,6 +270,14 @@ function module:update(dt)
 
 end
 
+function module:printStatus(text)
+
+    love.graphics.setFont(game.fonts.small)
+    love.graphics.setColor(game.color.white)
+    love.graphics.printf(text, 20, 570, game.lib.camera.frameWidth, "center")
+
+end
+
 function module:draw()
 
     -- must render the map outside any transformations
@@ -325,26 +333,16 @@ function module:draw()
     game.view.weather:drawIcon()
     love.graphics.pop()
 
-    -- print status line
+    -- status text
     if statustext then
-        love.graphics.push()
-        love.graphics.translate(10, 570)
-        love.graphics.setFont(game.fonts.small)
-        love.graphics.setColor(game.color.white)
-        love.graphics.print(statustext)
-        love.graphics.pop()
-    elseif game.logic.player.speed > 0 and not game.logic.player.trolling then
+        -- hovered button hint
+        self:printStatus(statustext)
+    elseif game.logic.player.speedDescription then
         -- boat speed
-        love.graphics.push()
-        love.graphics.translate(10, 570)
-        game.view.player.printBoatSpeed()
-        love.graphics.pop()
+        self:printStatus(game.logic.player.speedDescription)
     else
         -- rod and lure selection
-        love.graphics.push()
-        love.graphics.translate(20, 570)
-        game.view.player:drawRodDetails()
-        love.graphics.pop()
+        self:printStatus(game.logic.player.rodDescription)
     end
 
     -- mini map

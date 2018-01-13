@@ -52,8 +52,32 @@ local module = {
     lake = "Wes's Pond",
 
     -- records the number of casts made
-    castsCount = 0
+    castsCount = 0,
+
+    -- selected rod description for status text
+    rodDescription = "",
+
+    -- boat speed description for status text
+    speedDescription = nil
 }
+
+--- Set the rod and lure description
+local function setRodDescription()
+
+    if module.rod then
+        if module.rod.lure then
+            module.rodDescription = string.format("%s, %s %s",
+            module.rod.name,
+            module.rod.lure.color,
+            module.rod.lure.name)
+        else
+            module.rodDescription = string.format("%s", module.rod.name)
+        end
+    else
+        module.rodDescription = "No rod selected"
+    end
+
+end
 
 --- Turn the boat left
 function module:left()
@@ -275,6 +299,24 @@ function module:update(dt)
     -- work out boat cruising speed and distance to the goal
     game.logic.boat:calculateSpeed(self, dt)
 
+    if self.trolling then
+        self.speedDescription = nil
+    else
+        if self.speed > 3 then
+            self.speedDescription = "full throttle"
+        elseif self.speed > 2 then
+            self.speedDescription = "speeding"
+        elseif self.speed > 1 then
+            self.speedDescription = "cruising"
+        elseif self.speed > 0.1 then
+            self.speedDescription = "going slow"
+        elseif self.speed == 0.1 then
+            self.speedDescription = "idling"
+        else
+            self.speedDescription = nil
+        end
+    end
+
     -- retake aim in case boat is moving
     if self.castOffset and self.speed > 0.1 then
         self:aimCast(self.castOffset.screenX, self.castOffset.screenY)
@@ -405,6 +447,7 @@ end
 function module:resetTour()
 
     self.castsCount = 0
+    setRodDescription()
 
 end
 
@@ -419,6 +462,8 @@ function module:setLure(category, name, color)
         }
 
         game.dprint(string.format("set player lure as %s %s (%s)", color, name, category))
+
+        setRodDescription()
 
         -- take the time
         game.logic.tournament:takeTime(3)
@@ -439,6 +484,8 @@ function module:setRod(rod)
 
     -- select rod
     game.dprint(string.format("selected %s", rod.name))
+
+    setRodDescription()
 
     -- take the time
     game.logic.tournament:takeTime(1)
