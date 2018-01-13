@@ -30,22 +30,44 @@ tiles.w, tiles.h = tiles.image:getDimensions()
 -- use sharp interpolation
 tiles.image:setFilter("nearest", "nearest", 1)
 
-tiles.water = {}
-tiles.water.open = love.graphics.newQuad(80, 16, 16, 16, tiles.w, tiles.h)
-tiles.water.left = love.graphics.newQuad(48, 32, 16, 16, tiles.w, tiles.h)
-tiles.water.right = love.graphics.newQuad(16, 32, 16, 16, tiles.w, tiles.h)
-tiles.water.top = love.graphics.newQuad(32, 48, 16, 16, tiles.w, tiles.h)
-tiles.water.bottom = love.graphics.newQuad(32, 16, 16, 16, tiles.w, tiles.h)
-tiles.water.topleft = love.graphics.newQuad(80, 48, 16, 16, tiles.w, tiles.h)
-tiles.water.topright = love.graphics.newQuad(96, 48, 16, 16, tiles.w, tiles.h)
-tiles.water.bottomleft = love.graphics.newQuad(80, 64, 16, 16, tiles.w, tiles.h)
-tiles.water.bottomright = love.graphics.newQuad(96, 64, 16, 16, tiles.w, tiles.h)
-tiles.water.leftalcove = love.graphics.newQuad(16, 80, 16, 16, tiles.w, tiles.h)
-tiles.water.rightalcove = love.graphics.newQuad(32, 80, 16, 16, tiles.w, tiles.h)
-tiles.water.topalcove = love.graphics.newQuad(16, 96, 16, 16, tiles.w, tiles.h)
-tiles.water.bottomalcove = love.graphics.newQuad(16, 112, 16, 16, tiles.w, tiles.h)
+tiles.water = love.graphics.newQuad(80, 16, 16, 16, tiles.w, tiles.h)
 
-tiles.land = love.graphics.newQuad(32, 32, 16, 16, tiles.w, tiles.h)
+-- alcoves provide a rounded tile for single tiled dead-ends
+tiles.alcove = { }
+tiles.alcove.left = love.graphics.newQuad(16, 80, 16, 16, tiles.w, tiles.h)
+tiles.alcove.right = love.graphics.newQuad(32, 80, 16, 16, tiles.w, tiles.h)
+tiles.alcove.top = love.graphics.newQuad(16, 96, 16, 16, tiles.w, tiles.h)
+tiles.alcove.bottom = love.graphics.newQuad(16, 112, 16, 16, tiles.w, tiles.h)
+
+tiles.land = { }
+tiles.land.open = love.graphics.newQuad(32, 32, 16, 16, tiles.w, tiles.h)
+
+-- land corners provide rounded edges
+tiles.land.corner = { }
+tiles.land.corner.topleft = love.graphics.newQuad(16, 16, 16, 16, tiles.w, tiles.h)
+tiles.land.corner.topright = love.graphics.newQuad(48, 16, 16, 16, tiles.w, tiles.h)
+tiles.land.corner.bottomleft = love.graphics.newQuad(16, 48, 16, 16, tiles.w, tiles.h)
+tiles.land.corner.bottomright = love.graphics.newQuad(48, 48, 16, 16, tiles.w, tiles.h)
+
+-- land points
+tiles.land.point = { }
+tiles.land.point.left = love.graphics.newQuad(16, 32, 16, 16, tiles.w, tiles.h)
+tiles.land.point.right = love.graphics.newQuad(48, 32, 16, 16, tiles.w, tiles.h)
+tiles.land.point.top = love.graphics.newQuad(32, 16, 16, 16, tiles.w, tiles.h)
+tiles.land.point.bottom = love.graphics.newQuad(32, 48, 16, 16, tiles.w, tiles.h)
+
+--tiles.land.corner.top = love.graphics.newQuad(48, 32, 16, 16, tiles.w, tiles.h)
+--tiles.land.corner.right = love.graphics.newQuad(16, 32, 16, 16, tiles.w, tiles.h)
+--tiles.land.corner.top = love.graphics.newQuad(32, 48, 16, 16, tiles.w, tiles.h)
+--tiles.land.corner.bottom = love.graphics.newQuad(32, 16, 16, 16, tiles.w, tiles.h)
+
+-- land insets provide small corners that join land tiles together
+tiles.land.inset = { }
+tiles.land.inset.topleft = love.graphics.newQuad(80, 48, 16, 16, tiles.w, tiles.h)
+tiles.land.inset.topright = love.graphics.newQuad(96, 48, 16, 16, tiles.w, tiles.h)
+tiles.land.inset.bottomleft = love.graphics.newQuad(80, 64, 16, 16, tiles.w, tiles.h)
+tiles.land.inset.bottomright = love.graphics.newQuad(96, 64, 16, 16, tiles.w, tiles.h)
+
 
 tiles.plants = {
   love.graphics.newQuad(208, 16, 16, 16, tiles.w, tiles.h),

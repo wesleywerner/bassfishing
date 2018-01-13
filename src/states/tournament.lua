@@ -32,8 +32,10 @@ function module:init(data)
 
     -- generate a random lake (for testing this state without lake selection)
     if not game.lake then
-        data = { practice = false }
-        local seed = 42
+        data = { practice = true }
+        local seed = 158
+        -- 149 left/right points
+        -- 158 top/bottom points
         game.lake = game.logic.genie:generate(game.defaultMapWidth,
         game.defaultMapHeight, seed,
         game.defaultMapDensity, game.defaultMapIterations)
@@ -138,6 +140,8 @@ function module:keypressed(key)
             game.logic.tournament:endOfDay()
         elseif key == "f3" then
             game.logic.weather:change()
+            -- force map render
+            game.lake.rendered = nil
         elseif key == "space" then
             game.view.notify:add(string.format("%s this is a test notifications",
             os.date("%c", os.time())), math.random() < 0.1)

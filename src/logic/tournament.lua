@@ -68,6 +68,8 @@ module.fishStatistics = nil
 -- Sets up the time, weather, lake.
 function module:start()
 
+    -- TODO: play n-day tournaments (1 day tour)
+
     self.day = 0
 
     -- clear the list of fish caught by the player
@@ -102,6 +104,9 @@ end
 
 --- Begin the next day of the tournament
 function module:nextDay()
+
+    -- force map re-render so that water shade can update with weather
+    game.lake.rendered = nil
 
     -- ensure the angler standings have values
     for _, angler in ipairs(self.standings) do

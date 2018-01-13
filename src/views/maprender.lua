@@ -30,31 +30,78 @@ local function getWaterCorner(a, x, y)
     local topY = math.max(1, y-1)
     local bottomY = math.min(#a[1], y+1)
 
+    -- these flags are true if they point to land
     local left = a[leftX][y] > 0
     local top = a[x][topY] > 0
     local right = a[rightX][y] > 0
     local bottom = a[x][bottomY] > 0
 
     if top and bottom and left and not right then
-        return tiles.water.leftalcove
+        return tiles.alcove.left
     elseif top and bottom and right and not left then
-        return tiles.water.rightalcove
+        return tiles.alcove.right
     elseif left and right and top and not bottom then
-        return tiles.water.topalcove
+        return tiles.alcove.top
     elseif left and right and bottom and not top then
-        return tiles.water.bottomalcove
+        return tiles.alcove.bottom
     elseif top and left then
-        return tiles.water.topleft
+        return tiles.land.inset.topleft
     elseif top and right then
-        return tiles.water.topright
+        return tiles.land.inset.topright
     elseif bottom and left then
-        return tiles.water.bottomleft
+        return tiles.land.inset.bottomleft
     elseif bottom and right then
-        return tiles.water.bottomright
+        return tiles.land.inset.bottomright
     end
 
 end
 
+--- Get the quad to draw a corner of water as interpolated by the land around it.
+local function getLandCorner(a, x, y)
+
+    local tiles = game.view.tiles
+    local leftX = math.max(1, x-1)
+    local rightX = math.min(#a, x+1)
+    local topY = math.max(1, y-1)
+    local bottomY = math.min(#a[1], y+1)
+
+    -- these flags are true if they point to land
+    local left = a[leftX][y] > 0
+    local top = a[x][topY] > 0
+    local right = a[rightX][y] > 0
+    local bottom = a[x][bottomY] > 0
+
+    --TODO: ensure all top/left/bot/rt are checked
+
+    if right and not top and not left and not bottom then
+        -- point left
+        return tiles.land.point.left
+    elseif left and not top and not bottom and not right then
+        -- point right
+        return tiles.land.point.right
+    elseif bottom and not left and not top and not right then
+        -- point top
+        return tiles.land.point.top
+    elseif top and not bottom and not left and not right then
+        -- bottom point
+        return tiles.land.point.bottom
+    elseif right and bottom and not left and not top then
+        -- corner
+        return tiles.land.corner.topleft
+    elseif left and not right and not top and bottom then
+        -- corner
+        return tiles.land.corner.topright
+    elseif top and not bottom and not left and right then
+        -- corner
+        return tiles.land.corner.bottomleft
+    elseif left and top and not right and not bottom then
+        -- corner
+        return tiles.land.corner.bottomright
+    else
+        return tiles.land.open
+    end
+
+end
 
 function module:render()
 
@@ -79,15 +126,24 @@ function module:render()
 
         local ground = lake.contour[x][y] > 0
 
-        love.graphics.setColor(255, 255, 255)
+        -- draw water depth with a different shade
+        -- local depth = 192 + (lake.depth[x][y] * 63)
+        -- love.graphics.setColor(depth, depth, depth)
+
+        -- overcast days show darker water
+        local shade = math.max(128, 220 - game.logic.weather.cloudcover)
+        love.graphics.setColor(shade, shade, shade)
 
         if ground then
-            love.graphics.draw(tiles.image, tiles.land, drawx, drawy)
+            -- underlay open water to fill in any edges from the land
+            love.graphics.draw(tiles.image, tiles.water, drawx, drawy)
+            -- get the land tile
+            local landquad = getLandCorner(lake.contour, x, y)
+            love.graphics.setColor(255, 255, 255)
+            love.graphics.draw(tiles.image, landquad, drawx, drawy)
         else
             -- draw open water tile
-            local depth = 192 + (lake.depth[x][y] * 63)
-            love.graphics.setColor(depth, depth, depth)
-            love.graphics.draw(tiles.image, tiles.water.open, drawx, drawy)
+            love.graphics.draw(tiles.image, tiles.water, drawx, drawy)
             -- and any special corner tile
             local waterquad = getWaterCorner(lake.contour, x, y)
             if waterquad then
@@ -132,6 +188,7 @@ function module:render()
     end
 
     -- Draw obstacles
+    love.graphics.setColor(255, 255, 255, 192)
     for _, obs in ipairs(lake.obstacles) do
         local drawx = (obs.x-1) * tiles.size
         local drawy = (obs.y-1) * tiles.size
