@@ -20,6 +20,7 @@
 ]]--
 
 local module = { }
+local buttons = nil
 
 function module:init(data)
 
@@ -33,7 +34,7 @@ function module:init(data)
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
     -- buttons
-    self.buttons = self:makeButtons()
+    self:makeButtons()
 
     -- screen animation
     self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
@@ -82,26 +83,26 @@ function module:keypressed(key)
         self:newMap(self:seedFromString(self.lakelist:selectedItem()))
         game.sound:play("focus")
     else
-        self.buttons:keypressed(key)
+        buttons:keypressed(key)
     end
 
 end
 
 function module:mousemoved(x, y, dx, dy, istouch)
 
-    self.buttons:mousemoved(x, y, dx, dy, istouch)
+    buttons:mousemoved(x, y, dx, dy, istouch)
 
 end
 
 function module:mousepressed(x, y, button, istouch)
 
-    self.buttons:mousepressed(x, y, button, istouch)
+    buttons:mousepressed(x, y, button, istouch)
 
 end
 
 function module:mousereleased(x, y, button, istouch)
 
-    self.buttons:mousereleased(x, y, button, istouch)
+    buttons:mousereleased(x, y, button, istouch)
 
     if self.lakelist:selectPoint(x - self.lakelist.left, y - self.lakelist.top) then
         self:newMap(self:seedFromString(self.lakelist:selectedItem()))
@@ -125,7 +126,7 @@ end
 
 function module:update(dt)
 
-    self.buttons:update(dt)
+    buttons:update(dt)
 
     -- limit delta as the end of day weigh-in can use up to .25 seconds
     -- causing a transition jump.
@@ -160,14 +161,15 @@ function module:draw()
     self.transition:apply("drop down")
 
     -- background
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(game.color.white)
     love.graphics.draw(game.border)
 
     -- buttons
-    self.buttons:draw()
+    love.graphics.setFont(game.fonts.small)
+    buttons:draw()
 
     love.graphics.setColor(game.color.base0)
-    love.graphics.printf("Enter a 3-day tournament.\nYour biggest fish are entered into the record books.", 0, 40, game.window.width, "center")
+    love.graphics.printf("Enter a tournament.\nYour biggest fish are entered into the record books.", 0, 40, game.window.width, "center")
 
     -- lake list
     love.graphics.setColor(game.color.base01)
@@ -228,12 +230,36 @@ end
 
 function module:makeButtons()
 
-    local collection = game.lib.widgetCollection:new()
+    if buttons then return end
+    buttons = game.lib.widgetCollection:new()
+
+    love.graphics.setFont(game.fonts.small)
+
+    -- Days selections
+    game.view.ui:setSwitch(
+        buttons:button("days", {
+            left = game.window.width - 350,
+            top = game.window.height - 60,
+            text = "tour days",
+            callback = function(btn)
+
+                if btn.value == 1 then
+                    game.logic.tournament.tournamentDays = 3
+                else
+                    game.logic.tournament.tournamentDays = 1
+                end
+
+                game.dprint(string.format("set tournament days %d",
+                game.logic.tournament.tournamentDays))
+
+            end
+        }), {"3 Days", "1 Day"}
+    )
 
     -- Launch boat
     game.view.ui:setButton(
-        collection:button("launch", {
-            left = 60,
+        buttons:button("launch", {
+            left = game.window.width - 200,
             top = game.window.height - 60,
             text = "Launch boat",
             callback = function(btn)
@@ -244,8 +270,8 @@ function module:makeButtons()
 
     -- Back
     game.view.ui:setButton(
-        collection:button("back", {
-            left = game.window.width - 100,
+        buttons:button("back", {
+            left = 60,
             top = game.window.height - 60,
             text = "Back",
             callback = function(btn)
@@ -253,8 +279,6 @@ function module:makeButtons()
                 end
         })
     )
-
-    return collection
 
 end
 
