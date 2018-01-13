@@ -23,7 +23,7 @@ local module = { }
 
 -- statistics chart position and size
 local chartWidth, chartHeight = 445, 215
-local chartX = (game.window.width - chartWidth) / 2
+local chartX = math.floor((game.window.width - chartWidth) / 2)
 local chartY = 180
 
 -- list of available charts
