@@ -21,7 +21,7 @@
 local module = { }
 
 -- The game version
-module.version = "1"
+module.version = 2
 module.title = "Bass Lover"
 
 -- enable debug printing

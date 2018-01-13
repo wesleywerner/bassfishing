@@ -30,7 +30,7 @@ module.data = nil
 function module:load()
 
     local default = {
-            version = "1",
+            version = game.version,
             metric = true,
             music = true,
             sounds = true,
@@ -43,9 +43,12 @@ function module:load()
     game.settings = self.data
 
     -- upgrade data as needed
-    --if not self.data.version == "1" then
-        --self.data.version = game.version
+    --if self.data.version == 2 then
+
     --end
+
+    -- update to current game version
+    self.data.version = game.version
 
 end
 

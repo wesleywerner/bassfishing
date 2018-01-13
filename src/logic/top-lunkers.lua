@@ -29,12 +29,11 @@ module.data = nil
 
 function module:load()
 
-    self.data = game.logic.pickle:read("toplunkers")
+    local default = {
+        version = game.version
+    }
 
-    -- upgrade data as needed
-    if not self.data.version then
-        self.data.version = game.version
-    end
+    self.data = game.logic.pickle:read("toplunkers", default)
 
     if not self.data.lunkers then
 
@@ -51,7 +50,17 @@ function module:load()
 
     end
 
-    self:printLunkerList()
+    -- upgrade data as needed
+    --if self.data.version == 2 then
+
+    --end
+
+    -- update to current game version
+    self.data.version = game.version
+
+    if game.debug then
+        self:printLunkerList()
+    end
 
 end
 

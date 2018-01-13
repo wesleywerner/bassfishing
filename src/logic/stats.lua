@@ -29,33 +29,22 @@ module.data = nil
 
 function module:load(name)
 
+    local default = {
+        version = game.version,
+        name = name,
+        tours = { }
+    }
+
     self.filename = string.format("angler %s", name)
-    self.data = game.logic.pickle:read(self.filename)
-
-    -- angler file does not exist, create version 1
-    if not self.data.version then
-
-        -- stores file version
-        self.data.version = game.version
-
-        -- stores the angler name
-        self.data.name = name
-
-        -- stores a list of tournament statistics
-        self.data.tours = { }
-
-        -- WARNING: for new versions
-        -- add new storage values below in the upgrade tests
-    end
+    self.data = game.logic.pickle:read(self.filename, default)
 
     -- upgrade data as needed
-    if self.data.version ~= game.version  then
-        if self.data.version == "1" then
-            --print("upgrade from V1")
-        elseif self.data.version == "2" then
-            --print("upgrade from V2")
-        end
-    end
+    --if self.data.version == 2 then
+
+    --end
+
+    -- update to current game version
+    self.data.version = game.version
 
     self:updateStatistics()
 
