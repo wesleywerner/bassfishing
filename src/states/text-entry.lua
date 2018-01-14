@@ -24,6 +24,8 @@
 
 local module = { }
 
+local buttons = nil
+
 --- Initialize the text entry state.
 --
 -- @tparam init_data data
@@ -63,10 +65,13 @@ function module:init(data)
 
     self.transition = game.view.screentransition:new(game.transition.time / 2, game.transition.enter)
 
+    self:makeButtons()
     love.graphics.setFont(game.fonts.medium)
 
     -- enable key repeat so backspace can be held down to trigger love.keypressed multiple times
     love.keyboard.setKeyRepeat(true)
+
+    love.keyboard.setTextInput(true)
 
 end
 
@@ -120,11 +125,27 @@ function module:keypressed(key)
 
 end
 
+function module:textinput(t)
+
+    self.text = self.text..t
+
+end
+
 function module:mousemoved( x, y, dx, dy, istouch )
+
+    buttons:mousemoved(x, y, dx, dy, istouch)
 
 end
 
 function module:mousepressed( x, y, button, istouch )
+
+    buttons:mousepressed(x, y, button, istouch)
+
+end
+
+function module:mousereleased(x, y, button, istouch)
+
+    buttons:mousereleased(x, y, button, istouch)
 
 end
 
@@ -132,7 +153,11 @@ function module:update(dt)
 
     self.transition:update(dt)
 
+    -- update buttons
+    buttons:update(dt)
+
     if self.transition.isClosed then
+        love.keyboard.setTextInput(false)
         -- disable key repeat
         love.keyboard.setKeyRepeat(false)
         -- release screenshot
@@ -160,6 +185,9 @@ function module:draw()
     love.graphics.rectangle("fill", self.frameLeft, self.frameTop,
         self.frameWidth, self.frameHeight)
 
+    -- draw buttons
+    buttons:draw()
+
     -- print title
     if self.title then
         love.graphics.setColor(game.color.base01)
@@ -172,6 +200,40 @@ function module:draw()
 
     -- restore state
     love.graphics.pop()
+
+end
+
+
+function module:makeButtons()
+
+    local top = self.frameTop + self.frameHeight - 60
+
+    love.graphics.setFont(game.fonts.small)
+    buttons = game.lib.widgetCollection:new()
+
+    -- Cancel
+    game.view.ui:setButton(
+        buttons:button("cancel", {
+            left = self.frameLeft + 100,
+            top = top,
+            text = "Cancel",
+            callback = function(btn)
+                self:keypressed("escape")
+                end
+        })
+    )
+
+    -- OK
+    game.view.ui:setButton(
+        buttons:button("ok", {
+            left = self.frameLeft + self.frameWidth - 100,
+            top = top,
+            text = "Okay",
+            callback = function(btn)
+                self:keypressed("return")
+                end
+        })
+    )
 
 end
 

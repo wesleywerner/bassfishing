@@ -212,14 +212,21 @@ function module:render()
 end
 
 -- Render a preview of the lake contour to a canvas
-function module:renderMini(showPlayer)
+function module:renderMini(showPlayer, scale)
 
-    local preview = love.graphics.newCanvas(game.lake.width, game.lake.height)
+    if not scale then error("provide map render scale") end
+
+    local mapwidth = (game.lake.width + 1) * scale
+    local mapheight = (game.lake.height + 1) * scale
+
+    local preview = love.graphics.newCanvas(mapwidth, mapheight)
+    local originalCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(preview)
 
     -- compensate drawing one-based coordinates on a zero-based canvas
     love.graphics.push()
     love.graphics.translate(-1, -1)
+    love.graphics.scale(scale, scale)
 
     for x=1, game.lake.width do
         for y=1, game.lake.height do
@@ -252,7 +259,7 @@ function module:renderMini(showPlayer)
     end
 
     love.graphics.pop()
-    love.graphics.setCanvas()
+    love.graphics.setCanvas(originalCanvas)
 
     return preview
 

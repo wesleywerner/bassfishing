@@ -74,7 +74,8 @@ function module:drawIcon()
 
     end
 
-    love.graphics.draw(self.icons.image, forecastIcon)
+    -- TODO: move scale to init
+    love.graphics.draw(self.icons.image, forecastIcon, 0, 0, 0, game.window.scale, game.window.scale)
 
 end
 

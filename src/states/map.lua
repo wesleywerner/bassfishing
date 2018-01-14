@@ -23,15 +23,17 @@ local module = { }
 function module:init()
 
     -- pre-calculate centering lake on screen
-    self.mapscale = 9
-    self.lakeCenter = (game.window.width / module.mapscale / 2) - (game.defaultMapWidth / 2)
-    self.lakeBottom = (game.window.height / module.mapscale / 2) - (game.defaultMapHeight / 2)
+    self.mapscale = math.floor(9 * game.window.scale)
 
     -- save screen and use it as a menu background
     self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
 
     -- render the map
-    self.mapimage = game.view.maprender:renderMini(true)
+    self.mapimage = game.view.maprender:renderMini(true, self.mapscale)
+    local w, h = self.mapimage:getDimensions()
+
+    self.centerLeft = (game.window.width - w) / 2
+    self.centerTop = (game.window.height - h) / 2
 
     self.transition = game.view.screentransition:new(game.transition.time, game.transition.enter)
 
@@ -78,8 +80,7 @@ function module:draw()
 
     -- scale the mini map to fit the screen
     love.graphics.push()
-    love.graphics.scale(self.mapscale, self.mapscale)
-    love.graphics.translate(self.lakeCenter, self.lakeBottom)
+    love.graphics.translate(self.centerLeft, self.centerTop)
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.mapimage, 0, 0)
 
@@ -88,6 +89,7 @@ function module:draw()
         -- compensate drawing one-based coordinates on a zero-based canvas
         love.graphics.push()
         love.graphics.translate(-1, -1)
+        love.graphics.scale(self.mapscale, self.mapscale)
         love.graphics.setColor(game.color.base1)
         love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 1, 1)
         love.graphics.pop()

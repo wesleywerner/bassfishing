@@ -25,13 +25,14 @@ module.version = 2
 module.title = "Bass Lover"
 
 -- enable debug printing
-module.debug = false
+module.debug = true
 module.dprint = function(...) if module.debug then print(...) end end
 
 -- global defaults
 module.window = { }
 module.window.width = 800
 module.window.height = 600
+module.window.scale = 1
 
 -- re-usable screen border
 module.border = love.graphics.newImage("res/screen-border.png")

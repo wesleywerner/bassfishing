@@ -151,4 +151,13 @@ function module:draw()
     self:get().object:draw()
 end
 
+function module:textinput(t)
+    if #self.stack == 0 then return end
+    local object = self:get().object
+    if object.textinput then
+        object:textinput(t)
+    end
+end
+
+
 return module

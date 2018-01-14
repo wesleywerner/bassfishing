@@ -218,6 +218,9 @@ function module:setButton(btn, width)
         btn.width = width
     end
 
+    -- compensate to window scale
+    btn.width = btn.width * game.window.scale
+
     -- center text
     btn.textY = math.floor((btn.height / 2) - (textheight / 2))
 
@@ -291,6 +294,9 @@ function module:setSwitch(btn, options, width)
             end
         end
     end
+
+    -- compensate to window scale
+    btn.width = btn.width * game.window.scale
 
     -- custom switch code:
     -- "a" and "b" track the drawn position of the switch as n 0..1

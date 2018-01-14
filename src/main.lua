@@ -39,11 +39,21 @@ function savescreen()
 
 end
 
+--- Capture the screen size and adjust the scale to the game resolution
+function love.resize(w, h)
+    game.window.width = w
+    game.window.height = h
+    -- scale ratio from the game native size (800, 600) to the actual window
+    game.window.scale = h / 600
+end
+
 function love.load()
 
     game.dprint(string.format("Running bass lover version %s", game.version))
 
-    love.window.setMode(game.window.width, game.window.height)
+    -- attempt full screen, this fires the love.resize event
+    love.window.setMode(game.window.width, game.window.height, { fullscreen=true })
+
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
 
     game.logic.toplunkers:load()
@@ -123,5 +133,11 @@ end
 function love.draw()
 
     game.states:draw()
+
+end
+
+function love.textinput(t)
+
+    game.states:textinput(t)
 
 end

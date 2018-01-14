@@ -86,7 +86,7 @@ function module:init(data)
     self.transition = game.view.screentransition:new(0.5, "inCubic")
 
     -- palette block size
-    self.paletteSize = 40
+    self.paletteSize = math.floor(40 * game.window.scale)
 
     -- palette columns
     self.paletteColumns = 5
@@ -97,7 +97,7 @@ function module:init(data)
     -- padding from the top
     self.topPadding = panelTop + 20
     self.bottomPadding = 20
-    self.leftPadding = 20
+    self.leftPadding = math.floor(20 * game.window.scale)
 
     -- padding for list text
     self.textPadding = 10
@@ -261,7 +261,7 @@ function module:init(data)
         self.palette = game.lib.aperture:new{
             top = self.topPadding,
             -- right align palette on screen
-            left = game.window.width - self.lures.width - self.leftPadding,
+            left = game.window.width - self.leftPadding - (self.paletteColumns * self.paletteSize),
             -- width of the lure image
             width = self.lures.width,
             height = self.listHeight,
@@ -455,6 +455,9 @@ end
 
 function module:draw()
 
+    -- TODO: add this test to all states that have screenshots
+    if self.transition.isClosed then return end
+
     -- save screen state
     love.graphics.push()
 
@@ -550,7 +553,9 @@ function module:draw()
         else
             love.graphics.setColor(game.logic.tackle.colors[self.selectedColor])
         end
-        love.graphics.draw(self.lures.image, self.lureImageQuad, 0, 0)
+        -- TODO: move scale to init
+        love.graphics.draw(self.lures.image, self.lureImageQuad, 0, 0,
+        0, game.window.scale, game.window.scale)
         self.imageList:release()
     end
 

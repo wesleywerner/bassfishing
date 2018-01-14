@@ -32,7 +32,7 @@ function module:init(data)
 
     -- generate a random lake (for testing this state without lake selection)
     if not game.lake then
-        data = { practice = false }
+        data = { practice = true }
         local seed = 158
         -- 149 left/right points
         -- 158 top/bottom points
@@ -50,7 +50,8 @@ function module:init(data)
     game.logic.boat:launchBoat(game.logic.player)
 
     -- create mini map
-    self.minimap = game.view.maprender:renderMini()
+    self.minimapScale = 1.85 * game.window.scale
+    self.minimap = game.view.maprender:renderMini(false, self.minimapScale)
 
     -- clear live well
     game.logic.livewell:empty()
@@ -64,7 +65,7 @@ function module:init(data)
         game.lake.height * game.view.tiles.size * scale)
 
     -- set camera lens size
-    game.lib.camera:frame(6, 6, 613, 569)
+    game.lib.camera:frame(6, 6, 613*game.window.scale, 569*game.window.scale)
 
     -- center the camera
     game.lib.camera:instant(-game.lake.width * game.view.tiles.size / 2, -game.lake.height * game.view.tiles.size / 2)
@@ -277,7 +278,8 @@ function module:printStatus(text)
 
     love.graphics.setFont(game.fonts.small)
     love.graphics.setColor(game.color.base0)
-    love.graphics.printf(text, 20, 579, game.lib.camera.frameWidth, "center")
+    -- TODO: move scale to init
+    love.graphics.printf(text, 20*game.window.scale, 579*game.window.scale, game.lib.camera.frameWidth, "center")
 
 end
 
@@ -311,27 +313,33 @@ function module:draw()
 
     -- draw game border
     love.graphics.setColor(255, 255, 255)
+    love.graphics.push()
+    love.graphics.scale(game.window.scale, game.window.scale)
     love.graphics.draw(self.borderImage)
+    love.graphics.pop()
 
     -- draw buttons
     buttons:draw()
 
     -- fish finder
     love.graphics.push()
-    love.graphics.translate(634, 433)
+    -- TODO: move scale to init
+    love.graphics.translate(634 * game.window.scale, 433 * game.window.scale)
     game.view.fishfinder:draw()
     love.graphics.pop()
 
     if not self.practice then
         love.graphics.push()
-        love.graphics.translate(634, 14)
+        -- TODO: move scale to init
+        love.graphics.translate(634*game.window.scale, 14*game.window.scale)
         game.view.clock:draw()
         love.graphics.pop()
     end
 
     -- weather icon
     love.graphics.push()
-    love.graphics.translate(680, 32)
+    -- TODO: move scale to init
+    love.graphics.translate(680*game.window.scale, 32*game.window.scale)
     love.graphics.setColor(game.color.base2)
     game.view.weather:drawIcon()
     love.graphics.pop()
@@ -350,20 +358,24 @@ function module:draw()
 
     -- mini map
     love.graphics.push()
-    love.graphics.translate(634, 371)
-    love.graphics.scale(1.8, 1.8)
+    -- TODO: move scale to init
+    love.graphics.translate(634*game.window.scale, 371*game.window.scale)
+    -- TODO: scale minimap during its render instead of here
     love.graphics.setColor(game.color.white)
     love.graphics.draw(self.minimap)
 
     -- player position on the mini map
-    love.graphics.scale(1, 1)
+    --love.graphics.scale(1, 1)
     love.graphics.translate(-1, -1)
+    love.graphics.scale(self.minimapScale, self.minimapScale)
     love.graphics.rectangle("fill", game.logic.player.x, game.logic.player.y, 2, 2)
     love.graphics.pop()
 
     -- mini map border
     love.graphics.setColor(game.color.blue)
-    love.graphics.rectangle("line", 634, 371, 150, 56)
+    -- TODO: move scale to init
+    love.graphics.rectangle("line", 634*game.window.scale, 371*game.window.scale,
+        self.minimap:getWidth(), self.minimap:getHeight() )
 
 end
 
@@ -402,8 +414,8 @@ function module:makeButtons()
 
     local width = 130
     local spacing = 40
-    local left = 643
-    local top = 90
+    local left = 643 * game.window.scale
+    local top = 90 * game.window.scale
     love.graphics.setFont(game.fonts.small)
     buttons = game.lib.widgetCollection:new()
 
@@ -480,8 +492,8 @@ function module:makeButtons()
 
     -- create hotspots (buttons without interface)
     maphotspot = game.lib.hotspot:new{
-        left = 634,
-        top = 371,
+        left = 634 * game.window.scale,
+        top = 371 * game.window.scale,
         width = 150,
         height = 56,
         hint = "Look at the map (m)",

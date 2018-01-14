@@ -92,10 +92,6 @@ function module:render()
             -- border image
             self.background = love.graphics.newImage("res/fishfinder3000.png")
 
-            -- total size
-            self.width = self.background:getWidth()
-            self.height = self.background:getHeight()
-
         end
 
         love.graphics.push()
@@ -105,22 +101,25 @@ function module:render()
         local backgroundcolor = { 140, 185, 164 }
         local foregroundcolor = { 85, 106, 130 }
 
+        local scaleWidth = math.floor(self.graphWidth * game.window.scale)
+        local scaleHeight = math.floor(self.graphHeight * game.window.scale)
+
         -- create new graph canvas
         self.image = nil
-        self.image = love.graphics.newCanvas( self.graphWidth, self.graphHeight )
+        self.image = love.graphics.newCanvas(scaleWidth, scaleHeight)
         love.graphics.setCanvas(self.image)
         love.graphics.setColor(foregroundcolor)
 
         -- build the list of depth vertices
-        local vertices = { 0, self.graphHeight + 1 } -- ensure start point is an extremity
+        local vertices = { 0, scaleHeight + 1 } -- ensure start point is an extremity
 
         for n, point in ipairs(self.points) do
 
             -- history moves from right to left
-            local px = ( self.graphWidth / (self.history) ) * (n-1)
+            local px = ( scaleWidth / (self.history) ) * (n-1)
 
             -- depth 0=bottom 1=surface
-            local py = self.graphHeight - ( self.graphHeight * point.depth )
+            local py = scaleHeight - (scaleHeight * point.depth)
 
             -- vary the bottom for variety
             py = math.max(1, py - math.random(0, 6))
@@ -145,10 +144,10 @@ function module:render()
 
         -- insert a bottom-right vertice as the last position.
         -- this completes a polygon
-        table.insert(vertices, self.graphWidth)
+        table.insert(vertices, scaleWidth)
         table.insert(vertices, vertices[#vertices-1])
-        table.insert(vertices, self.graphWidth)
-        table.insert(vertices, self.graphHeight + 1) -- ensure end point is an extremity
+        table.insert(vertices, scaleWidth)
+        table.insert(vertices, scaleHeight + 1) -- ensure end point is an extremity
 
         -- draw the graph
         love.graphics.setLineJoin("none")
@@ -174,8 +173,9 @@ end
 function module:draw()
 
     love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(self.background, 0, 0)
-    love.graphics.draw(self.image, self.left, self.top)
+    love.graphics.draw(self.background, 0, 0, 0, game.window.scale, game.window.scale)
+    -- TODO: move scale to init
+    love.graphics.draw(self.image, self.left*game.window.scale, self.top*game.window.scale)
 
 end
 
