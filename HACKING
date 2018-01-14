@@ -1,13 +1,16 @@
 # release process
+* toggle the "debug" flag in game.lua
+* update the version number in game.lua
+* append (and edit!) the changlog:
 
-toggle debug game flag
+        # output log since tag "v1", titles only and in commit order
+        git log --pretty=format:%s v1..HEAD | tac >> CHANGELOG.md
 
-update version in game.lua
+*commit and tag:
 
-commit and tag:
-
-    git tag -a "v1"
-    git push --tags
+        git add . & git commit
+        git tag -a "v1"
+        git push --tags
 
 zip the source into the builds directory:
 

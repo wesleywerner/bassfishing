@@ -4,6 +4,8 @@ Bass Lover is a tournament fishing simulatation.
 
 See the [Bass Lover website](https://wesleywerner.github.io/basslover/index.html) for the game manual and fishing tips.
 
+See [CREDITS](CREDITS) for attributions.
+
 # license
 
     This program is free software: you can redistribute it and/or modify
