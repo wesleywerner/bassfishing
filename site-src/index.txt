@@ -13,11 +13,57 @@ Get the latest version from [[https://github.com/wesleywerner/basslover/releases
 ===== fishing guide =====
 To learn how to use your boat, fish finder and tips on finding that big fish, see the [[manual]].
 
+===== with thanks =====
+I used these works to help build Bass Lover:
+
+* Music by Eric Matyas [[http://soundimage.org/|www.soundimage.org]]
+* [[https://erikflowers.github.io/weather-icons/|Weather icons by Erik Flowers,]] licensed under SIL OFL 1.1
+* [[https://github.com/rxi/lume|Lume Lua library by rxi,]] licensed under MIT
+* [[https://github.com/wesleywerner/lua-star|Lua A* path finding library by Wesley Werner,]] licensed under GPL
+* [[http://www.fontspace.com/kineticplasma-fonts/mechanical|Mechanical font by KineticPlasma Fonts,]] licensed under SIL Open Font License
+* [[https://openclipart.org/detail/171200/fishing-rod|Fishing rod image by hatalar205,]] licensed under Creative Commons Zero 1.0
+* [[https://openclipart.org/detail/170642/fish|Fish icon by by Last Dino]], licensed under Creative Commons Zero 1.0
+* [[https://openclipart.org/detail/524/jumping-fish|Jumping bass image by Johnny Automatic]], licensed under Creative Commons Zero 1.0
+
+Bass lover is inspired by a game called [[https://www.myabandonware.com/game/basstour-13i|BassTour]] circa 1992 created by Dick Olsen.
+
 ===== changes =====
 
-**Version 2 (01/2018)**
+==== Version 2 (2018-01-14) ====
 
-* todo
+**Added**
+* Angler sign-in screen.
+* Shiny buttons and switches with tab-navigation.
+* New tournament lake selection screen.
+* You can now fish 1-day tournaments.
+* Game sounds and music.
+* A new options screen to set units of measure, sounds and music.
+* A detailed weather forecast screen.
+* A dedicated live well screen.
+* Mini map that shows your position.
+* Records player and tournament statistics.
+* Pretty charts - cycle them with mouse wheel or arrow keys.
+* Unobtrusive notifications when you land a fish.
+* Move your boat using the mouse, must be enabled in the options screen.
+
+**Changed**
+* A new main menu layout.
+* Improved the tournament layout.
+* Display the cast range in the rod selection screen.
+* Rework the lure selection: Allow scroll with mouse wheel. Hover colors for a preview.
+* Allow casting while navigating the boat.
+* Switching between outboard and trolling motors now uses time.
+* Reduce the outboard cut-off time to 2 seconds.
+* The outboard motor uses less time the faster you go.
+* Land tiles now have round corners.
+* Fish now spawn randomly for each game.
+
+**Fixed**
+* Crashing while moving mouse when exiting the main menu.
+* Crash when certain randomly generated lakes spawn fish not near any feeding zones.
+* Title-case angler name and allow apostrophe's and dashes.
+* Avoid placing the player boat on top of obstacles or other boats when launching.
+
 
 ===== license =====
 Copyright 2017 Wesley Werner
@@ -34,16 +80,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see http://www.gnu.org/licenses/.
-
-===== with thanks =====
-I used these works to help build Bass Lover:
-
-* [[https://erikflowers.github.io/weather-icons/|Weather icons by Erik Flowers,]] licensed under SIL OFL 1.1
-* [[https://github.com/rxi/lume|Lume Lua library by rxi,]] licensed under MIT
-* [[https://github.com/wesleywerner/lua-star|Lua A* path finding library by Wesley Werner,]] licensed under GPL
-* [[http://www.fontspace.com/kineticplasma-fonts/mechanical|Mechanical font by KineticPlasma Fonts,]] licensed under SIL Open Font License
-* [[https://openclipart.org/detail/171200/fishing-rod|Fishing rod image by hatalar205,]] licensed under Creative Commons Zero 1.0
-* [[https://openclipart.org/detail/170642/fish|Fish icon by by Last Dino]], licensed under Creative Commons Zero 1.0
-* [[https://openclipart.org/detail/524/jumping-fish|Jumping bass image by Johnny Automatic]], licensed under Creative Commons Zero 1.0
-
-Bass lover is inspired by a game called [[https://www.myabandonware.com/game/basstour-13i|BassTour]] circa 1992 created by Dick Olsen.
