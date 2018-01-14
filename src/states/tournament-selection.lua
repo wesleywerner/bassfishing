@@ -147,6 +147,9 @@ end
 
 function module:draw()
 
+    -- skip drawing after screenshot is cleared
+    if not self.screenshot then return end
+
     -- cache the lake preview to canvas: has to render outside any transforms
     if not self.lakepreview then
         self.lakepreview = game.view.maprender.renderMini()

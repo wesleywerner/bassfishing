@@ -12,7 +12,7 @@
 * Mini map that shows your position.
 * Records player and tournament statistics.
 * Pretty charts - cycle them with mouse wheel or arrow keys.
-* Unobstrusive notifications when you land a fish.
+* Unobtrusive notifications when you land a fish.
 * Move your boat using the mouse, must be enabled in the options screen.
 
 ## Changed

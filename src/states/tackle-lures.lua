@@ -455,6 +455,9 @@ end
 
 function module:draw()
 
+    -- skip drawing after screenshot is cleared
+    if not self.screenshot then return end
+
     -- save screen state
     love.graphics.push()
 
