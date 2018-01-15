@@ -71,6 +71,9 @@ end
 
 function module:draw()
 
+    -- skip drawing after screenshot is cleared
+    if not self.screenshot then return end
+
     -- underlay screenshot
     local fade = 255 - (128 * self.transition.scale)
     love.graphics.setColor(fade, fade, fade)
