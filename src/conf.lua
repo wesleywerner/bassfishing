@@ -15,7 +15,6 @@
 
 function love.conf(t)
     t.identity = "basslover"
-    t.version = "0.10.2"
+    t.version = "11.1"
     t.window.title = "Bass Lover"
 end
-
