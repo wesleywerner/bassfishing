@@ -28,7 +28,7 @@ function module:init()
     self.lakeBottom = (game.window.height / module.mapscale / 2) - (game.defaultMapHeight / 2)
 
     -- save screen and use it as a menu background
-    self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
+    love.graphics.captureScreenshot (function(data) self.screenshot = love.graphics.newImage (data) end)
 
     -- render the map
     self.mapimage = game.view.maprender:renderMini(true)

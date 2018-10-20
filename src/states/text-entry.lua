@@ -59,7 +59,7 @@ function module:init(data)
     self.titleTop = self.frameTop + 40
 
     -- save screen and use it as a menu background
-    self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
+    love.graphics.captureScreenshot (function(data) self.screenshot = love.graphics.newImage (data) end)
 
     self.transition = game.view.screentransition:new(game.transition.time / 2, game.transition.enter)
 

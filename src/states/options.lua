@@ -32,7 +32,7 @@ function module:init(data)
     self.callback = data.callback
 
     -- save screen and use it as a menu background
-    self.screenshot = love.graphics.newImage(love.graphics.newScreenshot())
+    love.graphics.captureScreenshot (function(data) self.screenshot = love.graphics.newImage (data) end)
 
     self:makeButtons()
 

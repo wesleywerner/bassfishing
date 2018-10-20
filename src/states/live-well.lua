@@ -39,7 +39,7 @@ function module:init(data)
     end
 
     -- save screen and use it as a menu background
-    self.screenshot = love.graphics.newImage(love.graphics.newScreenshot())
+    love.graphics.captureScreenshot (function(data) self.screenshot = love.graphics.newImage (data) end)
 
     -- size of the box (in percentage of screen size)
     local boxwidth = 0.4

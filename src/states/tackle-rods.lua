@@ -27,7 +27,7 @@ local panelTop = 0
 function module:init(data)
 
     -- save screen and use it as a menu background
-    self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
+    love.graphics.captureScreenshot (function(n) self.screenshot = data.screenshot or love.graphics.newImage (n) end)
 
     panelTop = game.window.height - panelHeight
 
@@ -159,7 +159,7 @@ function module:draw()
     love.graphics.push()
 
     -- underlay screenshot
-    local fade = 255 - (128 * self.transition.scale)
+    local fade = (255 - (128 * self.transition.scale)) / 255
     love.graphics.setColor(fade, fade, fade)
     love.graphics.draw(self.screenshot)
 

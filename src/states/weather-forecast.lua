@@ -39,7 +39,7 @@ local hints = {
 function module:init(data)
 
     -- save screen and use it as a menu background
-    self.screenshot = love.graphics.newImage(love.graphics.newScreenshot())
+    love.graphics.captureScreenshot (function(data) self.screenshot = love.graphics.newImage (data) end)
 
     -- alias weather
     if not weather then

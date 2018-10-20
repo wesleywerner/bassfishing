@@ -28,7 +28,7 @@ function module:init(data)
     -- expect data to contain "title", "message" and optionally "shake" bool.
 
     -- save screen and use it as a menu background
-    self.screenshot = love.graphics.newImage( love.graphics.newScreenshot() )
+    love.graphics.captureScreenshot (function(data) self.screenshot = love.graphics.newImage (data) end)
 
     -- reset transforms
     love.graphics.origin()

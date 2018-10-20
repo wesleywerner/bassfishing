@@ -18,13 +18,10 @@
 
 ]]--
 
--- TODO: write release process & versioning
-
 game = require("game")
 
 function savescreen()
 
-    local screenshot = love.graphics.newScreenshot()
     local dir = love.filesystem.getSaveDirectory()
     local counter = 0
     local filename = nil
@@ -34,7 +31,7 @@ function savescreen()
         filename = string.format("screenshot_%.3d.png", counter)
     until not love.filesystem.exists( filename )
 
-    screenshot:encode('png', filename)
+    love.graphics.captureScreenshot(filename)
     print(string.format("saved %s/%s", dir, filename))
 
 end
