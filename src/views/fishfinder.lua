@@ -102,8 +102,8 @@ function module:render()
         love.graphics.setFont(game.fonts.small)
 
         -- render to canvas
-        local backgroundcolor = { 140, 185, 164 }
-        local foregroundcolor = { 85, 106, 130 }
+        local backgroundcolor = { 140/255, 185/255, 164/255 }
+        local foregroundcolor = { 85/255, 106/255, 130/255 }
 
         -- create new graph canvas
         self.image = nil
