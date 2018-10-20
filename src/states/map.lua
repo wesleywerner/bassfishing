@@ -28,7 +28,11 @@ function module:init()
     self.lakeBottom = (game.window.height / module.mapscale / 2) - (game.defaultMapHeight / 2)
 
     -- save screen and use it as a menu background
-    love.graphics.captureScreenshot (function(data) self.screenshot = love.graphics.newImage (data) end)
+    love.graphics.captureScreenshot (
+        function(n)
+            print ("capturing screenshot", n)
+            module.screenshot = love.graphics.newImage (n)
+        end)
 
     -- render the map
     self.mapimage = game.view.maprender:renderMini(true)
@@ -73,7 +77,7 @@ function module:draw()
     if not self.screenshot then return end
 
     -- underlay screenshot
-    local fade = 255 - (128 * self.transition.scale)
+    local fade = (255 - (128 * self.transition.scale)) / 255
     love.graphics.setColor(fade, fade, fade)
     love.graphics.draw(self.screenshot)
 

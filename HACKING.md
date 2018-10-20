@@ -1,4 +1,11 @@
-# release process
+# Setting up for development
+
+        git clone https://github.com/wesleywerner/basslover.git
+        git submodule init
+        git submodule update
+
+# Release process
+
 * toggle the "debug" flag in game.lua
 * update the version number in game.lua
 * append (and edit!) the changlog:
